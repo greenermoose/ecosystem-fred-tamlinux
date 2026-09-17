@@ -1,0 +1,12 @@
+# makepkg build products never belong in the registry; ~/pkgs is the build scratch.
+packages/*/src/
+packages/*/pkg/
+packages/*/*.pkg.tar.*
+packages/*/*.tar.gz
+packages/*/*.tar.xz
+packages/*/*.zst
+packages/*/build.log
+retired/*/src/
+retired/*/pkg/
+*~
+*.swp

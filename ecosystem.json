@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "omarchy-fred-ecosystem",
+  "version": "0.1.0",
+  "description": "Third-party packages Fred's Omarchy workstations run patched, and the software of his that depends on those patches",
+  "conventions": {
+    "fork_branches": "patch/<slug> per patch and patchset/<release-tag> integration branch, both off the upstream release tag the PKGBUILD builds; `fred` always points at the current patchset and is the fork's default branch",
+    "fork_tags": "<release-tag>-fred.<N>, N bumped whenever the patch set changes (independent of pkgrel)",
+    "local_version": "Arch's version with pkgrel <archrel>.<N>: outranks Arch's build of the same version, loses to any newer Arch build, so the patch retires itself",
+    "patches": "exported from the fork with `omarchy-fred-ecosystem export <pkg>` (git format-patch, one file per commit, in order); builds stay tarball + patches",
+    "posting_upstream": "see docs/agent-guides/upstream-engagement.md in omarchy-fred-config: agents never post on hyprwm/*; issue-first elsewhere with AI use disclosed"
+  },
+  "packages": [
+    {
+      "name": "gtk4",
+      "status": "active",
+      "added": "2026-09-06",
+      "summary": "Wayland dmabuf format table: munmap of the wrong pointer crashed every GTK4 Wayland app on the second dmabuf feedback round",
+      "upstream": { "repo": "https://gitlab.gnome.org/GNOME/gtk", "license": "LGPL-2.1-or-later" },
+      "upstream_version": "4.22.4",
+      "arch_version": "1:4.22.4-1",
+      "local_version": "1:4.22.4-1.1",
+      "fork": null,
+      "patches": [
+        {
+          "file": "gtk4-dmabuf-format-table-munmap.patch",
+          "subject": "gdk/wayland: munmap the format table, not the formats array",
+          "origin": "backport of GTK MR !10166 (merged upstream; first release 4.23.3, also on gtk-4-22 so 4.22.5+)",
+          "origin_url": "https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10166",
+          "filed": null
+        }
+      ],
+      "retires_when": "Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison",
+      "verify_binary": "DEBUGINFOD_URLS= gdb -q -batch -ex 'disassemble /s linux_dmabuf_format_table' /usr/lib/libgtk-4.so.1 | grep -q 'mov    0x20(%rdi),%rdi'",
+      "depended_on_by": ["omarchy-fred-config"],
+      "notes": "packages/gtk4/README.md"
+    },
+    {
+      "name": "aquamarine",
+      "status": "active",
+      "added": "2026-09-11",
+      "summary": "Disable the KMS pipeline before tearing down a disconnected connector; without it a resume or hotplug can hand a still-active CRTC to another connector and every atomic commit fails (Fault D)",
+      "upstream": { "repo": "https://github.com/hyprwm/aquamarine", "license": "BSD-3-Clause" },
+      "upstream_version": "0.15.0",
+      "arch_version": "0.15.0-2",
+      "local_version": "0.15.0-2.1",
+      "fork": {
+        "repo": "https://github.com/greenermoose/aquamarine",
+        "checkout": "~/Code/aquamarine",
+        "release_tag": "v0.15.0",
+        "tag": "v0.15.0-fred.1",
+        "compare_url": "https://github.com/hyprwm/aquamarine/compare/v0.15.0...greenermoose:aquamarine:v0.15.0-fred.1"
+      },
+      "patches": [
+        {
+          "file": "aquamarine-disable-kms-before-disconnect.patch",
+          "subject": "drm: disable KMS output before disconnect cleanup",
+          "branch": "patch/disable-kms-before-disconnect",
+          "commit": "cf638ba",
+          "author": "Nico Duldhardt (klaudworks) — cherry-picked from upstream PR #395 with authorship preserved",
+          "filed": { "url": "https://github.com/hyprwm/aquamarine/pull/395", "state": "closed 2026-09-09, unvouched author (not ours); tracking issue hyprwm/aquamarine#386" }
+        }
+      ],
+      "retires_when": "an Arch aquamarine release whose SDRMConnector::disconnect() disables KMS before the teardown (watch hyprwm/aquamarine#386); version unknown until it lands",
+      "verify_binary": "strings /usr/lib/libaquamarine.so.0.15.0 | grep -q 'Disabled KMS output'",
+      "depended_on_by": ["omarchy-fred-config", "fred.monitor (planned)"],
+      "notes": "packages/aquamarine/README.md"
+    },
+    {
+      "name": "hyprland",
+      "status": "active",
+      "added": "2026-09-13",
+      "summary": "Two fixes: a monitor that connects while DPMS is off stays dark, and an unchanged idle-inhibit re-evaluation (every focus change) no longer resets ext-idle-notify timers",
+      "upstream": { "repo": "https://github.com/hyprwm/Hyprland", "license": "BSD-3-Clause" },
+      "upstream_version": "0.56.2",
+      "arch_version": "0.56.2-3",
+      "local_version": "0.56.2-3.2",
+      "fork": {
+        "repo": "https://github.com/greenermoose/Hyprland",
+        "checkout": "~/Code/Hyprland",
+        "release_tag": "v0.56.2",
+        "tag": "v0.56.2-fred.2",
+        "compare_url": "https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.2"
+      },
+      "patches": [
+        {
+          "file": "hyprland-dpms-off-on-connect.patch",
+          "subject": "Inherit the compositor-wide DPMS state when a monitor connects",
+          "branch": "patch/monitor-inherit-dpms-on-connect",
+          "commit": "68a4dfe2",
+          "filed": { "url": "https://github.com/hyprwm/Hyprland/pull/16290", "state": "closed 2026-09-17 by bot (unvouched); not to be re-filed — hyprwm AI policy" }
+        },
+        {
+          "file": "hyprland-idle-inhibit-unchanged-noop.patch",
+          "subject": "Do not reset ext-idle-notify notifications when the inhibit state is unchanged",
+          "branch": "patch/idle-notify-inhibit-unchanged-noop",
+          "commit": "a7a03d6f",
+          "filed": { "url": null, "state": "not filed and not to be filed — hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md" }
+        }
+      ],
+      "retires_when": "an Arch hyprland release containing both fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case). If only one lands, drop that patch and rebuild as <arch>.1",
+      "verify_binary": "test \"$(strings /usr/bin/Hyprland | grep -c 'connected while DPMS is off')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'inhibit state unchanged')\" = 1",
+      "abi_note": "same tarball, same GIT_COMMIT_HASH, so the plugin ABI string is unchanged and hyprbars keeps loading; never build from the fork's git tree",
+      "depended_on_by": ["omarchy-fred-config", "omarchy-fred-workspaces", "fred.monitor (planned)"],
+      "notes": "packages/hyprland/README.md"
+    },
+    {
+      "name": "omawrite",
+      "status": "active",
+      "added": "2026-09-10",
+      "summary": "Five fixes the omawrite-review workflow depends on: in-window close button, always open the CLI file, a 'File removed' dialog that recovers and whose Reload works, no shortcuts-dialog binding loop, 80-column editor width",
+      "upstream": { "repo": "https://github.com/omacom/omawrite", "license": "MIT" },
+      "upstream_version": "0.5.0",
+      "arch_version": "0.5.0-1",
+      "local_version": "0.5.0-1.5",
+      "fork": {
+        "repo": "https://github.com/greenermoose/omawrite",
+        "checkout": "~/Code/omawrite",
+        "release_tag": "v0.5.0",
+        "tag": "v0.5.0-fred.5",
+        "compare_url": "https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5",
+        "stacked": true
+      },
+      "patches": [
+        { "file": "omawrite-window-close-button.patch", "subject": "Add in-window close button to top-right corner", "branch": "patch/window-close-button", "commit": "ba36baf", "filed": null },
+        { "file": "omawrite-open-cli-file.patch", "subject": "Always open an explicitly requested command-line file", "branch": "patch/open-cli-file", "commit": "306f148", "filed": null },
+        { "file": "omawrite-stale-file-removed-dialog.patch", "subject": "Let \"File removed\" recover when the file comes back, and make Reload work", "branch": "patch/stale-file-removed-dialog", "commit": "371390c", "filed": { "url": "https://github.com/omacom/omawrite/issues/73", "state": "issue open (patch inline), filed 2026-09-17" } },
+        { "file": "omawrite-shortcuts-dialog-binding-loop.patch", "subject": "Stop the shortcuts dialog from reporting a binding loop on every launch", "branch": "patch/shortcuts-dialog-binding-loop", "commit": "293ba59", "filed": { "url": "https://github.com/omacom/omawrite/pull/72", "state": "PR open, filed 2026-09-17 (from branch fix-shortcuts-dialog-binding-loop)" } },
+        { "file": "omawrite-editor-width-80-col.patch", "subject": "Expand editor max column width from 65 to 80 characters", "branch": "patch/editor-width-80-col", "commit": "d914ed8", "filed": null }
+      ],
+      "retires_when": "Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release",
+      "verify_binary": "test \"$(strings -el /usr/bin/omawrite | grep -c 'no longer on disk')\" = 1",
+      "depended_on_by": ["omarchy-fred-config (omawrite-review, skill omawrite-review)"],
+      "notes": "packages/omawrite/README.md"
+    }
+  ]
+}

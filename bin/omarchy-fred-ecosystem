@@ -1,0 +1,323 @@
+#!/usr/bin/env bash
+# omarchy-fred-ecosystem — keep Fred's patched third-party packages honest:
+# the fork branch is the source of truth for a change, ~/pkgs/<pkg> builds it,
+# and this registry (ecosystem.json + packages/<pkg>/) records it publicly.
+#
+# Part of https://github.com/greenermoose/omarchy-fred-ecosystem
+# License: GPL-3.0-or-later
+#
+# Subcommands:
+#   export  <pkg>       regenerate ~/pkgs/<pkg>/*.patch from the fork commits named in
+#                       ecosystem.json (git format-patch), refresh b2sums and .SRCINFO
+#   verify  [pkg]       fork tag resolves; registry patches applied to the release tag
+#                       reproduce the fork tag's tree; the tarball in ~/pkgs matches the
+#                       release tag; versions agree; pkgrel carries the .N suffix
+#   status  [pkg]       one line per package: registry, installed, hook status
+#   render              rewrite the table in ECOSYSTEM.md from ecosystem.json
+#   retire  <pkg>       move packages/<pkg> to retired/<pkg>, mark it retired
+#   install <pkg>       (new machine) build packages/<pkg>, publish into the
+#                       [local-patches] repo, install, install the pacman hook
+#
+# Environment: FRED_PKGS_DIR (default ~/pkgs), FRED_ECOSYSTEM_DIR (default: this
+# script's repo), FRED_CODE_DIR (default ~/Code, where fork checkouts live).
+
+set -euo pipefail
+
+VERSION="0.1.0"
+SELF="omarchy-fred-ecosystem"
+
+ECO_DIR="${FRED_ECOSYSTEM_DIR:-$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)}"
+PKGS_DIR="${FRED_PKGS_DIR:-$HOME/pkgs}"
+CODE_DIR="${FRED_CODE_DIR:-$HOME/Code}"
+REGISTRY="$ECO_DIR/ecosystem.json"
+LOCAL_REPO_DIR=/var/cache/local-patches
+LOCAL_REPO_NAME=local-patches
+
+TMPROOT=$(mktemp -d); trap 'rm -rf "$TMPROOT"' EXIT
+fail() { echo "$SELF: $*" >&2; exit 1; }
+warn() { echo "$SELF: warning: $*" >&2; }
+log()  { echo "$SELF: $*"; }
+
+usage() {
+  sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'
+  echo
+  echo "Usage: $SELF <export|verify|status|render|retire|install> [pkg] [--dry-run]"
+  echo "       $SELF --version"
+}
+
+need() { command -v "$1" >/dev/null 2>&1 || fail "missing tool: $1"; }
+need jq; need git
+
+[[ -f "$REGISTRY" ]] || fail "no registry at $REGISTRY"
+
+# --- registry access ----------------------------------------------------------
+pkg_json() { jq -e --arg n "$1" '.packages[] | select(.name == $n)' "$REGISTRY" 2>/dev/null \
+  || fail "package '$1' is not in $REGISTRY"; }
+pkg_field() { pkg_json "$1" | jq -r "$2"; }
+all_pkgs() { jq -r '.packages[].name' "$REGISTRY"; }
+active_pkgs() { jq -r '.packages[] | select(.status == "active") | .name' "$REGISTRY"; }
+expand_home() { printf '%s' "${1/#\~/$HOME}"; }
+
+# Where the fork checkout lives, or empty when the package has no fork (gtk4).
+fork_checkout() {
+  local c; c=$(pkg_field "$1" '.fork.checkout // empty')
+  [[ -n "$c" ]] && expand_home "$c"
+}
+
+# Which directory holds the build recipe: ~/pkgs/<pkg> when it exists (this is
+# the workstation that builds), else the registry copy (a fresh machine).
+recipe_dir() {
+  if [[ -d "$PKGS_DIR/$1" ]]; then echo "$PKGS_DIR/$1"; else echo "$ECO_DIR/packages/$1"; fi
+}
+
+# format-patch flags shared by export and verify so the two agree byte for byte.
+FORMAT_PATCH_FLAGS=(--stdout --no-signature --no-numbered --keep-subject --full-index)
+
+# --- export -------------------------------------------------------------------
+cmd_export() {
+  local pkg=${1:?usage: $SELF export <pkg>}
+  local co; co=$(fork_checkout "$pkg") || fail "$pkg has no fork; nothing to export"
+  [[ -d "$co/.git" ]] || fail "fork checkout missing: $co (clone $(pkg_field "$pkg" .fork.repo))"
+  local tag; tag=$(pkg_field "$pkg" .fork.tag)
+  git -C "$co" rev-parse -q --verify "refs/tags/$tag" >/dev/null || fail "tag $tag not in $co (git fetch --tags origin)"
+  local dest="$PKGS_DIR/$pkg"
+  [[ -d "$dest" ]] || fail "no rig at $dest (this command regenerates the rig's patches)"
+
+  local n=0 file commit
+  while IFS=$'\t' read -r file commit; do
+    [[ -n "$commit" ]] || fail "patch $file has no commit in the registry"
+    git -C "$co" merge-base --is-ancestor "$commit" "$tag" \
+      || fail "commit $commit ($file) is not part of tag $tag"
+    git -C "$co" format-patch "${FORMAT_PATCH_FLAGS[@]}" -1 "$commit" > "$dest/$file.new"
+    if cmp -s "$dest/$file" "$dest/$file.new" 2>/dev/null; then
+      rm -f "$dest/$file.new"; log "unchanged $file"
+    else
+      mv -f "$dest/$file.new" "$dest/$file"; log "wrote     $file  (commit $commit)"; n=$((n+1))
+    fi
+  done < <(pkg_json "$pkg" | jq -r '.patches[] | [.file, (.commit // "")] | @tsv')
+
+  if (( n > 0 )) && [[ -f "$dest/PKGBUILD" ]]; then
+    if command -v updpkgsums >/dev/null; then
+      (cd "$dest" && updpkgsums >/dev/null 2>&1) && log "updated checksums in PKGBUILD" || warn "updpkgsums failed; fix b2sums by hand"
+    else
+      warn "updpkgsums not found; fix b2sums in PKGBUILD by hand"
+    fi
+    (cd "$dest" && makepkg --printsrcinfo > .SRCINFO 2>/dev/null) && log "regenerated .SRCINFO" || true
+  fi
+  log "export $pkg: $n patch file(s) changed. The binary is unaffected when '$SELF verify $pkg' passes."
+}
+
+# --- verify -------------------------------------------------------------------
+_verify_one() {
+  local pkg=$1 ok=1
+  local status; status=$(pkg_field "$pkg" .status)
+  local rdir; rdir=$(recipe_dir "$pkg")
+  echo "== $pkg ($status) — recipe: $rdir"
+
+  # 1. versions: registry local_version == PKGBUILD's, pkgrel carries the suffix.
+  if [[ -f "$rdir/PKGBUILD" ]]; then
+    local pv pr ep want have
+    pv=$(grep -m1 -E '^pkgver=' "$rdir/PKGBUILD" | cut -d= -f2 | tr -d "\"'")
+    pr=$(grep -m1 -E '^pkgrel=' "$rdir/PKGBUILD" | cut -d= -f2 | tr -d "\"'")
+    ep=$(grep -m1 -E '^epoch=' "$rdir/PKGBUILD" | cut -d= -f2 | tr -d "\"'" || true)
+    have="${ep:+$ep:}$pv-$pr"; want=$(pkg_field "$pkg" .local_version)
+    if [[ "$have" == "$want" ]]; then echo "  ok   local_version $have"; else echo "  FAIL local_version: registry $want, PKGBUILD $have"; ok=0; fi
+    if [[ "$pr" =~ ^[0-9]+\.[0-9]+$ ]]; then echo "  ok   pkgrel $pr carries a local suffix"; else echo "  FAIL pkgrel '$pr' has no .N suffix (would not outrank Arch)"; ok=0; fi
+    # every registry patch must be a PKGBUILD source
+    local f
+    while IFS= read -r f; do
+      grep -q -- "$f" "$rdir/PKGBUILD" && echo "  ok   PKGBUILD sources $f" || { echo "  FAIL PKGBUILD does not source $f"; ok=0; }
+      [[ -f "$rdir/$f" ]] || { echo "  FAIL missing $rdir/$f"; ok=0; }
+    done < <(pkg_field "$pkg" '.patches[].file')
+  else
+    echo "  FAIL no PKGBUILD in $rdir"; ok=0
+  fi
+
+  # 2. fork: tag resolves, patches reproduce the tag's tree on the touched files.
+  local co; co=$(fork_checkout "$pkg") || co=""
+  if [[ -n "$co" ]]; then
+    local tag rtag; tag=$(pkg_field "$pkg" .fork.tag); rtag=$(pkg_field "$pkg" .fork.release_tag)
+    if [[ ! -d "$co/.git" ]]; then
+      echo "  skip fork checkout $co not present"
+    elif ! git -C "$co" rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+      echo "  FAIL fork tag $tag not found in $co"; ok=0
+    else
+      echo "  ok   fork tag $tag = $(git -C "$co" rev-parse --short "$tag")"
+      # commits listed in the registry all belong to the tag, in order
+      local commit file
+      while IFS=$'\t' read -r file commit; do
+        if [[ -n "$commit" ]] && git -C "$co" merge-base --is-ancestor "$commit" "$tag" 2>/dev/null; then
+          if [[ -f "$rdir/$file" ]] && git -C "$co" format-patch "${FORMAT_PATCH_FLAGS[@]}" -1 "$commit" | cmp -s - "$rdir/$file"; then
+            echo "  ok   $file == format-patch $commit"
+          else
+            echo "  note $file differs textually from format-patch $commit (tree check below decides)"
+          fi
+        else
+          echo "  FAIL $file: commit '$commit' not in $tag"; ok=0
+        fi
+      done < <(pkg_json "$pkg" | jq -r '.patches[] | [.file, (.commit // "")] | @tsv')
+
+      # tree check: release tag + registry patches == fork tag, on the touched files
+      local tmp; tmp=$(mktemp -d -p "$TMPROOT")
+      mkdir -p "$tmp/base" "$tmp/want"
+      local touched; touched=$(git -C "$co" diff --name-only "$rtag" "$tag")
+      # shellcheck disable=SC2086
+      git -C "$co" archive "$rtag" $touched 2>/dev/null | tar -x -C "$tmp/base" || {
+        # a file the patchset creates does not exist at the release tag; archive the rest
+        local existing=""; for f in $touched; do git -C "$co" cat-file -e "$rtag:$f" 2>/dev/null && existing+=" $f"; done
+        # shellcheck disable=SC2086
+        [[ -n "$existing" ]] && git -C "$co" archive "$rtag" $existing | tar -x -C "$tmp/base"
+      }
+      # shellcheck disable=SC2086
+      git -C "$co" archive "$tag" $touched | tar -x -C "$tmp/want"
+      local applied=1
+      while IFS= read -r f; do
+        (cd "$tmp/base" && patch -Np1 -s -f -i "$rdir/$f" >/dev/null 2>&1) || { echo "  FAIL $f does not apply on $rtag"; applied=0; ok=0; break; }
+      done < <(pkg_field "$pkg" '.patches[].file')
+      if (( applied )); then
+        find "$tmp/base" -name '*.orig' -delete
+        if diff -r "$tmp/base" "$tmp/want" >/dev/null; then
+          echo "  ok   $rtag + patches == $tag on $(echo "$touched" | wc -l) file(s)"
+        else
+          echo "  FAIL $rtag + patches != $tag:"; diff -r "$tmp/base" "$tmp/want" | head -20; ok=0
+        fi
+      fi
+      # tarball in the rig matches the release tag on the touched files
+      local tb; tb=$(ls "$rdir"/*.tar.gz "$rdir"/*.tar.xz 2>/dev/null | head -1 || true)
+      if [[ -n "$tb" ]]; then
+        local mism=0
+        for f in $touched; do
+          git -C "$co" cat-file -e "$rtag:$f" 2>/dev/null || continue
+          if ! bsdtar -xOf "$tb" "*/$f" 2>/dev/null | cmp -s - <(git -C "$co" show "$rtag:$f"); then mism=1; echo "  FAIL tarball $(basename "$tb") differs from $rtag at $f"; fi
+        done
+        (( mism )) && ok=0 || echo "  ok   tarball $(basename "$tb") == $rtag on touched files"
+      fi
+    fi
+  else
+    echo "  info no fork (upstream already carries the fix: $(pkg_field "$pkg" '.patches[0].origin_url // "n/a"'))"
+  fi
+
+  # 3. this machine (informational unless the stamp disagrees with the registry)
+  local st="/var/lib/$pkg-local-patch/status" stamp="/var/lib/$pkg-local-patch/patched-version"
+  if [[ "$status" == "active" ]]; then
+    if [[ -r "$st" ]]; then
+      local s; s=$(awk -F'\t' '{print $NF}' "$st"); echo "  info hook status: $s ($(awk -F'\t' '{print $1}' "$st"))"
+      if [[ -r "$stamp" && "$(<"$stamp")" != "$(pkg_field "$pkg" .local_version)" ]]; then
+        echo "  FAIL stamp $(<"$stamp") != registry $(pkg_field "$pkg" .local_version)"; ok=0
+      fi
+    else
+      echo "  info not installed on this machine (no $st)"
+    fi
+  fi
+  (( ok )) && echo "  PASS" || echo "  FAILED"
+  return $(( ok ? 0 : 1 ))
+}
+
+cmd_verify() {
+  local rc=0 p
+  if [[ -n "${1:-}" ]]; then _verify_one "$1" || rc=1
+  else for p in $(active_pkgs); do _verify_one "$p" || rc=1; done; fi
+  (( rc == 0 )) && log "verify: all checks passed" || fail "verify: failures above"
+}
+
+# --- status -------------------------------------------------------------------
+cmd_status() {
+  local p pkgs
+  if [[ -n "${1:-}" ]]; then pkgs=$1; else pkgs=$(all_pkgs); fi
+  printf '%-12s %-9s %-16s %-16s %-10s %s\n' PACKAGE STATUS REGISTRY INSTALLED HOOK FORK
+  for p in $pkgs; do
+    local inst hook ftag
+    inst=$(pacman -Q "$p" 2>/dev/null | awk '{print $2}' || true); inst=${inst:--}
+    hook=$( [[ -r /var/lib/$p-local-patch/status ]] && awk -F'\t' '{print $NF}' "/var/lib/$p-local-patch/status" || echo - )
+    ftag=$(pkg_field "$p" '.fork.tag // "-"')
+    printf '%-12s %-9s %-16s %-16s %-10s %s\n' "$p" "$(pkg_field "$p" .status)" "$(pkg_field "$p" .local_version)" "$inst" "$hook" "$ftag"
+  done
+}
+
+# --- render -------------------------------------------------------------------
+cmd_render() {
+  local md="$ECO_DIR/ECOSYSTEM.md" begin='<!-- registry:begin -->' end='<!-- registry:end -->'
+  [[ -f "$md" ]] || fail "no $md"
+  grep -q "$begin" "$md" && grep -q "$end" "$md" || fail "$md lacks the $begin / $end markers"
+  local table
+  table=$(jq -r '
+    def fork: if .fork == null then "none (upstream has it)" else "[\(.fork.tag)](\(.fork.compare_url))" end;
+    def filed: [.patches[] | select(.filed != null and .filed.url != null) | "[\(.filed.url | sub("https://github.com/";""))](\(.filed.url))"] | join(", ") | if . == "" then "—" else . end;
+    "| Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |",
+    "|---|---|---|---|---|---|---|---|",
+    (.packages[] | "| [\(.name)](packages/\(.name)/README.md) | \(.status) | `\(.local_version)` | \(fork) | \(.patches | length) | \(filed) | \(.retires_when) | \(.depended_on_by | join(", ")) |")
+  ' "$REGISTRY")
+  local tmp; tmp=$(mktemp)
+  awk -v b="$begin" -v e="$end" -v t="$table" '
+    $0 == b { print; print t; skip=1; next }
+    $0 == e { skip=0 }
+    !skip { print }' "$md" > "$tmp"
+  mv -f "$tmp" "$md"; log "rendered table in ECOSYSTEM.md"
+}
+
+# --- retire -------------------------------------------------------------------
+cmd_retire() {
+  local pkg=${1:?usage: $SELF retire <pkg>}
+  pkg_json "$pkg" >/dev/null
+  [[ "$(pkg_field "$pkg" .status)" == "active" ]] || fail "$pkg is not active"
+  [[ -d "$ECO_DIR/packages/$pkg" ]] || fail "no packages/$pkg to retire"
+  local today; today=$(date +%F)
+  (cd "$ECO_DIR" && git mv "packages/$pkg" "retired/$pkg")
+  jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "retired/\($n)/README.md")' \
+    "$REGISTRY" > "$REGISTRY.tmp" && mv -f "$REGISTRY.tmp" "$REGISTRY"
+  cmd_render
+  log "retired $pkg in the registry. Still to do on the machine (runbook §8): remove the rig, the repo entries, the hook, the check script and the state dir; leave the fork tag in place."
+}
+
+# --- install (new machine) ----------------------------------------------------
+cmd_install() {
+  local pkg=${1:?usage: $SELF install <pkg> [--dry-run]} dry=${DRY_RUN:-0}
+  [[ "$(pkg_field "$pkg" .status)" == "active" ]] || fail "$pkg is not active in the registry"
+  local rdir; rdir=$(recipe_dir "$pkg")
+  [[ -f "$rdir/PKGBUILD" ]] || fail "no PKGBUILD in $rdir"
+  need makepkg; need repo-add; need pkexec
+  run() { if (( dry )); then echo "  would: $*"; else "$@"; fi; }
+
+  if ! grep -q "^\[$LOCAL_REPO_NAME\]" /etc/pacman.conf; then
+    log "registering [$LOCAL_REPO_NAME] in /etc/pacman.conf (file:// repo, SigLevel Optional TrustAll)"
+    run pkexec bash -c "install -d -m755 -o $USER $LOCAL_REPO_DIR && printf '\n[%s]\nSigLevel = Optional TrustAll\nServer = file://%s\n' '$LOCAL_REPO_NAME' '$LOCAL_REPO_DIR' >> /etc/pacman.conf"
+  fi
+  # cache Arch's original for offline rollback while Arch's is still the newest
+  run pkexec pacman -Sw --noconfirm "$pkg" || warn "could not pre-cache Arch's $pkg"
+  local deps; deps=$(cd "$rdir" && makepkg --printsrcinfo | awk '/^\t(make)?depends = /{print $3}' | sed 's/[<>=].*//' | sort -u | tr '\n' ' ')
+  # shellcheck disable=SC2086
+  run pkexec pacman -S --needed --asdeps --noconfirm $deps
+  run bash -c "cd '$rdir' && makepkg -Cf --noconfirm"
+  local built; built=$(ls "$rdir"/*.pkg.tar.zst 2>/dev/null | grep -v -- '-debug-' | head -1 || true)
+  local dbg;   dbg=$(ls "$rdir"/*-debug-*.pkg.tar.zst 2>/dev/null | head -1 || true)
+  (( dry )) || [[ -n "$built" ]] || fail "makepkg produced no package in $rdir"
+  run cp -f "$built" ${dbg:+"$dbg"} "$LOCAL_REPO_DIR/"
+  run repo-add "$LOCAL_REPO_DIR/$LOCAL_REPO_NAME.db.tar.zst" "$LOCAL_REPO_DIR/$(basename "${built:-$pkg.pkg.tar.zst}")" ${dbg:+"$LOCAL_REPO_DIR/$(basename "$dbg")"}
+  run pkexec pacman -Sy
+  run pkexec pacman -S --noconfirm "$LOCAL_REPO_NAME/$pkg" ${dbg:+"$LOCAL_REPO_NAME/$pkg-debug"}
+  # hook, check script, stamp
+  local hook chk; hook=$(ls "$rdir"/50-*.hook 2>/dev/null | head -1 || true); chk=$(ls "$rdir"/*-local-patch-check 2>/dev/null | head -1 || true)
+  if [[ -n "$hook" && -n "$chk" ]]; then
+    run pkexec bash -c "install -Dm755 '$chk' /usr/local/bin/$(basename "$chk") && install -Dm644 '$hook' /etc/pacman.d/hooks/$(basename "$hook") && mkdir -p /var/lib/$pkg-local-patch && echo '$(pkg_field "$pkg" .local_version)' > /var/lib/$pkg-local-patch/patched-version && /usr/local/bin/$(basename "$chk")"
+  else
+    warn "no hook/check script in $rdir; install them by hand (runbook §6)"
+  fi
+  log "installed $pkg $(pkg_field "$pkg" .local_version). Log out and back in if it is a compositor library. Verify: $(pkg_field "$pkg" '.verify_binary // "see README"')"
+}
+
+# --- main ---------------------------------------------------------------------
+DRY_RUN=0
+args=()
+for a in "$@"; do case "$a" in --dry-run) DRY_RUN=1;; *) args+=("$a");; esac; done
+set -- "${args[@]:-}"
+case "${1:-}" in
+  export)  cmd_export "${2:-}";;
+  verify)  cmd_verify "${2:-}";;
+  status)  cmd_status "${2:-}";;
+  render)  cmd_render;;
+  retire)  cmd_retire "${2:-}";;
+  install) cmd_install "${2:-}";;
+  --version|-V) echo "$SELF $VERSION";;
+  -h|--help|help|"") usage;;
+  *) usage >&2; fail "unknown command: $1";;
+esac
