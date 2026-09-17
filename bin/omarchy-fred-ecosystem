@@ -284,13 +284,31 @@ cmd_install() {
   fi
   # cache Arch's original for offline rollback while Arch's is still the newest
   run pkexec pacman -Sw --noconfirm "$pkg" || warn "could not pre-cache Arch's $pkg"
-  local deps; deps=$(cd "$rdir" && makepkg --printsrcinfo | awk '/^\t(make)?depends = /{print $3}' | sed 's/[<>=].*//' | sort -u | tr '\n' ' ')
+  # Build and runtime deps from .SRCINFO; `pacman -T` (deptest) returns only the
+  # unsatisfied ones and understands sonames and virtual provides, so we never
+  # ask pacman to install "libEGL.so" or pick an "opengl-driver" provider.
+  local deps missing; deps=$(cd "$rdir" && makepkg --printsrcinfo | awk '/^\t(make|check)?depends = /{print $3}' | sort -u | tr '\n' ' ')
   # shellcheck disable=SC2086
-  run pkexec pacman -S --needed --asdeps --noconfirm $deps
+  missing=$(pacman -T $deps || true)
+  local installable=""; local d
+  for d in $missing; do
+    if [[ "$d" == *.so || "$d" == *.so=* || "$d" == *.so\>* || "$d" == *.so\<* ]]; then
+      warn "unsatisfied soname dependency '$d'; install its package by hand"
+    else
+      installable+=" ${d%%[<>=]*}"
+    fi
+  done
+  if [[ -n "$installable" ]]; then
+    # shellcheck disable=SC2086
+    run pkexec pacman -S --needed --asdeps --noconfirm $installable
+  else
+    log "all build dependencies already installed"
+  fi
   run bash -c "cd '$rdir' && makepkg -Cf --noconfirm"
   local built; built=$(ls "$rdir"/*.pkg.tar.zst 2>/dev/null | grep -v -- '-debug-' | head -1 || true)
   local dbg;   dbg=$(ls "$rdir"/*-debug-*.pkg.tar.zst 2>/dev/null | head -1 || true)
   (( dry )) || [[ -n "$built" ]] || fail "makepkg produced no package in $rdir"
+  (( dry )) && [[ -z "$built" ]] && built="$rdir/$pkg-<version>-x86_64.pkg.tar.zst"
   run cp -f "$built" ${dbg:+"$dbg"} "$LOCAL_REPO_DIR/"
   run repo-add "$LOCAL_REPO_DIR/$LOCAL_REPO_NAME.db.tar.zst" "$LOCAL_REPO_DIR/$(basename "${built:-$pkg.pkg.tar.zst}")" ${dbg:+"$LOCAL_REPO_DIR/$(basename "$dbg")"}
   run pkexec pacman -Sy
