@@ -8,7 +8,8 @@
 # auto-scan, ~6 s after DPMS-off on this machine) is re-created lit: the blank
 # lasts ~8 s, and the bus-powered MSI on DP-2 gets a cold link training that
 # intermittently comes up jittering (Fault C).
-# Upstream: hyprwm/Hyprland#16290 (PR filed 2026-09-17).
+# Upstream: hyprwm/Hyprland#16290 (filed and auto-closed 2026-09-17, unvouched; not to be
+# re-filed — hyprwm AI policy). Public copy: greenermoose/Hyprland patch/monitor-inherit-dpms-on-connect.
 #
 # Patch 2 (hyprland-idle-inhibit-unchanged-noop.patch, since 0.56.2-3.2): makes
 # CIdleNotifyProtocol::setInhibit() a no-op when the inhibit state is
@@ -16,7 +17,8 @@
 # timers as if the user had touched the mouse, so hypridle never reaches its
 # 30-minute suspend rule whenever anything focuses a window while idle
 # (2026-09-17 incident: 85 blank/resume cycles overnight, no suspend).
-# Upstream: unfixed on main as of 2026-09-17; draft in ~/pkgs/hyprland/upstream-pr.md.
+# Upstream: unfixed on main as of 2026-09-17; not filed (hyprwm AI policy). Public copy:
+# greenermoose/Hyprland patch/idle-notify-inhibit-unchanged-noop; registry omarchy-fred-ecosystem.
 #
 # See docs/agent-runbooks/local-package-patching.md,
 # docs/agent-runbooks/display-output-instability.md and
