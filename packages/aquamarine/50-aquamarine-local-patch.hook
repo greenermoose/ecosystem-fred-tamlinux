@@ -1,0 +1,15 @@
+# Reports whether the local aquamarine disable-KMS-before-disconnect patch
+# survived an aquamarine change, and tells us to retire it once the upstream
+# fix arrives. See docs/agent-runbooks/local-package-patching.md
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = aquamarine
+
+[Action]
+Description = Checking local aquamarine disconnect patch status...
+When = PostTransaction
+Exec = /usr/local/bin/aquamarine-local-patch-check
+Depends = pacman

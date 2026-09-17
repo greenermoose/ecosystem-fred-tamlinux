@@ -1,0 +1,62 @@
+# Maintainer: ImFenyx <imfenyxdev@protonmail.com>
+pkgname=omawrite
+pkgver=0.5.0
+pkgrel=1.5
+# patches: exported from https://github.com/greenermoose/omawrite tag v0.5.0-fred.5 by 'omarchy-fred-ecosystem export omawrite'
+# (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/omawrite)
+pkgdesc='Dead-simple Markdown writing app built with Qt Quick'
+arch=('x86_64')
+url='https://github.com/omacom-io/omawrite'
+license=('MIT' 'OFL-1.1')
+depends=('hicolor-icon-theme' 'qt6-base' 'qt6-declarative' 'xdg-desktop-portal')
+makedepends=('gcc' 'make')
+source=(
+  "$pkgname-$pkgver.tar.gz::https://github.com/omacom-io/omawrite/archive/refs/tags/v$pkgver.tar.gz"
+  "omawrite-window-close-button.patch"
+  "omawrite-open-cli-file.patch"
+  "omawrite-stale-file-removed-dialog.patch"
+  "omawrite-shortcuts-dialog-binding-loop.patch"
+  "omawrite-editor-width-80-col.patch"
+)
+sha256sums=('b57e418212f9bde0b8a12cff2424a43f15829a56a58fdc49542a0393a430f938'
+            '5ebdb67e1854d41dc4117fb11c90f7681bbcd852477831bdacf5d8a3f946a3b3'
+            '46081c7852f4a42828962f84c3c91ea9148aa44c619a593c2bcb807769eb6694'
+            '52bb8e3848edf0e1dac6534617c22c0c34a219c836599e8cdd54bf1b4074a43a'
+            '65385b4e53a744391e31ea4bf2827d9db959a125028fffc3a8ee75777423b963'
+            'c6c9207916b47e84e55681ea5c76903bcd5d105945c9a7db14d4742278844368')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  patch -Np1 -i "$srcdir/omawrite-window-close-button.patch"
+  patch -Np1 -i "$srcdir/omawrite-open-cli-file.patch"
+  patch -Np1 -i "$srcdir/omawrite-stale-file-removed-dialog.patch"
+  patch -Np1 -i "$srcdir/omawrite-shortcuts-dialog-binding-loop.patch"
+  patch -Np1 -i "$srcdir/omawrite-editor-width-80-col.patch"
+}
+
+build() {
+  mkdir -p build
+  cd build
+  qmake6 "$srcdir/$pkgname-$pkgver/omawrite.pro"
+  make
+}
+
+check() {
+  # The Qt test suite covers all four local patches (closesFromWindowCloseButton,
+  # reportsRemovedFileComingBack, reloadOfMissingFileKeepsText,
+  # shortcutsDialogHasNoBindingLoop). Failing here
+  # is the signal that a rebase onto a new upstream release went wrong.
+  mkdir -p build-tests
+  cd build-tests
+  qmake6 "$srcdir/$pkgname-$pkgver/tests/tests.pro"
+  make
+  QT_QPA_PLATFORM=offscreen ./tst_omawrite
+}
+
+package() {
+  install -Dm755 build/omawrite "$pkgdir/usr/bin/omawrite"
+  install -Dm644 "$pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$pkgname-$pkgver/fonts/OFL.txt" "$pkgdir/usr/share/licenses/$pkgname/OFL.txt"
+  install -Dm644 "$pkgname-$pkgver/pkgbuild/omawrite.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/omawrite.svg"
+  install -Dm644 "$pkgname-$pkgver/pkgbuild/omawrite.desktop" "$pkgdir/usr/share/applications/omawrite.desktop"
+}

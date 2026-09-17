@@ -1,0 +1,43 @@
+From cf638baf55ca338ad374e47c0a22f2f1202ee3d4 Mon Sep 17 00:00:00 2001
+From: Nico Duldhardt <nico@duldhardt.com>
+Date: Wed, 9 Sep 2026 16:40:12 +0200
+Subject: drm: disable KMS output before disconnect cleanup
+
+(cherry picked from commit d6c3c8a393627e518cde7ede43edba563b225490)
+---
+ src/backend/drm/DRM.cpp | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/src/backend/drm/DRM.cpp b/src/backend/drm/DRM.cpp
+index 6618a262321f5d0f2bcb692c127431f45d63b9ba..ee8b5a4b09e31c9eb6a05aece4ab7670b5a05ef6 100644
+--- a/src/backend/drm/DRM.cpp
++++ b/src/backend/drm/DRM.cpp
+@@ -2133,6 +2133,28 @@ void Aquamarine::SDRMConnector::disconnect() {
+     backend->cancelAsyncOutput(output.get());
+     invalidateFrame();
+ 
++    // Hotplug has already marked the connector disconnected, so the normal
++    // output commit path rejects it. Explicitly disable KMS before dropping
++    // the output/FBs or reassigning its CRTC. In particular, Intel Type-C PHY
++    // ownership can remain held by an orphaned active CRTC after unplug.
++    if (crtc && backend->backend->session && backend->backend->session->active && output->enabledState) {
++        const auto QUEUE_KEY = crtc->id;
++        if (backend->pauseCommitQueue(QUEUE_KEY)) {
++            CScopeGuard             resume([this, QUEUE_KEY] { backend->resumeCommitQueue(QUEUE_KEY); });
++            SDRMConnectorCommitData data = {};
++            data.modeset                 = true;
++            data.blocking                = true;
++            data.committed               = COutputState::AQ_OUTPUT_STATE_ENABLED;
++
++            if (backend->impl->commit(self.lock(), data)) {
++                output->enabledState = false;
++                backend->log(AQ_LOG_DEBUG, std::format("drm: Disabled KMS output {} before disconnect", szName));
++            } else
++                backend->log(AQ_LOG_ERROR, std::format("drm: Failed to disable KMS output {} before disconnect", szName));
++        } else
++            backend->log(AQ_LOG_ERROR, std::format("drm: Failed to pause commit queue for disconnect of {}", szName));
++    }
++
+     status = DRM_MODE_DISCONNECTED;
+     releaseFBReferences();
+ 

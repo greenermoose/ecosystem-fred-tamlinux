@@ -1,0 +1,37 @@
+From 306f148f0d4f15e813c2ab6724add71d9e26b9a4 Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Thu, 17 Sep 2026 12:37:54 -0400
+Subject: Always open an explicitly requested command-line file
+
+Omawrite 0.5.0 starts the QML editor before inspecting argv.  The blank
+editor can mark the backend modified during startup, which made the old
+`!backend.modified()` guard skip Backend::open() altogether.  As a result,
+`omawrite /path/to/plan.md` displayed an empty Untitled.md window.
+
+An explicit file argument is an instruction to replace any recovered or
+transient blank document, so it must take precedence over that state.
+
+Retires when upstream includes this change (or an equivalent) in 0.5.1+.
+
+(Patch carried in ~/pkgs by Fred's Omarchy workstation; registry: https://github.com/greenermoose/omarchy-fred-ecosystem)
+
+AI-Tool: claude 2.1.274
+AI-Model: Claude Opus 5
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/main.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 8b222132b3f7d01be02015db0fe9daf27d20ef3d..7e0dcac0ed311bf741e1475784145536419797b4 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
+     backend.setParentWindow(qobject_cast<QWindow *>(engine.rootObjects().constFirst()));
+ 
+     const QStringList args = app.arguments();
+-    if (args.size() > 1 && !backend.modified())
++    if (args.size() > 1)
+         backend.open(QUrl::fromLocalFile(args.at(1)));
+ 
+     return app.exec();

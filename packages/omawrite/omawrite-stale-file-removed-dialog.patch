@@ -1,0 +1,274 @@
+From 371390ceaa2ea238b2697ac9eb91f30bed0b6639 Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Thu, 17 Sep 2026 12:37:54 -0400
+Subject: Let "File removed" recover when the file comes back, and make Reload
+ work
+
+Omawrite 0.5.0 decides `deleted` once, at the instant QFileSystemWatcher
+fires (backend.cpp: `!QFileInfo::exists(path)`), and never looks again.
+Editors and agents that rewrite a file by unlink-then-create trip this:
+the handler runs in the gap, the dialog says "File removed", and the file
+is back on disk before the user reads it. The watch on the old inode is
+gone, so nothing ever corrects the dialog.
+
+ExternalChangeDialog.qml then sets `enabled: !root.deleted` on Reload, but
+SquareDialogButton.qml overrides background/contentItem without consulting
+`enabled`, so the disabled button is painted exactly like an enabled one.
+Net effect: a bright blue Reload that swallows clicks.
+
+Fix:
+ - backend: after reporting a removal, watch the parent directory. When the
+   file reappears, re-arm the file watch and emit externalChangeDetected
+   (false, ...) if the contents differ, or a new externalFileRestored() if
+   they are byte-identical.
+ - backend: reloadFromDisk() re-checks the disk; if the file is still gone
+   it falls back to keepExternalVersion() with a status line, so the button
+   is never a dead click.
+ - dialog: Reload stays enabled in the removed state.
+ - Main.qml: externalFileRestored closes a stale "File removed" dialog.
+ - SquareDialogButton: paint a disabled state (opacity) so any future
+   disabled button actually looks disabled.
+ - tests: reportsRemovedFileComingBack, reloadOfMissingFileKeepsText.
+
+Upstream: https://github.com/omacom-io/omawrite (issue drafted locally in
+~/pkgs/omawrite/upstream-issue-stale-file-removed.md).
+Retires when upstream includes this change (or an equivalent) in 0.5.1+.
+
+diff -ruN a/src/backend.cpp b/src/backend.cpp
+
+(Patch carried in ~/pkgs by Fred's Omarchy workstation; registry: https://github.com/greenermoose/omarchy-fred-ecosystem)
+
+AI-Tool: claude 2.1.274
+AI-Model: Claude Opus 5
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/ExternalChangeDialog.qml |  3 +-
+ src/Main.qml                 |  5 ++++
+ src/SquareDialogButton.qml   |  2 ++
+ src/backend.cpp              | 50 +++++++++++++++++++++++++++++--
+ src/backend.h                |  2 ++
+ tests/tst_omawrite.cpp       | 58 ++++++++++++++++++++++++++++++++++++
+ 6 files changed, 115 insertions(+), 5 deletions(-)
+
+diff --git a/src/ExternalChangeDialog.qml b/src/ExternalChangeDialog.qml
+index 2bf59c54e2585387857c98cd4b07f02912751329..1b487c0e851cbc5db49f13f6aea8786a83a3a03c 100644
+--- a/src/ExternalChangeDialog.qml
++++ b/src/ExternalChangeDialog.qml
+@@ -47,7 +47,7 @@ Dialog {
+         Label {
+             width: parent.width
+             text: root.deleted
+-                ? "This file was removed outside Omawrite. Keep your text as an unsaved document?"
++                ? "This file was removed outside Omawrite. Keep your text as an unsaved document, or reload it if it is back on disk?"
+                 : (root.locallyModified
+                    ? "This file changed outside Omawrite. Reloading will discard your changes."
+                    : "This file changed outside Omawrite.")
+@@ -89,7 +89,6 @@ Dialog {
+             SquareDialogButton {
+                 id: reloadButton
+                 text: "Reload"
+-                enabled: !root.deleted
+                 primary: true
+                 darkMode: root.darkMode
+                 textScale: root.textScale
+diff --git a/src/Main.qml b/src/Main.qml
+index a5a99e5787c84e80424bb8c6b800bfc3f7ef0950..30edf016df687df77fdb1d47f511e7a2f7605fd6 100644
+--- a/src/Main.qml
++++ b/src/Main.qml
+@@ -265,6 +265,11 @@ ApplicationWindow {
+             externalChangeDialog.locallyModified = locallyModified;
+             externalChangeDialog.open();
+         }
++
++        function onExternalFileRestored() {
++            if (externalChangeDialog.opened && externalChangeDialog.deleted)
++                externalChangeDialog.close();
++        }
+     }
+ 
+     Dialogs.FileDialog {
+diff --git a/src/SquareDialogButton.qml b/src/SquareDialogButton.qml
+index 363682f8443e955a30732d5565f3b10ec9d0593b..15f3e83bc1ddebfa1b6641953e09d2c30069b59a 100644
+--- a/src/SquareDialogButton.qml
++++ b/src/SquareDialogButton.qml
+@@ -18,6 +18,8 @@ Button {
+     Keys.onReturnPressed: clicked()
+     Keys.onEnterPressed: clicked()
+ 
++    opacity: enabled ? 1 : 0.45
++
+     contentItem: Label {
+         text: control.text
+         color: control.labelColor
+diff --git a/src/backend.cpp b/src/backend.cpp
+index 90e279e9a949a57437de211993a6d7491ad6995a..35f6778163d04ed4528f502686e3341e5ba7ac5d 100644
+--- a/src/backend.cpp
++++ b/src/backend.cpp
+@@ -114,8 +114,31 @@ Backend::Backend(QObject *parent) : QObject(parent) {
+                     }
+                 }
+ 
++                if (deleted)
++                    watchCurrentDirectory();
+                 emit externalChangeDetected(deleted, m_modified);
+             });
++    connect(&m_fileWatcher, &QFileSystemWatcher::directoryChanged, this,
++            [this](const QString &directory) {
++                // Only armed after the file was reported removed. Tools that
++                // rewrite by unlink-then-create bring the file back moments
++                // later; tell the UI so "File removed" does not go stale.
++                const QString path = m_fileUrl.toLocalFile();
++                if (!m_fileUrl.isLocalFile()
++                        || QFileInfo(path).absolutePath() != directory
++                        || !QFileInfo::exists(path))
++                    return;
++
++                watchCurrentFile();
++                QFile file(path);
++                const bool unchanged = m_hasKnownFileContents
++                        && file.open(QIODevice::ReadOnly)
++                        && file.readAll() == m_lastKnownFileContents;
++                if (unchanged)
++                    emit externalFileRestored();
++                else
++                    emit externalChangeDetected(false, m_modified);
++            });
+ 
+     loadOmarchyTheme();
+     watchOmarchyTheme();
+@@ -258,8 +281,18 @@ void Backend::discardRecovery() {
+ }
+ 
+ void Backend::reloadFromDisk() {
+-    if (m_fileUrl.isLocalFile())
+-        open(m_fileUrl);
++    if (!m_fileUrl.isLocalFile())
++        return;
++
++    // The dialog's "removed" verdict is a snapshot from the watcher event and
++    // may be stale by the time the user answers. Check again now.
++    if (!QFileInfo::exists(m_fileUrl.toLocalFile())) {
++        keepExternalVersion();
++        setStatus(QStringLiteral("%1 is no longer on disk; kept your version")
++                      .arg(fileName()));
++        return;
++    }
++    open(m_fileUrl);
+ }
+ 
+ void Backend::keepExternalVersion() {
+@@ -566,13 +599,24 @@ void Backend::clearRecovery() {
+ }
+ 
+ void Backend::watchCurrentFile() {
+-    const QStringList watched = m_fileWatcher.files();
++    const QStringList watched = m_fileWatcher.files() + m_fileWatcher.directories();
+     if (!watched.isEmpty())
+         m_fileWatcher.removePaths(watched);
+     if (m_fileUrl.isLocalFile() && QFileInfo::exists(m_fileUrl.toLocalFile()))
+         m_fileWatcher.addPath(m_fileUrl.toLocalFile());
+ }
+ 
++void Backend::watchCurrentDirectory() {
++    const QStringList watched = m_fileWatcher.directories();
++    if (!watched.isEmpty())
++        m_fileWatcher.removePaths(watched);
++    if (!m_fileUrl.isLocalFile())
++        return;
++    const QString directory = QFileInfo(m_fileUrl.toLocalFile()).absolutePath();
++    if (QFileInfo::exists(directory))
++        m_fileWatcher.addPath(directory);
++}
++
+ void Backend::loadOmarchyTheme() {
+     m_themeBackground = m_darkMode ? QStringLiteral("#101010") : QStringLiteral("#ffffff");
+     m_themeForeground = m_darkMode ? QStringLiteral("#eeeeee") : QStringLiteral("#222324");
+diff --git a/src/backend.h b/src/backend.h
+index 24295904467a0b981257911952a5fe6462ea7cf1..f8ff5481eb8f644d10e494f990561c1e5e99b3fe 100644
+--- a/src/backend.h
++++ b/src/backend.h
+@@ -88,6 +88,7 @@ signals:
+     void saveDialogRequested(const QUrl &suggestedUrl);
+     void saveSucceeded();
+     void externalChangeDetected(bool deleted, bool locallyModified);
++    void externalFileRestored();
+ 
+ private:
+     void loadDocumentText(const QString &text);
+@@ -108,6 +109,7 @@ private:
+     void clearRecovery();
+     QString recoveryPath() const;
+     void watchCurrentFile();
++    void watchCurrentDirectory();
+     void loadOmarchyTheme();
+     void watchOmarchyTheme();
+ 
+diff --git a/tests/tst_omawrite.cpp b/tests/tst_omawrite.cpp
+index 956e6b494e4ffc8aab5a9bbd083d0080b9b3c1b2..f1206d18379d4f59f5917da5de5f26ff17169363 100644
+--- a/tests/tst_omawrite.cpp
++++ b/tests/tst_omawrite.cpp
+@@ -112,6 +112,64 @@ private slots:
+         QTRY_COMPARE(externalChangeSpy.count(), 1);
+     }
+ 
++    void reportsRemovedFileComingBack() {
++        QTemporaryDir directory;
++        QVERIFY(directory.isValid());
++
++        const QString path = directory.filePath(QStringLiteral("rewritten.md"));
++        Backend backend;
++        QSignalSpy externalChangeSpy(&backend, &Backend::externalChangeDetected);
++        QSignalSpy restoredSpy(&backend, &Backend::externalFileRestored);
++
++        backend.saveAs(QUrl::fromLocalFile(path));
++        QVERIFY(QFileInfo::exists(path));
++
++        // unlink-then-create, the way many editors and agents rewrite a file
++        QVERIFY(QFile::remove(path));
++        QTRY_COMPARE(externalChangeSpy.count(), 1);
++        QVERIFY(externalChangeSpy.at(0).at(0).toBool());
++
++        QFile recreated(path);
++        QVERIFY(recreated.open(QIODevice::WriteOnly | QIODevice::Truncate));
++        QCOMPARE(recreated.write("rewritten elsewhere"), qint64(19));
++        recreated.close();
++        QTRY_COMPARE(externalChangeSpy.count(), 2);
++        QVERIFY(!externalChangeSpy.at(1).at(0).toBool());
++        QCOMPARE(restoredSpy.count(), 0);
++
++        // Reload must work now that the file is back
++        backend.reloadFromDisk();
++        QVERIFY(!backend.modified());
++        QVERIFY(backend.status().startsWith(QStringLiteral("Opened")));
++
++        // A file that comes back byte-identical is restored, not changed
++        QVERIFY(QFile::remove(path));
++        QTRY_COMPARE(externalChangeSpy.count(), 3);
++        QFile identical(path);
++        QVERIFY(identical.open(QIODevice::WriteOnly | QIODevice::Truncate));
++        QCOMPARE(identical.write("rewritten elsewhere"), qint64(19));
++        identical.close();
++        QTRY_COMPARE(restoredSpy.count(), 1);
++        QCOMPARE(externalChangeSpy.count(), 3);
++    }
++
++    void reloadOfMissingFileKeepsText() {
++        QTemporaryDir directory;
++        QVERIFY(directory.isValid());
++
++        const QString path = directory.filePath(QStringLiteral("gone.md"));
++        Backend backend;
++        QSignalSpy externalChangeSpy(&backend, &Backend::externalChangeDetected);
++
++        backend.saveAs(QUrl::fromLocalFile(path));
++        QVERIFY(QFile::remove(path));
++        QTRY_COMPARE(externalChangeSpy.count(), 1);
++
++        backend.reloadFromDisk();
++        QVERIFY(backend.modified());
++        QVERIFY(backend.status().contains(QStringLiteral("no longer on disk")));
++    }
++
+     void keepsCursorAndSelectionStableAcrossInsertions() {
+         const QString mutationsPath = QFINDTESTDATA("../src/EditorMutations.js");
+         QVERIFY(!mutationsPath.isEmpty());

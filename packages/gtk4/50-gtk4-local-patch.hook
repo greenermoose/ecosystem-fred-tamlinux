@@ -1,0 +1,15 @@
+# Reports whether the local gtk4 dmabuf-munmap patch survived a gtk4 change,
+# and tells us to retire it once the upstream fix arrives.
+# See docs/agent-runbooks/local-package-patching.md
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = gtk4
+
+[Action]
+Description = Checking local gtk4 dmabuf patch status...
+When = PostTransaction
+Exec = /usr/local/bin/gtk4-local-patch-check
+Depends = pacman

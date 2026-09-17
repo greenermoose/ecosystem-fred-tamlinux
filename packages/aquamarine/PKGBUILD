@@ -1,0 +1,57 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: Aaron Blasko <blaskoazzolaaaron [at] gmail.com>
+
+pkgname=aquamarine
+pkgver=0.15.0
+pkgrel=2.1
+# patches: exported from https://github.com/greenermoose/aquamarine tag v0.15.0-fred.1 by 'omarchy-fred-ecosystem export aquamarine'
+# (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/aquamarine)
+pkgdesc='a very light linux rendering backend library'
+arch=(x86_64 aarch64)
+url="https://github.com/hyprwm/$pkgname"
+license=(BSD-3-Clause)
+depends=(libgcc
+         libstdc++
+         glibc # libc.so libm.so
+         hyprutils libhyprutils.so
+         libdisplay-info libdisplay-info.so
+         libdrm # libdrm.so
+         libglvnd libEGL.so
+         libinput # libinput.so
+         mesa # libgbm.so
+         opengl-driver
+         pixman
+         seatd libseat.so
+         systemd-libs libudev.so
+         wayland libwayland-client.so
+         wayland-protocols)
+makedepends=(cmake
+             hyprwayland-scanner)
+provides=("lib$pkgname.so")
+_archive="$pkgname-$pkgver"
+source=("$url/archive/v$pkgver/$_archive.tar.gz"
+        aquamarine-disable-kms-before-disconnect.patch)
+sha256sums=('bb5323f58cd2f379cb11c39893336e49980fe2e9fb101745addd87cebde3d13d'
+            '0c520567c1ceadea262dac06444be68a57908c8813b96258762a6d2cc5d0cdb8')
+
+prepare() {
+	cd "$_archive"
+	# Local patch (see the .patch header): disable the KMS pipeline before a
+	# disconnected connector is torn down, upstream PR #395 / issue #386.
+	# This patch and the pkgrel=2.1 bump retire themselves when Arch ships it.
+	patch -Np1 -i "$srcdir/aquamarine-disable-kms-before-disconnect.patch"
+}
+
+build() {
+	cd "$_archive"
+	cmake -B build \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=Release
+	cmake --build build
+}
+
+package() {
+	cd "$_archive"
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

@@ -1,0 +1,36 @@
+From d914ed87c461f6fc3476bc46b7f157fbf6ca806d Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Thu, 17 Sep 2026 12:37:54 -0400
+Subject: Expand editor max column width from 65 to 80 characters
+
+Omawrite previously clamped editorWidth to Math.round(writerFontMetrics.averageCharacterWidth * 65).
+On modern widescreen displays, 65 characters feels overly narrow, leaving excessive
+empty space on wide screens while wrapping lines sooner than standard 80-column limits.
+
+Raising the ceiling to 80 characters increases line capacity while preserving
+dynamic responsive shrinking on narrower windows (where width - 20 * avgCharWidth < 80 * avgCharWidth).
+
+Retires when: upstream provides configurable column width or adopts 80 cols in pkgver > 0.5.0
+
+(Patch carried in ~/pkgs by Fred's Omarchy workstation; registry: https://github.com/greenermoose/omarchy-fred-ecosystem)
+
+AI-Tool: claude 2.1.274
+AI-Model: Claude Opus 5
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/Main.qml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Main.qml b/src/Main.qml
+index b7afe4d076efbdbb361a525726801b2201a762a5..82eed17794037eae9d80f21b6da5a759f2c09fa9 100644
+--- a/src/Main.qml
++++ b/src/Main.qml
+@@ -27,7 +27,7 @@ ApplicationWindow {
+     readonly property real textScale: backend.textScale
+     readonly property int editorFontPixelSize: scaledSize(20)
+     readonly property int editorWidth: Math.min(
+-        Math.round(writerFontMetrics.averageCharacterWidth * 65),
++        Math.round(writerFontMetrics.averageCharacterWidth * 80),
+         Math.max(360, width - Math.round(writerFontMetrics.averageCharacterWidth * 20)))
+     property bool closeConfirmed: false
+     property bool searchOpen: false

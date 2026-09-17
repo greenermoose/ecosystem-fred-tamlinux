@@ -1,0 +1,214 @@
+From ba36baf32a2f0b8443d8a1aa546894b9fee0be9b Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Thu, 17 Sep 2026 12:37:54 -0400
+Subject: Add in-window close button to top-right corner
+
+Files (Nautilus) and other client-decorated windows provide a close button,
+but Omawrite had no titlebar or window close button, forcing the user to
+rely on Super+W keyboard shortcut to close the window.
+
+This patch adds WindowCloseButton.qml to the top right of Omawrite,
+styled with a subtle circular disc matching Omarchy/Files app aesthetics,
+connected to win.close() which safely prompts on unsaved changes.
+
+Retires when: Omawrite upstream ships a native close button in pkgver > 0.5.0
+
+(Patch carried in ~/pkgs by Fred's Omarchy workstation; registry: https://github.com/greenermoose/omarchy-fred-ecosystem)
+
+AI-Tool: claude 2.1.274
+AI-Model: Claude Opus 5
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/Main.qml              |  16 ++++++
+ src/WindowCloseButton.qml | 100 ++++++++++++++++++++++++++++++++++++++
+ src/resources.qrc         |   1 +
+ tests/tst_omawrite.cpp    |  21 ++++++++
+ 4 files changed, 138 insertions(+)
+ create mode 100644 src/WindowCloseButton.qml
+
+diff --git a/src/Main.qml b/src/Main.qml
+index cdcbc3e1d8358d0897a541bd0b5fe3a9c07504bd..a5a99e5787c84e80424bb8c6b800bfc3f7ef0950 100644
+--- a/src/Main.qml
++++ b/src/Main.qml
+@@ -846,6 +846,22 @@ ApplicationWindow {
+             font.pixelSize: win.scaledSize(11)
+         }
+ 
++        WindowCloseButton {
++            id: windowCloseButton
++            objectName: "windowCloseButton"
++            anchors.top: parent.top
++            anchors.right: parent.right
++            anchors.topMargin: win.scaledSize(10)
++            anchors.rightMargin: win.scaledSize(12)
++            darkMode: win.darkMode
++            pageColor: win.pageColor
++            iconColor: win.mutedColor
++            activeIconColor: win.strongTextColor
++            textScale: win.textScale
++            visible: !win.searchOpen
++            z: 5
++            onClicked: win.close()
++        }
+ 
+         Pane {
+             anchors.top: parent.top
+diff --git a/src/WindowCloseButton.qml b/src/WindowCloseButton.qml
+new file mode 100644
+index 0000000000000000000000000000000000000000..f85c90b97a2423c7bd74da1cc1973c37aa52aca6
+--- /dev/null
++++ b/src/WindowCloseButton.qml
+@@ -0,0 +1,100 @@
++import QtQuick
++import QtQuick.Controls
++import QtQuick.Window
++
++Item {
++    id: control
++
++    signal clicked()
++
++    property bool darkMode: false
++    property color pageColor: "#1a1a1a"
++    property color iconColor: "#666666"
++    property color activeIconColor: "#ffffff"
++    property real textScale: 1.0
++
++    readonly property real buttonSize: Math.max(20, Math.round(28 * textScale))
++    readonly property real canvasSize: Math.max(10, Math.round(14 * textScale))
++
++    width: buttonSize
++    height: buttonSize
++
++    ToolTip.visible: mouseArea.containsMouse && !mouseArea.pressed
++    ToolTip.text: "Close"
++    ToolTip.delay: 400
++
++    Rectangle {
++        id: baseBg
++        anchors.fill: parent
++        radius: width / 2
++        color: control.pageColor
++    }
++
++    Rectangle {
++        id: bg
++        anchors.fill: parent
++        radius: width / 2
++        color: {
++            if (mouseArea.pressed)
++                return control.darkMode ? "rgba(255, 255, 255, 0.22)" : "rgba(0, 0, 0, 0.16)";
++            if (mouseArea.containsMouse)
++                return control.darkMode ? "rgba(255, 255, 255, 0.14)" : "rgba(0, 0, 0, 0.09)";
++            return control.darkMode ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.04)";
++        }
++        border.color: control.darkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)"
++        border.width: 1
++        Behavior on color { ColorAnimation { duration: 100 } }
++    }
++
++    Canvas {
++        id: iconCanvas
++        anchors.centerIn: parent
++
++        readonly property real dpr: Screen.devicePixelRatio
++        width: control.canvasSize * dpr
++        height: control.canvasSize * dpr
++        scale: 1 / dpr
++        onDprChanged: requestPaint()
++
++        onPaint: {
++            var context = getContext("2d");
++            context.setTransform(dpr, 0, 0, dpr, 0, 0);
++            context.clearRect(0, 0, control.canvasSize, control.canvasSize);
++            context.strokeStyle = mouseArea.containsMouse
++                ? control.activeIconColor
++                : control.iconColor;
++            context.lineWidth = Math.max(1.5, 1.5 * control.textScale);
++            context.lineCap = "round";
++            context.beginPath();
++
++            var m = control.canvasSize * 0.24;
++            var end = control.canvasSize - m;
++            context.moveTo(m, m);
++            context.lineTo(end, end);
++            context.moveTo(end, m);
++            context.lineTo(m, end);
++            context.stroke();
++        }
++
++        Connections {
++            target: control
++            function onIconColorChanged() { iconCanvas.requestPaint(); }
++            function onActiveIconColorChanged() { iconCanvas.requestPaint(); }
++            function onTextScaleChanged() { iconCanvas.requestPaint(); }
++            function onDarkModeChanged() { iconCanvas.requestPaint(); }
++        }
++
++        Connections {
++            target: mouseArea
++            function onContainsMouseChanged() { iconCanvas.requestPaint(); }
++        }
++    }
++
++    MouseArea {
++        id: mouseArea
++        anchors.fill: parent
++        hoverEnabled: true
++        cursorShape: Qt.PointingHandCursor
++        onClicked: control.clicked()
++    }
++}
+diff --git a/src/resources.qrc b/src/resources.qrc
+index 91d9a86e602e84fe44758c4da339a953b0b746ae..4e9703afcf89a70727c6e47ea5af99e13133ed73 100644
+--- a/src/resources.qrc
++++ b/src/resources.qrc
+@@ -3,6 +3,7 @@
+         <file alias="Main.qml">Main.qml</file>
+         <file alias="SearchIconButton.qml">SearchIconButton.qml</file>
+         <file alias="FooterIconButton.qml">FooterIconButton.qml</file>
++        <file alias="WindowCloseButton.qml">WindowCloseButton.qml</file>
+         <file alias="SquareDialogButton.qml">SquareDialogButton.qml</file>
+         <file alias="UnsavedChangesDialog.qml">UnsavedChangesDialog.qml</file>
+         <file alias="ExternalChangeDialog.qml">ExternalChangeDialog.qml</file>
+diff --git a/tests/tst_omawrite.cpp b/tests/tst_omawrite.cpp
+index 5c3306a89452b56f63dccd36cbbcfb7c39ea62b9..956e6b494e4ffc8aab5a9bbd083d0080b9b3c1b2 100644
+--- a/tests/tst_omawrite.cpp
++++ b/tests/tst_omawrite.cpp
+@@ -180,8 +180,10 @@ private slots:
+ 
+         QObject *saveButton = window->findChild<QObject *>(QStringLiteral("saveButton"));
+         QObject *openButton = window->findChild<QObject *>(QStringLiteral("openButton"));
++        QObject *closeButton = window->findChild<QObject *>(QStringLiteral("windowCloseButton"));
+         QVERIFY(saveButton);
+         QVERIFY(openButton);
++        QVERIFY(closeButton);
+ 
+         QSignalSpy saveDialogSpy(&backend, &Backend::saveDialogRequested);
+         QVERIFY(QMetaObject::invokeMethod(saveButton, "clicked"));
+@@ -192,6 +194,25 @@ private slots:
+         QCOMPARE(openDialogSpy.count(), 1);
+     }
+ 
++    void closesFromWindowCloseButton() {
++        const QString mainQmlPath = QFINDTESTDATA("../src/Main.qml");
++        QVERIFY(!mainQmlPath.isEmpty());
++
++        Backend backend;
++        QQmlEngine engine;
++        engine.rootContext()->setContextProperty(QStringLiteral("backend"), &backend);
++        QQmlComponent component(&engine, QUrl::fromLocalFile(mainQmlPath));
++        QVERIFY2(component.isReady(), qPrintable(component.errorString()));
++        QScopedPointer<QObject> window(component.create());
++        QVERIFY2(window, qPrintable(component.errorString()));
++
++        QObject *closeButton = window->findChild<QObject *>(QStringLiteral("windowCloseButton"));
++        QVERIFY(closeButton);
++
++        QVERIFY(QMetaObject::invokeMethod(closeButton, "clicked"));
++        QCOMPARE(window->property("visible").toBool(), false);
++    }
++
+     void scalesTextWithDesktopTextSize() {
+         const QString mainQmlPath = QFINDTESTDATA("../src/Main.qml");
+         QVERIFY(!mainQmlPath.isEmpty());

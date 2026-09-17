@@ -1,0 +1,15 @@
+# Reports whether the local omawrite window close button patch survived an omawrite change,
+# and tells us to retire it once the upstream fix arrives.
+# See docs/agent-runbooks/local-package-patching.md
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = omawrite
+
+[Action]
+Description = Checking local omawrite patch status...
+When = PostTransaction
+Exec = /usr/local/bin/omawrite-local-patch-check
+Depends = pacman

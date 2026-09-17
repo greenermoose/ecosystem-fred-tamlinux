@@ -1,0 +1,92 @@
+#!/bin/bash
+# Reports the status of the local aquamarine disable-KMS-before-disconnect
+# patch after any aquamarine install/upgrade. Driven by
+# /etc/pacman.d/hooks/50-aquamarine-local-patch.hook.
+#
+# The patch fixes a 0.15.0 regression: a connector that disappears while
+# driving a CRTC leaves that CRTC active in the kernel, so after a
+# suspend/resume hotplug race the outputs get each other's CRTC and every
+# modeset fails with EINVAL (compositor alive, screens frozen, input "dead").
+# Upstream: hyprwm/aquamarine#386, fix PR #395.
+# See docs/agent-runbooks/local-package-patching.md and
+# docs/agent-runbooks/display-output-instability.md (Fault D).
+#
+# Three outcomes:
+#   upstream fix present -> say so, tell the user to retire the local patch
+#   patched build intact -> stay silent
+#   anything else        -> the patch was replaced; say so loudly
+
+set -uo pipefail
+
+state_dir=/var/lib/aquamarine-local-patch
+stamp="$state_dir/patched-version"
+status="$state_dir/status"
+
+# First Arch release known to contain the upstream fix. Empty until #395 (or an
+# equivalent) is merged and released; fill it in then, e.g. "0.16.0-1".
+fixed_upstream_version=""
+
+installed=$(pacman -Q aquamarine 2>/dev/null | awk '{print $2}')
+[[ -n $installed ]] || exit 0
+
+note() {
+  mkdir -p "$state_dir"
+  printf '%s\t%s\t%s\n' "$(date --iso-8601=seconds)" "$installed" "$1" >"$status"
+}
+
+fixed_upstream() {
+  [[ -n $fixed_upstream_version ]] || return 1
+  (($(vercmp "$1" "$fixed_upstream_version") >= 0))
+}
+
+if fixed_upstream "$installed"; then
+  note "upstream-fixed"
+  cat <<EOF
+
+>> aquamarine $installed carries the upstream disconnect fix (aquamarine #386/#395).
+>> The local patch has done its job and should now be retired:
+>>
+>>     repo-remove /var/cache/local-patches/local-patches.db.tar.zst aquamarine aquamarine-debug
+>>     rm -rf ~/pkgs/aquamarine /var/cache/local-patches/aquamarine-*.pkg.tar.zst
+>>     # then drop [local-patches] from /etc/pacman.conf if nothing else uses it
+>>     pkexec rm -f /etc/pacman.d/hooks/50-aquamarine-local-patch.hook \\
+>>                  /usr/local/bin/aquamarine-local-patch-check
+>>     pkexec rm -rf /var/lib/aquamarine-local-patch
+
+EOF
+  exit 0
+fi
+
+expected=$(cat "$stamp" 2>/dev/null || true)
+
+if [[ -n $expected && $installed == "$expected" ]]; then
+  note "patched"
+  exit 0
+fi
+
+note "PATCH-LOST"
+cat <<EOF
+
+!! aquamarine $installed replaced the locally patched ${expected:-<none recorded>}.
+!! Unless this release contains the upstream fix, the post-resume CRTC wedge
+!! (Fault D) is BACK: after suspend/resume the screens can freeze with input
+!! apparently dead. Check first:
+!!
+!!     https://github.com/hyprwm/aquamarine/issues/386   (is #395 merged/released?)
+!!     grep -c 'before disconnect' /usr/lib/libaquamarine.so.*   # 0 = no such path
+!!
+!! If the fix is in: set fixed_upstream_version in this script and retire the
+!! patch (see above). If not, rebuild the patched package:
+!!
+!!     cd ~/pkgs/aquamarine && git pull      # refresh Arch's PKGBUILD
+!!     # re-apply the pkgrel bump + patch (see the runbook), then:
+!!     makepkg -f
+!!     repo-add /var/cache/local-patches/local-patches.db.tar.zst \\
+!!              /var/cache/local-patches/aquamarine{,-debug}-*.pkg.tar.zst
+!!     pkexec pacman -Syu
+!!     # then log out and back in: Hyprland loads libaquamarine at start
+!!
+!! Runbook: ~/docs/agent-runbooks/local-package-patching.md
+
+EOF
+exit 0

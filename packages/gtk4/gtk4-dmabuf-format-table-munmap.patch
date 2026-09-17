@@ -1,0 +1,29 @@
+Fix munmap() of the wrong pointer in the dmabuf format table.
+
+linux_dmabuf_format_table() unmapped info->dmabuf_formats -- a small g_new0()
+heap struct -- instead of info->dmabuf_format_table, the mmap()ed table it is
+actually replacing. The stale pointer was left in place, so the next
+zwp_linux_dmabuf_feedback_v1.done event dereferenced unmapped memory in
+dmabuf_formats_free() and the process died with SIGSEGV/SEGV_MAPERR.
+
+Reaching it needs a second dmabuf feedback round, which compositors send when
+the output or scanout device set changes -- e.g. a monitor hotplug storm.
+
+Fixed upstream in GTK 4.23.3:
+https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10166
+
+Local patch against 1:4.22.4-1. Retire this once Arch ships gtk4 >= 4.23.3.
+
+--- a/gdk/wayland/gdkdmabuf-wayland.c
++++ b/gdk/wayland/gdkdmabuf-wayland.c
+@@ -117,8 +117,8 @@
+ {
+   DmabufFormatsInfo *info = data;
+
+-  if (info->dmabuf_formats)
+-    munmap (info->dmabuf_formats, sizeof (DmabufFormat) * info->n_dmabuf_formats);
++  if (info->dmabuf_format_table)
++    munmap (info->dmabuf_format_table, sizeof (DmabufFormat) * info->n_dmabuf_formats);
+
+   info->n_dmabuf_formats = size / 16;
+   info->dmabuf_format_table = mmap (NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);

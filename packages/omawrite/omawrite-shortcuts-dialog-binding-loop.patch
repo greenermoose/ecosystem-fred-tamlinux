@@ -1,0 +1,134 @@
+From 293ba597b7ab9c86e0d7f90bcd2005aeae9cc910 Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Thu, 17 Sep 2026 12:37:54 -0400
+Subject: Stop the shortcuts dialog from reporting a binding loop on every
+ launch
+
+Omawrite 0.5.0 builds the Ctrl+? "Keyboard shortcuts" Dialog with a bare
+`contentItem: Label { ... }`. Under the Material style, Dialog.qml derives
+implicitWidth from the content item's implicit width, and a custom content
+item feeds that straight back into the popup's own sizing, so QML logs
+
+  qrc:/Main.qml:332:5: QML Dialog: Binding loop detected for property
+  "implicitWidth": qrc:/qt-project.org/imports/QtQuick/Controls/Material/Dialog.qml:14:5
+
+four times at window creation, before the dialog is ever opened. It is
+cosmetic (the dialog renders and sizes correctly) but it is emitted to the
+terminal, or to journald when stderr is not a TTY, on every single launch.
+
+Declaring the Label as a child of the Dialog instead lets the default content
+item (a Pane) size to it through its contentWidth tracking, which does not
+re-enter the implicitWidth binding. Measured offscreen with Qt 6.11.2: the
+dialog's implicit size is identical (269.6 x 456) and the warning count drops
+from 2 to 0. Wrapping the Label in a Column while keeping `contentItem:` does
+NOT help; the loop is in the custom-content-item path itself.
+
+The test guards it: shortcutsDialogHasNoBindingLoop loads Main.qml, opens the
+dialog and fails on any "Binding loop detected" message. It fails against the
+unpatched dialog (2 loops) and passes with this change.
+
+Upstream: https://github.com/omacom/omawrite (unfixed on main as of 2026-09-17;
+PR text drafted in upstream-pr-shortcuts-dialog-binding-loop.md).
+Retires when: upstream ships the shortcuts dialog without the loop in pkgver > 0.5.0
+
+diff -ruN a/src/Main.qml b/src/Main.qml
+
+(Patch carried in ~/pkgs by Fred's Omarchy workstation; registry: https://github.com/greenermoose/omarchy-fred-ecosystem)
+
+AI-Tool: claude 2.1.274
+AI-Model: Claude Opus 5
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/Main.qml           |  6 ++++-
+ tests/tst_omawrite.cpp | 50 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+
+diff --git a/src/Main.qml b/src/Main.qml
+index 30edf016df687df77fdb1d47f511e7a2f7605fd6..b7afe4d076efbdbb361a525726801b2201a762a5 100644
+--- a/src/Main.qml
++++ b/src/Main.qml
+@@ -331,11 +331,15 @@ ApplicationWindow {
+ 
+     Dialog {
+         id: shortcutsDialog
++        objectName: "shortcutsDialog"
+         modal: true
+         title: "Keyboard shortcuts"
+         standardButtons: Dialog.Close
+         anchors.centerIn: parent
+-        contentItem: Label {
++        // A bare Label as contentItem trips a Popup implicitWidth binding loop
++        // (Material Dialog.qml:14); as a child, the default content item sizes
++        // to it without the feedback.
++        Label {
+             text: "Ctrl+S  Save\nCtrl+Shift+S  Save As\nCtrl+O  Open\nCtrl+N  New Window\nCtrl+F  Find\nCtrl+H  Find and Replace\nCtrl+B  Bold\nCtrl+I  Italic\nCtrl+K  Link\nCtrl+P  Print\nF11 / Super+F  Fullscreen\nCtrl+?  Shortcuts"
+             lineHeight: 1.5
+         }
+diff --git a/tests/tst_omawrite.cpp b/tests/tst_omawrite.cpp
+index f1206d18379d4f59f5917da5de5f26ff17169363..467d66545e9acd9f41cb941813be1ac3dd8017fd 100644
+--- a/tests/tst_omawrite.cpp
++++ b/tests/tst_omawrite.cpp
+@@ -8,6 +8,30 @@
+ #include "backend.h"
+ #include "markdownhighlighter.h"
+ 
++// Counts QML "Binding loop detected" warnings while it is alive, forwarding
++// everything to the previous handler so test output stays intact.
++class BindingLoopCounter {
++public:
++    BindingLoopCounter() {
++        s_count = 0;
++        m_previous = qInstallMessageHandler(handle);
++        s_previous = m_previous;
++    }
++    ~BindingLoopCounter() { qInstallMessageHandler(m_previous); }
++    int count() const { return s_count; }
++
++private:
++    static void handle(QtMsgType type, const QMessageLogContext &context, const QString &message) {
++        if (message.contains(QLatin1String("Binding loop detected")))
++            ++s_count;
++        if (s_previous)
++            s_previous(type, context, message);
++    }
++    static inline int s_count = 0;
++    static inline QtMessageHandler s_previous = nullptr;
++    QtMessageHandler m_previous = nullptr;
++};
++
+ class OmawriteTest : public QObject {
+     Q_OBJECT
+ 
+@@ -297,6 +321,32 @@ private slots:
+         QCOMPARE(editor->property("font").value<QFont>().pixelSize(), 15);
+     }
+ 
++    void shortcutsDialogHasNoBindingLoop() {
++        const QString mainQmlPath = QFINDTESTDATA("../src/Main.qml");
++        QVERIFY(!mainQmlPath.isEmpty());
++
++        // Material's Dialog derives implicitWidth from its content item; a bare
++        // Label assigned as contentItem feeds back into that binding and QML
++        // reports a binding loop for the dialog on every launch.
++        BindingLoopCounter bindingLoops;
++
++        Backend backend;
++        QQmlEngine engine;
++        engine.rootContext()->setContextProperty(QStringLiteral("backend"), &backend);
++        QQmlComponent component(&engine, QUrl::fromLocalFile(mainQmlPath));
++        QVERIFY2(component.isReady(), qPrintable(component.errorString()));
++        QScopedPointer<QObject> window(component.create());
++        QVERIFY2(window, qPrintable(component.errorString()));
++
++        QObject *dialog = window->findChild<QObject *>(QStringLiteral("shortcutsDialog"));
++        QVERIFY(dialog);
++        QVERIFY(QMetaObject::invokeMethod(dialog, "open"));
++        QTRY_VERIFY(dialog->property("opened").toBool());
++        QCOMPARE(dialog->property("implicitWidth").toReal() > 0, true);
++
++        QCOMPARE(bindingLoops.count(), 0);
++    }
++
+     void remembersLastSaveDirectory() {
+         QTemporaryDir saveDirectory;
+         QVERIFY(saveDirectory.isValid());

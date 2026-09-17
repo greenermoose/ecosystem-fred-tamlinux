@@ -1,0 +1,81 @@
+#!/bin/bash
+# Reports the status of the local gtk4 dmabuf-munmap patch after any gtk4
+# install/upgrade. Driven by /etc/pacman.d/hooks/50-gtk4-local-patch.hook.
+#
+# The patch fixes a use-after-free in GTK's Wayland linux-dmabuf feedback
+# handler (munmap of the wrong pointer), which segfaults any GTK4 app when
+# outputs flap. See docs/agent-runbooks/local-package-patching.md.
+#
+# Three outcomes:
+#   upstream fix present -> say so, tell the user to retire the local patch
+#   patched build intact -> stay silent
+#   anything else        -> the patch was replaced; say so loudly
+
+set -uo pipefail
+
+state_dir=/var/lib/gtk4-local-patch
+stamp="$state_dir/patched-version"
+status="$state_dir/status"
+
+installed=$(pacman -Q gtk4 2>/dev/null | awk '{print $2}')
+[[ -n $installed ]] || exit 0
+
+note() {
+  mkdir -p "$state_dir"
+  printf '%s\t%s\t%s\n' "$(date --iso-8601=seconds)" "$installed" "$1" >"$status"
+}
+
+# The fix landed upstream in 4.23.3, and on the gtk-4-22 branch. So anything
+# from 4.22.5 up to (but not including) 4.23.0 has it, as does 4.23.3+.
+# 4.23.0 through 4.23.2 predate the fix on that branch and do NOT have it.
+fixed_upstream() {
+  local v=$1
+  if (($(vercmp "$v" "1:4.22.5") >= 0)) && (($(vercmp "$v" "1:4.23.0") < 0)); then
+    return 0
+  fi
+  (($(vercmp "$v" "1:4.23.3") >= 0))
+}
+
+if fixed_upstream "$installed"; then
+  note "upstream-fixed"
+  cat <<EOF
+
+>> gtk4 $installed carries the upstream dmabuf munmap fix (GTK MR !10166).
+>> The local patch has done its job and should now be retired:
+>>
+>>     repo-remove /var/cache/local-patches/local-patches.db.tar.zst gtk4 gtk4-debug
+>>     rm -rf ~/pkgs/gtk4 /var/cache/local-patches/gtk4-*.pkg.tar.zst
+>>     # then drop [local-patches] from /etc/pacman.conf if nothing else uses it
+>>     pkexec rm -f /etc/pacman.d/hooks/50-gtk4-local-patch.hook \\
+>>                  /usr/local/bin/gtk4-local-patch-check
+>>     pkexec rm -rf /var/lib/gtk4-local-patch
+
+EOF
+  exit 0
+fi
+
+expected=$(cat "$stamp" 2>/dev/null || true)
+
+if [[ -n $expected && $installed == "$expected" ]]; then
+  note "patched"
+  exit 0
+fi
+
+note "PATCH-LOST"
+cat <<EOF
+
+!! gtk4 $installed replaced the locally patched ${expected:-<none recorded>}.
+!! The Wayland dmabuf use-after-free is BACK: GTK4 apps will segfault when
+!! monitors hotplug. Rebuild the patched package:
+!!
+!!     cd ~/pkgs/gtk4 && git pull      # refresh Arch's PKGBUILD
+!!     # re-apply the pkgrel bump + patch (see the runbook), then:
+!!     makepkg -f
+!!     repo-add /var/cache/local-patches/local-patches.db.tar.zst \\
+!!              /var/cache/local-patches/gtk4{,-debug}-*.pkg.tar.zst
+!!     pkexec pacman -Syu
+!!
+!! Runbook: ~/docs/agent-runbooks/local-package-patching.md
+
+EOF
+exit 0

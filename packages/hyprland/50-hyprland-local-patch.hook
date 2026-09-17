@@ -1,0 +1,15 @@
+# Reports whether the local hyprland patches (DPMS state on monitor connect,
+# idle-inhibit unchanged guard) survived a hyprland change, and tells us to
+# retire them once the upstream fixes arrive. See docs/agent-runbooks/local-package-patching.md
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = hyprland
+
+[Action]
+Description = Checking local hyprland patch status (DPMS-on-connect, idle-inhibit guard)...
+When = PostTransaction
+Exec = /usr/local/bin/hyprland-local-patch-check
+Depends = pacman
