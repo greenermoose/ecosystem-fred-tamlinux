@@ -70,17 +70,17 @@
       "name": "hyprland",
       "status": "active",
       "added": "2026-09-13",
-      "summary": "Two fixes: a monitor that connects while DPMS is off stays dark, and an unchanged idle-inhibit re-evaluation (every focus change) no longer resets ext-idle-notify timers",
+      "summary": "Three fixes: a monitor that connects while DPMS is off stays dark, an unchanged idle-inhibit re-evaluation (every focus change) no longer resets ext-idle-notify timers, and a per-monitor `dpms off` no longer makes the next mouse move anywhere re-light it",
       "upstream": { "repo": "https://github.com/hyprwm/Hyprland", "license": "BSD-3-Clause" },
       "upstream_version": "0.56.2",
       "arch_version": "0.56.2-3",
-      "local_version": "0.56.2-3.2",
+      "local_version": "0.56.2-3.3",
       "fork": {
         "repo": "https://github.com/greenermoose/Hyprland",
         "checkout": "~/Code/Hyprland",
         "release_tag": "v0.56.2",
-        "tag": "v0.56.2-fred.2",
-        "compare_url": "https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.2"
+        "tag": "v0.56.2-fred.3",
+        "compare_url": "https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3"
       },
       "patches": [
         {
@@ -96,10 +96,17 @@
           "branch": "patch/idle-notify-inhibit-unchanged-noop",
           "commit": "a7a03d6f",
           "filed": { "url": null, "state": "not filed and not to be filed — hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md" }
+        },
+        {
+          "file": "hyprland-dpms-state-per-monitor.patch",
+          "subject": "Derive the compositor-wide DPMS flag from monitor state; remember per-output DPMS-off across reconnects",
+          "branch": "patch/dpms-state-per-monitor",
+          "commit": "3e4303a7",
+          "filed": { "url": null, "state": "not filed and not to be filed — hyprwm AI policy" }
         }
       ],
-      "retires_when": "an Arch hyprland release containing both fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case). If only one lands, drop that patch and rebuild as <arch>.1",
-      "verify_binary": "test \"$(strings /usr/bin/Hyprland | grep -c 'connected while DPMS is off')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'inhibit state unchanged')\" = 1",
+      "retires_when": "an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1",
+      "verify_binary": "test \"$(strings /usr/bin/Hyprland | grep -c 'connected while DPMS is off')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'inhibit state unchanged')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'compositor-wide')\" = 1",
       "abi_note": "same tarball, same GIT_COMMIT_HASH, so the plugin ABI string is unchanged and hyprbars keeps loading; never build from the fork's git tree",
       "depended_on_by": ["omarchy-fred-config", "omarchy-fred-workspaces", "fred.monitor (planned)"],
       "notes": "packages/hyprland/README.md"
