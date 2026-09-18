@@ -1,7 +1,7 @@
 pkgbase = hyprland
 	pkgdesc = a highly customizable dynamic tiling Wayland compositor
 	pkgver = 0.56.2
-	pkgrel = 3.2
+	pkgrel = 3.3
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
 	arch = aarch64
@@ -82,9 +82,11 @@ pkgbase = hyprland
 	source = Hyprland-0.56.2.tar.gz::https://github.com/hyprwm/Hyprland/releases/download/v0.56.2/source-v0.56.2.tar.gz
 	source = hyprland-dpms-off-on-connect.patch
 	source = hyprland-idle-inhibit-unchanged-noop.patch
+	source = hyprland-dpms-state-per-monitor.patch
 	sha256sums = 03ad3f5ef152ff44116ffd56fcf808486211ecabf4f0ba567108ee746ba5cd2e
 	sha256sums = 348e93ae29a988dbca4a42d24ad0e98f84ca026eb8d32c4a916db2f8a880ec13
 	sha256sums = 84e474cf7f1c257f0d7450a7e2a5131fa355f650e31ce8b04e71e64ad4ec220c
+	sha256sums = fee516e2593ba537584e32a44e7e3de51acb368274fa9557c6a9217b77e0836e
 
 pkgname = hyprland
 

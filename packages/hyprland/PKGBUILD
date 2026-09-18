@@ -5,8 +5,8 @@
 
 pkgname=(hyprland hyprpm)
 pkgver=0.56.2
-pkgrel=3.2
-# patches: exported from https://github.com/greenermoose/Hyprland tag v0.56.2-fred.2 by 'omarchy-fred-ecosystem export hyprland'
+pkgrel=3.3
+# patches: exported from https://github.com/greenermoose/Hyprland tag v0.56.2-fred.3 by 'omarchy-fred-ecosystem export hyprland'
 # (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/hyprland)
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
@@ -69,23 +69,29 @@ provides=(wayland-compositor)
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz"
         hyprland-dpms-off-on-connect.patch
-        hyprland-idle-inhibit-unchanged-noop.patch)
+        hyprland-idle-inhibit-unchanged-noop.patch
+        hyprland-dpms-state-per-monitor.patch)
 sha256sums=('03ad3f5ef152ff44116ffd56fcf808486211ecabf4f0ba567108ee746ba5cd2e'
             '348e93ae29a988dbca4a42d24ad0e98f84ca026eb8d32c4a916db2f8a880ec13'
-            '84e474cf7f1c257f0d7450a7e2a5131fa355f650e31ce8b04e71e64ad4ec220c')
+            '84e474cf7f1c257f0d7450a7e2a5131fa355f650e31ce8b04e71e64ad4ec220c'
+            'fee516e2593ba537584e32a44e7e3de51acb368274fa9557c6a9217b77e0836e')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
 	cd "$_archive"
 	sed -i -e '/^release:/{n;s/-D/-DCMAKE_SKIP_RPATH=ON -D/}' Makefile
 	sed -i -e '/find_package.glaze/s/7...<8 //' {.,hyprpm,start}/CMakeLists.txt
-	# Local patches (see each .patch header). These and the pkgrel=3.2 bump
+	# Local patches (see each .patch header). These and the pkgrel=3.3 bump
 	# retire themselves when Arch ships a release that has them.
 	# 1. a monitor that connects while DPMS is off comes up disabled, not lit.
 	patch -Np1 -i "$srcdir/hyprland-dpms-off-on-connect.patch"
 	# 2. an unchanged idle-inhibit re-evaluation (every focus change) no longer
 	#    resets ext-idle-notify timers, so hypridle reaches its longer rules.
 	patch -Np1 -i "$srcdir/hyprland-idle-inhibit-unchanged-noop.patch"
+	# 3. the compositor-wide DPMS flag is derived from monitor state, so a
+	#    per-monitor `dpms off` no longer makes the next mouse move re-light it;
+	#    an output that reconnects (HPD drop) after being blanked stays dark.
+	patch -Np1 -i "$srcdir/hyprland-dpms-state-per-monitor.patch"
 }
 
 build() {
