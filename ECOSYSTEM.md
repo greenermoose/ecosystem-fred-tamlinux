@@ -32,7 +32,7 @@ outrank Arch's build of the same release and lose to any newer one.
 | Repository | Needs | Because |
 |---|---|---|
 | [omarchy-fred-config](https://github.com/greenermoose/omarchy-fred-config) (private) | all four | the workstation itself; `omawrite-review` (how agents show Fred their plans) hard-depends on the omawrite patches |
-| [omarchy-fred-workspaces](https://github.com/greenermoose/omarchy-fred-workspaces) | hyprland | its hotplug `reconcile` focuses windows; on stock Hyprland that resets the idle clock (patch 2) and a monitor reconnecting while dark comes up lit (patch 1) |
+| [omarchy-fred-workspaces](https://github.com/greenermoose/omarchy-fred-workspaces) | hyprland | its per-monitor idle blanking depends on per-output DPMS isolation (patch 3); its hotplug `reconcile` focuses windows, which on stock Hyprland resets the idle clock (patch 2); and a reconnecting monitor stays dark (patch 1) |
 | fred.monitor (planned) | aquamarine, hyprland | per-display reset/retrain assumes a KMS teardown that does not wedge on resume (Fault D) and DPMS-aware reconnects |
 
 ## Retired
