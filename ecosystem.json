@@ -139,6 +139,36 @@
       "verify_binary": "test \"$(strings -el /usr/bin/omawrite | grep -c 'no longer on disk')\" = 1",
       "depended_on_by": ["omarchy-fred-config (omawrite-review, skill omawrite-review)"],
       "notes": "packages/omawrite/README.md"
+    },
+    {
+      "name": "omarchy",
+      "status": "active",
+      "added": "2026-09-21",
+      "summary": "Bar tooltip bubble reserves inset border in Text padding (like PanelToolTip) so fractional scales (Dell 1.25×) no longer clip the bottom border and version footer",
+      "upstream": { "repo": "https://github.com/basecamp/omarchy", "license": "MIT" },
+      "upstream_version": "4.0.4",
+      "arch_version": "4.0.4-1",
+      "local_version": "4.0.4-1.1",
+      "fork": {
+        "repo": "https://github.com/greenermoose/omarchy",
+        "checkout": "~/Code/omarchy",
+        "release_tag": "v4.0.4",
+        "tag": "v4.0.4-fred.1",
+        "compare_url": "https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.1"
+      },
+      "patches": [
+        {
+          "file": "omarchy-bar-tooltip-border-padding.patch",
+          "subject": "Fix bar tooltip clipping on fractional display scales",
+          "branch": "patch/bar-tooltip-border-padding",
+          "commit": "afe057b0",
+          "filed": { "url": null, "state": "draft in packages/omarchy/upstream-issue-bar-tooltip.md; not filed until Dell verification" }
+        }
+      ],
+      "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip sizes like PanelToolTip (border reserved in padding); then retire via omarchy-fred-ecosystem retire omarchy",
+      "verify_binary": "rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml && rg -q 'controlPaddingY' /usr/share/omarchy/shell/plugins/bar/Bar.qml",
+      "depended_on_by": ["omarchy-fred-config", "fred.agents", "fred.monitor", "fred.sysinfo", "fred.clock"],
+      "notes": "packages/omarchy/README.md"
     }
   ]
 }
