@@ -1,0 +1,15 @@
+# Reports whether the local omarchy bar-tooltip patch survived an omarchy change,
+# and tells us to retire it once the upstream fix arrives.
+# See docs/agent-runbooks/local-package-patching.md
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = omarchy
+
+[Action]
+Description = Checking local omarchy patch status...
+When = PostTransaction
+Exec = /usr/local/bin/omarchy-local-patch-check
+Depends = pacman

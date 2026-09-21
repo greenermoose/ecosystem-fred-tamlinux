@@ -1,0 +1,79 @@
+#!/bin/bash
+# Reports the status of the local omarchy bar-tooltip fix after any omarchy install/upgrade.
+# Driven by /etc/pacman.d/hooks/50-omarchy-local-patch.hook.
+#
+# The patch sizes the shared bar tooltip like PanelToolTip so fractional scales
+# (Dell 1.25×) no longer clip the bottom border. See local-package-patching.md.
+#
+# Three outcomes:
+#   upstream fix present -> say so, tell the user to retire the local patch
+#   patched build intact -> stay silent
+#   anything else        -> the patch was replaced; say so
+
+set -uo pipefail
+
+state_dir=/var/lib/omarchy-local-patch
+stamp="$state_dir/patched-version"
+status="$state_dir/status"
+
+installed=$(pacman -Q omarchy 2>/dev/null | awk '{print $2}')
+[[ -n $installed ]] || exit 0
+
+note() {
+  mkdir -p "$state_dir"
+  printf '%s\t%s\t%s\n' "$(date --iso-8601=seconds)" "$installed" "$1" >"$status"
+}
+
+# Bump when a known-good upstream release containing the sizing fix ships.
+fixed_upstream() {
+  local v=$1
+  (($(vercmp "$v" "4.0.5") >= 0))
+}
+
+if fixed_upstream "$installed"; then
+  note "upstream-newer"
+  cat <<END
+>> omarchy $installed is newer than the locally patched 4.0.4-1.1.
+>> The local bar-tooltip patch is GONE until you act. Check on Dell (1.25×):
+>>
+>>   1. Hover fred.monitor / fred.agents / fred.sysinfo — is the bottom border intact?
+>>   2. Does Bar.qml still contain tooltipBorderSpec + controlPaddingY padding?
+>>
+>> If the clip is back, REBASE onto $installed — see
+>> "Rebasing onto a new upstream release" in
+>> ~/docs/agent-runbooks/local-package-patching.md.
+>>
+>> If upstream fixed it, retire the local patch:
+>>
+>>     omarchy-fred-ecosystem retire omarchy
+>>     repo-remove /var/cache/local-patches/local-patches.db.tar.zst omarchy omarchy-debug
+>>     rm -rf ~/pkgs/omarchy /var/cache/local-patches/omarchy-*.pkg.tar.zst
+>>     pkexec rm -f /etc/pacman.d/hooks/50-omarchy-local-patch.hook \\
+>>                  /usr/local/bin/omarchy-local-patch-check
+>>     pkexec rm -rf /var/lib/omarchy-local-patch
+
+END
+  exit 0
+fi
+
+expected=$(cat "$stamp" 2>/dev/null || true)
+
+if [[ -n $expected && $installed == "$expected" ]]; then
+  note "patched"
+  exit 0
+fi
+
+note "PATCH-LOST"
+cat <<END
+!! omarchy $installed replaced the locally patched ${expected:-<none recorded>}.
+!! The bar-tooltip fix is MISSING. Rebuild the patched package:
+!!
+!!     cd ~/pkgs/omarchy && makepkg -Cf
+!!     repo-add /var/cache/local-patches/local-patches.db.tar.zst \\
+!!              /var/cache/local-patches/omarchy{,-debug}-*.pkg.tar.zst
+!!     pkexec pacman -Sy && pkexec pacman -S --noconfirm local-patches/omarchy
+!!
+!! Runbook: ~/docs/agent-runbooks/local-package-patching.md
+
+END
+exit 0

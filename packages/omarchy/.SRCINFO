@@ -1,0 +1,39 @@
+pkgbase = omarchy
+	pkgdesc = Beautiful, modern, and opinionated Arch Linux by DHH
+	pkgver = 4.0.4
+	pkgrel = 1.1
+	url = https://github.com/basecamp/omarchy
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = git
+	depends = omarchy-keyring
+	depends = omarchy-settings=4.0.4
+	depends = hyprland
+	depends = quickshell
+	depends = uwsm
+	depends = sddm
+	depends = xdg-desktop-portal-hyprland
+	depends = wireplumber
+	depends = pipewire
+	depends = gnome-keyring
+	depends = gum
+	depends = jq
+	depends = git
+	depends = perl
+	depends = fakeroot
+	depends = pacman-contrib
+	depends = ttf-jetbrains-mono-nerd-basic
+	conflicts = omarchy-dev
+	source = omarchy::git+https://github.com/basecamp/omarchy.git#commit=c668141e9c42b13c80c9ca4ea108e11708c5e8a5
+	source = omarchy-bar-tooltip-border-padding.patch
+	sha256sums = 8371b148aa06e9d0627c9e11668ef2dfdf54c4a9e5ffbee5aee08c3945073618
+	sha256sums = 0a2243e88ecc126bb690ba85ac1f6fef414755f10a61d32d076aaf281741e405
+	depends_x86_64 = limine
+	depends_x86_64 = limine-mkinitcpio-hook
+	depends_x86_64 = limine-snapper-sync
+	depends_x86_64 = snapper
+	depends_aarch64 = iwd
+	depends_aarch64 = networkmanager
+
+pkgname = omarchy

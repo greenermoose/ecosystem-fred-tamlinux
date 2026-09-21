@@ -1,0 +1,66 @@
+From afe057b026caa9e02a69a77bbb7390d1942c4fd9 Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Mon, 21 Sep 2026 17:36:38 -0400
+Subject: Fix bar tooltip clipping on fractional display scales
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The shared bar tooltip sized its bubble as text + fixed padding and
+centered the label, without reserving inset border width. On 1.25× (and
+similar fractional scales) that shortfall clips the bottom border and
+version footer. Size like PanelToolTip: bubble tracks the label's padded
+implicit size, with Border.* included in Text padding.
+
+Evidence: Dell DP-1 @ 1.25× clips fred.monitor / fred.agents /
+fred.sysinfo stock tooltips; integer/1.5× outputs and custom PopupWindow
+hovers (fred.tides) do not.
+
+Retires when upstream Omarchy ships this sizing (or equivalent) in a
+release after 4.0.4.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+AI-Tool: Cursor 3.21.16
+AI-Model: composer
+---
+ shell/plugins/bar/Bar.qml | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/shell/plugins/bar/Bar.qml b/shell/plugins/bar/Bar.qml
+index be9fece40f43f9f460cbe3f500140a631eb7f7a7..047ec4351fc32f661b8b35485b3fbaaa5ba17eb4 100644
+--- a/shell/plugins/bar/Bar.qml
++++ b/shell/plugins/bar/Bar.qml
+@@ -1327,22 +1327,29 @@ Item {
+ 
+       BorderSurface {
+         id: tooltipBubble
+-        implicitWidth: tooltipLabel.implicitWidth + 20
+-        implicitHeight: tooltipLabel.implicitHeight + 14
++        // Size like PanelToolTip: border width is reserved in Text padding so
++        // the inset Rectangle border does not eat the content budget (clips
++        // the bottom edge on fractional scales such as 1.25×).
++        readonly property var tooltipBorderSpec: Border.surfaceSpec("tooltip", "border", Color.tooltip.border, Style.normalBorderWidth)
++        implicitWidth: tooltipLabel.implicitWidth
++        implicitHeight: tooltipLabel.implicitHeight
+         color: Color.tooltip.background
+-        borderSpec: Border.surfaceSpec("tooltip", "border", Color.tooltip.border, 1)
++        borderSpec: tooltipBorderSpec
+         radius: Style.cornerRadius
+ 
+         Text {
+           id: tooltipLabel
+           textFormat: Text.PlainText
+-          anchors.centerIn: parent
+           text: root.tooltipText
+           color: Color.tooltip.text
+           font.family: root.fontFamily
+           font.pixelSize: Style.font.body
+           horizontalAlignment: Text.AlignHCenter
+           verticalAlignment: Text.AlignVCenter
++          leftPadding: Border.left(tooltipBubble.tooltipBorderSpec) + Style.spacing.controlPaddingX
++          rightPadding: Border.right(tooltipBubble.tooltipBorderSpec) + Style.spacing.controlPaddingX
++          topPadding: Border.top(tooltipBubble.tooltipBorderSpec) + Style.spacing.controlPaddingY
++          bottomPadding: Border.bottom(tooltipBubble.tooltipBorderSpec) + Style.spacing.controlPaddingY
+         }
+       }
+     }
