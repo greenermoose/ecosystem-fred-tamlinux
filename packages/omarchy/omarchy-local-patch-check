@@ -33,7 +33,7 @@ fixed_upstream() {
 if fixed_upstream "$installed"; then
   note "upstream-newer"
   cat <<END
->> omarchy $installed is newer than the locally patched 4.0.4-1.1.
+>> omarchy $installed is newer than the locally patched 4.0.4-1.2.
 >> The local bar-tooltip patch is GONE until you act. Check on Dell (1.25×):
 >>
 >>   1. Hover fred.monitor / fred.agents / fred.sysinfo — is the bottom border intact?

@@ -1,0 +1,53 @@
+From dd0ad03ccc50c1ae09779157f667c0e76c0337af Mon Sep 17 00:00:00 2001
+From: Fred Horch <fred.horch@gmail.com>
+Date: Mon, 21 Sep 2026 18:05:44 -0400
+Subject: Make bar tooltip size safe under fractional display scales
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Ceil popup width/height so logical size × screen devicePixelRatio maps to
+an integer physical pixel count. On 1.25× (Dell), heights like 138 yield
+172.5 physical px and buffer rounding clips the bottom border even after
+PanelToolTip-style padding; workspace hovers with "lucky" heights did not.
+
+Retires with the border-padding patch when upstream ships equivalent sizing.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+AI-Tool: Cursor 3.21.16
+AI-Model: composer
+---
+ shell/plugins/bar/Bar.qml | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/shell/plugins/bar/Bar.qml b/shell/plugins/bar/Bar.qml
+index 047ec4351fc32f661b8b35485b3fbaaa5ba17eb4..7a0d9e8c1686609556b5dfb9d0e71906abd02c73 100644
+--- a/shell/plugins/bar/Bar.qml
++++ b/shell/plugins/bar/Bar.qml
+@@ -1234,6 +1234,15 @@ Item {
+   component BarPanel: PanelWindow {
+     id: barWindow
+ 
++    // Grow a logical size so size × devicePixelRatio is an integer physical
++    // pixel count. Fractional DPR (e.g. Dell 1.25×) otherwise truncates the
++    // popup buffer and clips a 1px tooltip border.
++    function scaleSafeSize(logical) {
++      var dpr = (barWindow.screen && barWindow.screen.devicePixelRatio > 0)
++                ? barWindow.screen.devicePixelRatio : 1
++      return Math.ceil(logical * dpr) / dpr
++    }
++
+     // Hiding parks the bar just past its screen edge instead of unmapping it.
+     // Unmapping frees the layer surface and the whole scene graph, so every
+     // reveal has to rebuild them — new surface, re-shaped glyphs, re-uploaded
+@@ -1288,8 +1297,8 @@ Item {
+ 
+       visible: root.tooltipShown && root.tooltipTarget !== null && root.tooltipText !== "" && root.targetBelongsToWindow(root.tooltipTarget, barWindow)
+       color: "transparent"
+-      implicitWidth: Math.ceil(tooltipBubble.implicitWidth)
+-      implicitHeight: Math.ceil(tooltipBubble.implicitHeight)
++      implicitWidth: barWindow.scaleSafeSize(tooltipBubble.implicitWidth)
++      implicitHeight: barWindow.scaleSafeSize(tooltipBubble.implicitHeight)
+ 
+       anchor {
+         id: tooltipAnchor

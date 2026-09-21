@@ -53,3 +53,9 @@ will re-verify after upstream lands.
 ---
 
 Filed: **not yet**
+
+## Update 2026-09-21 — scale-safe size
+
+Border padding alone was insufficient. A second patch ceils popup
+width/height so `size × devicePixelRatio` is an integer physical pixel
+count (`scaleSafeSize`). Local package: `4.0.4-1.2` / tag `v4.0.4-fred.2`.

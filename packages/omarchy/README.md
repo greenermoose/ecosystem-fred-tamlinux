@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Upstream | [basecamp/omarchy](https://github.com/basecamp/omarchy) (MIT) |
-| Fork | [greenermoose/omarchy](https://github.com/greenermoose/omarchy), tag `v4.0.4-fred.1` — [compare with v4.0.4](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.1) |
+| Fork | [greenermoose/omarchy](https://github.com/greenermoose/omarchy), tag `v4.0.4-fred.2` — [compare with v4.0.4](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) |
 | Packaging source | [omacom/omarchy-pkgs](https://github.com/omacom/omarchy-pkgs) `pkgbuilds/omarchy` @ release `4.0.4` (`PKGBUILD.omarchy-orig`) |
 | Patched version | `4.0.4-1.1` (Omarchy packaging `4.0.4-1` + 1 patch) |
 | Added | 2026-09-21 |
@@ -32,4 +32,17 @@ same Dell output (2026-09-21).
 ```bash
 rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml \
   && rg -q 'controlPaddingY' /usr/share/omarchy/shell/plugins/bar/Bar.qml
+```
+
+## Patch — `patch/bar-tooltip-scale-safe-size`
+
+`PopupWindow` implicits use `scaleSafeSize(logical)` =
+`ceil(logical × devicePixelRatio) / devicePixelRatio` so the buffer covers
+an integer physical pixel count on fractional scales (Dell 1.25×).
+
+## Verify in binary
+
+```bash
+rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml \
+  && rg -q 'scaleSafeSize' /usr/share/omarchy/shell/plugins/bar/Bar.qml
 ```

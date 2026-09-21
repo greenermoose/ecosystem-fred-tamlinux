@@ -1,7 +1,7 @@
 pkgbase = omarchy
 	pkgdesc = Beautiful, modern, and opinionated Arch Linux by DHH
 	pkgver = 4.0.4
-	pkgrel = 1.1
+	pkgrel = 1.2
 	url = https://github.com/basecamp/omarchy
 	arch = x86_64
 	arch = aarch64
@@ -27,8 +27,10 @@ pkgbase = omarchy
 	conflicts = omarchy-dev
 	source = omarchy::git+https://github.com/basecamp/omarchy.git#commit=c668141e9c42b13c80c9ca4ea108e11708c5e8a5
 	source = omarchy-bar-tooltip-border-padding.patch
+	source = omarchy-bar-tooltip-scale-safe-size.patch
 	sha256sums = 8371b148aa06e9d0627c9e11668ef2dfdf54c4a9e5ffbee5aee08c3945073618
 	sha256sums = 0a2243e88ecc126bb690ba85ac1f6fef414755f10a61d32d076aaf281741e405
+	sha256sums = 0a8f48f10bb0f9aad228790df98ae8579709cead265ad373d5e8a438cb2c54e5
 	depends_x86_64 = limine
 	depends_x86_64 = limine-mkinitcpio-hook
 	depends_x86_64 = limine-snapper-sync
