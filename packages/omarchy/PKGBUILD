@@ -13,7 +13,7 @@ pkgname='omarchy'
 _tag='v4.0.4'
 _commit='c668141e9c42b13c80c9ca4ea108e11708c5e8a5'
 pkgver=4.0.4
-pkgrel=1.2
+pkgrel=1.3
 # patches: exported from https://github.com/greenermoose/omarchy tag v4.0.4-fred.2 by 'omarchy-fred-ecosystem export omarchy'
 # (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/omarchy)
 pkgdesc='Beautiful, modern, and opinionated Arch Linux by DHH'
@@ -97,21 +97,25 @@ if [[ -n "${OMARCHY_SRC:-}" ]]; then
   source=(
     "omarchy-bar-tooltip-border-padding.patch"
     "omarchy-bar-tooltip-scale-safe-size.patch"
+    "omarchy-bar-tooltip-scale-safe-bubble.patch"
   )
   sha256sums=(
     '0a2243e88ecc126bb690ba85ac1f6fef414755f10a61d32d076aaf281741e405'
     '0a8f48f10bb0f9aad228790df98ae8579709cead265ad373d5e8a438cb2c54e5'
+    '3566e5cbf4df78e285ea753e0acde904528f475906e67da4fa2faf37d2ec68e7'
   )
 else
   source=(
     "omarchy::git+https://github.com/basecamp/omarchy.git#commit=${_commit}"
     "omarchy-bar-tooltip-border-padding.patch"
     "omarchy-bar-tooltip-scale-safe-size.patch"
+    "omarchy-bar-tooltip-scale-safe-bubble.patch"
   )
   sha256sums=(
     '8371b148aa06e9d0627c9e11668ef2dfdf54c4a9e5ffbee5aee08c3945073618'
     '0a2243e88ecc126bb690ba85ac1f6fef414755f10a61d32d076aaf281741e405'
     '0a8f48f10bb0f9aad228790df98ae8579709cead265ad373d5e8a438cb2c54e5'
+    '3566e5cbf4df78e285ea753e0acde904528f475906e67da4fa2faf37d2ec68e7'
   )
 fi
 
@@ -124,6 +128,7 @@ prepare() {
   cd "$srcdir/omarchy"
   patch -Np1 -i "$srcdir/omarchy-bar-tooltip-border-padding.patch"
   patch -Np1 -i "$srcdir/omarchy-bar-tooltip-scale-safe-size.patch"
+  patch -Np1 -i "$srcdir/omarchy-bar-tooltip-scale-safe-bubble.patch"
 }
 
 package() {
