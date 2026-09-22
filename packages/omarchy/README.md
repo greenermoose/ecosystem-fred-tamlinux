@@ -9,7 +9,7 @@
 | Added | 2026-09-21 |
 | Retires when | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the painted bubble so logical size × DPR is an integer physical pixel count |
 | Upstream state | Issue draft in `upstream-issue-bar-tooltip.md`; not filed until Dell verification |
-| **Agent handoff** | **`HANDOFF-bar-tooltip-dell-1.25x.md`** in the public registry copy (`omarchy-fred-ecosystem/packages/omarchy/`) |
+| **Agent handoff** | **[`HANDOFF-bar-tooltip-dell-1.25x.md`](HANDOFF-bar-tooltip-dell-1.25x.md)** — read this first (source: `~/pkgs/omarchy/`, kept by `omarchy-fred-sync`) |
 
 **Build model:** same git commit as the Omarchy `4.0.4` package (`_commit=c668141e…`), then apply the three local patches in `prepare()`. Never build from the fork's already-patched git tree as `OMARCHY_SRC`.
 
