@@ -37,12 +37,14 @@ Full border and padding matching `PanelToolTip`.
 
 ### Proposed fix
 
-Mirror `PanelToolTip` sizing in the bar `PopupWindow` tooltip (see compare):
+Three commits on fork tag `v4.0.4-fred.2` (padding, `scaleSafeSize`, bubble sizing):
 
-https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.1
+https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2
 
-Local package: `omarchy 4.0.4-1.1` via
+Local package: `omarchy 4.0.4-1.3` via
 https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/omarchy
+
+Handoff for agents: `packages/omarchy/HANDOFF-bar-tooltip-dell-1.25x.md`
 
 ### AI disclosure
 
@@ -54,8 +56,10 @@ will re-verify after upstream lands.
 
 Filed: **not yet**
 
-## Update 2026-09-21 — scale-safe size
+## Update 2026-09-21 — scale-safe size + bubble
 
-Border padding alone was insufficient. A second patch ceils popup
-width/height so `size × devicePixelRatio` is an integer physical pixel
-count (`scaleSafeSize`). Local package: `4.0.4-1.2` / tag `v4.0.4-fred.2`.
+Border padding alone was insufficient. A second patch adds
+`scaleSafeSize` so `size × devicePixelRatio` is an integer physical pixel
+count. A third patch applies that sizing to the painted `BorderSurface`
+bubble (not only `PopupWindow`), otherwise empty margin grows and the
+border still clips. Local package: `4.0.4-1.3` / tag `v4.0.4-fred.2`.

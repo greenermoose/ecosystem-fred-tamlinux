@@ -148,7 +148,7 @@
       "upstream": { "repo": "https://github.com/basecamp/omarchy", "license": "MIT" },
       "upstream_version": "4.0.4",
       "arch_version": "4.0.4-1",
-      "local_version": "4.0.4-1.2",
+      "local_version": "4.0.4-1.3",
       "fork": {
         "repo": "https://github.com/greenermoose/omarchy",
         "checkout": "~/Code/omarchy",
@@ -169,6 +169,13 @@
           "subject": "Make bar tooltip size safe under fractional display scales",
           "branch": "patch/bar-tooltip-scale-safe-size",
           "commit": "dd0ad03c",
+          "filed": { "url": null, "state": "draft in packages/omarchy/upstream-issue-bar-tooltip.md; not filed until Dell verification" }
+        },
+        {
+          "file": "omarchy-bar-tooltip-scale-safe-bubble.patch",
+          "subject": "Apply scaleSafeSize to the tooltip bubble, not empty window margin",
+          "branch": "patch/bar-tooltip-scale-safe-size",
+          "commit": "6edc29cc",
           "filed": { "url": null, "state": "draft in packages/omarchy/upstream-issue-bar-tooltip.md; not filed until Dell verification" }
         }
       ],
