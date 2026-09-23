@@ -1,4 +1,4 @@
-# ecosystem-fred-tamlinux
+# The Tamlinux Ecosystem
 
 The public record of every third-party package Fred's [Tamlinux](https://github.com/greenermoose/tamlinux) workstations
 run **patched**, and of the software of his that depends on those patches.
