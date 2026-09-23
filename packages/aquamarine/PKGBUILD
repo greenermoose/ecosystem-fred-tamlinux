@@ -4,8 +4,8 @@
 pkgname=aquamarine
 pkgver=0.15.0
 pkgrel=2.2
-# patches: exported from https://github.com/greenermoose/aquamarine tag v0.15.0-fred.2 by 'omarchy-fred-ecosystem export aquamarine'
-# (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/aquamarine)
+# patches: exported from https://github.com/greenermoose/aquamarine tag v0.15.0-fred.2 by 'tam-ecosystem export aquamarine'
+# (registry: https://github.com/greenermoose/ecosystem-fred-tamlinux/tree/main/packages/aquamarine)
 pkgdesc='a very light linux rendering backend library'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/$pkgname"

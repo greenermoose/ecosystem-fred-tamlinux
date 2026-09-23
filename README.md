@@ -1,4 +1,4 @@
-# omarchy-fred-ecosystem
+# ecosystem-fred-tamlinux
 
 The public record of every third-party package Fred's [Tamlinux](https://github.com/greenermoose/tamlinux) workstations
 run **patched**, and of the software of his that depends on those patches.
@@ -11,7 +11,7 @@ in context, how it is built, and when it goes away.
 | Registry | [`ECOSYSTEM.md`](ECOSYSTEM.md) (human) · [`ecosystem.json`](ecosystem.json) (machine) |
 | Recipes | [`packages/<pkg>/`](packages/) — Arch `PKGBUILD` + exported patches + the pacman hook that watches for retirement |
 | Code, in context | fork branches on `greenermoose/<Upstream>`; every entry links a GitHub *compare* view against the release it patches |
-| Tool | [`bin/omarchy-fred-ecosystem`](bin/omarchy-fred-ecosystem) — `export`, `verify`, `status`, `retire`, `install` |
+| Tool | [`bin/tam-ecosystem`](bin/tam-ecosystem) — `export`, `verify`, `status`, `retire`, `install` |
 | Consumers | Fred's own repos carry an `ECOSYSTEM.md` naming the patches they rely on |
 
 ## Why this exists instead of upstream pull requests
@@ -39,10 +39,10 @@ package. An upstream merge is welcome; it is not the deliverable.
 ```
 greenermoose/<Upstream>        fred/<slug> topic branches off the shipped release tag,
         │                      fred/<tag> integration branch, tag <tag>-fred.N, default branch `fred`
-        │  omarchy-fred-ecosystem export       (git format-patch)
+        │  tam-ecosystem export       (git format-patch)
         ▼
 ~/pkgs/<pkg>/                  Arch's PKGBUILD with pkgrel <arch>.N + the patches   (build scratch)
-        │  omarchy-fred-sync                   (mirror)
+        │  tam-sync                   (mirror)
         ▼
 packages/<pkg>/                this repo — the recipe, the hook, the notes
 ```
@@ -60,13 +60,13 @@ packages/<pkg>/                this repo — the recipe, the hook, the notes
 ## Building one package
 
 ```bash
-git clone https://github.com/greenermoose/ecosystem-fred-tamlinux ~/Code/omarchy-fred-ecosystem
-cd ~/Code/omarchy-fred-ecosystem/packages/<pkg>
+git clone https://github.com/greenermoose/ecosystem-fred-tamlinux ~/Code/tamlinux/ecosystem-fred-tamlinux
+cd ~/Code/tamlinux/ecosystem-fred-tamlinux/packages/<pkg>
 makepkg -Cf --noconfirm              # as your user, never root
 pkexec pacman -U ./<pkg>-*.pkg.tar.zst
 ```
 
-`omarchy-fred-ecosystem install <pkg>` does the same and also publishes into a
+`tam-ecosystem install <pkg>` does the same and also publishes into a
 local `[local-patches]` pacman repository so upgrades keep the precedence rule
 above. The full procedure — building, the local repo, the retirement hook,
 rollback — is Fred's `local-package-patching.md` runbook in the private
@@ -84,7 +84,7 @@ omawrite, LGPL-2.1+ for GTK). `PKGBUILD` files derive from Arch Linux packaging
 
 ## Related
 
-- [`omarchy-fred-plugin`](https://github.com/greenermoose/plugin-fred-tamlinux)
+- [`plugin-fred-tamlinux`](https://github.com/greenermoose/plugin-fred-tamlinux)
   — the `fred.*` plugin suite manager and the ecosystem showcase site.
 - [`AI_PROVENANCE.md`](AI_PROVENANCE.md) and
   [`docs/ai/sessions.md`](docs/ai/sessions.md) — which tools and models did what.

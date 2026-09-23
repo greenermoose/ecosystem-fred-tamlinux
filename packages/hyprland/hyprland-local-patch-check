@@ -18,7 +18,7 @@
 # 30-minute suspend rule whenever anything focuses a window while idle
 # (2026-09-17 incident: 85 blank/resume cycles overnight, no suspend).
 # Upstream: unfixed on main as of 2026-09-17; not filed (hyprwm AI policy). Public copy:
-# greenermoose/Hyprland patch/idle-notify-inhibit-unchanged-noop; registry omarchy-fred-ecosystem.
+# greenermoose/Hyprland patch/idle-notify-inhibit-unchanged-noop; registry ecosystem-fred-tamlinux.
 #
 # Patch 3 (hyprland-dpms-state-per-monitor.patch, since 0.56.2-3.3): derives
 # g_pCompositor->m_dpmsStateOn from the monitors instead of letting the dpms
@@ -28,7 +28,7 @@
 # one (2026-09-17 23:02). It also remembers per-output DPMS-off across an HPD
 # drop/reconnect so the HP does not come back lit 1 s after each blank.
 # Upstream: same code on main as of 2026-09-17; not filed (hyprwm AI policy). Public copy:
-# greenermoose/Hyprland patch/dpms-state-per-monitor; registry omarchy-fred-ecosystem.
+# greenermoose/Hyprland patch/dpms-state-per-monitor; registry ecosystem-fred-tamlinux.
 #
 # See docs/agent-runbooks/local-package-patching.md,
 # docs/agent-runbooks/display-output-instability.md and

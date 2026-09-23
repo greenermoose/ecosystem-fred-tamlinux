@@ -1,4 +1,4 @@
-# AI Collaboration Session Archive: `omarchy-fred-ecosystem`
+# AI Collaboration Session Archive: `ecosystem-fred-tamlinux`
 
 Prompt history, tools, models and key decisions for this repository. Patches
 themselves were authored in earlier sessions recorded in the private

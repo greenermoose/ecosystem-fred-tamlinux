@@ -42,7 +42,7 @@ Three commits on fork tag `v4.0.4-fred.2` (padding, `scaleSafeSize`, bubble sizi
 https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2
 
 Local package: `omarchy 4.0.4-1.3` via
-https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/omarchy
+https://github.com/greenermoose/ecosystem-fred-tamlinux/tree/main/packages/omarchy
 
 Handoff for agents: `packages/omarchy/HANDOFF-bar-tooltip-dell-1.25x.md`
 

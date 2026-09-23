@@ -23,7 +23,7 @@ pull requests. See [`README.md`](README.md) §"Why this exists".
 | **Grok CLI** (`grok`) | `1.0.25` | Grok 4.6 | Workstation support. |
 
 Versions captured 2026-09-17 (`claude --version`); others as last recorded in
-`omarchy-fred-workspaces/AI_PROVENANCE.md` (2026-09-13).
+`workspaces-fred-tamlinux/AI_PROVENANCE.md` (2026-09-13).
 
 ## 2. Milestones
 

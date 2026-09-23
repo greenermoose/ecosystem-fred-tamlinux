@@ -45,7 +45,7 @@ if fixed_upstream "$installed"; then
 >>
 >> If upstream fixed it, retire the local patch:
 >>
->>     omarchy-fred-ecosystem retire omarchy
+>>     tam-ecosystem retire omarchy
 >>     repo-remove /var/cache/local-patches/local-patches.db.tar.zst omarchy omarchy-debug
 >>     rm -rf ~/pkgs/omarchy /var/cache/local-patches/omarchy-*.pkg.tar.zst
 >>     pkexec rm -f /etc/pacman.d/hooks/50-omarchy-local-patch.hook \\

@@ -10,7 +10,7 @@
 | Local repo | `[local-patches]` → `/var/cache/local-patches/` |
 | Fork tag | `v4.0.4-fred.2` @ `6edc29cc` ([greenermoose/omarchy](https://github.com/greenermoose/omarchy)) |
 | Patches (3) | border padding → scale-safe helper → **bubble** sizing (not PopupWindow-only) |
-| Registry | `omarchy-fred-ecosystem` entry `packages/omarchy/` + `ecosystem.json` |
+| Registry | `ecosystem-fred-tamlinux` entry `packages/omarchy/` + `ecosystem.json` |
 | Hook stamp | `/var/lib/omarchy-local-patch/patched-version` → `4.0.4-1.3` |
 | Reload after install | `omarchy-qmlcache-purge && omarchy-restart-shell` (reboot **not** required) |
 
@@ -18,7 +18,7 @@ Verify on disk:
 
 ```bash
 rg 'scaleSafeSize\(tooltipLabel' /usr/share/omarchy/shell/plugins/bar/Bar.qml
-omarchy-fred-ecosystem verify omarchy
+tam-ecosystem verify omarchy
 ```
 
 ## Problem
@@ -35,7 +35,7 @@ Root cause (confirmed in session):
 
 - Fork commits on `patch/bar-tooltip-scale-safe-size` / tag `v4.0.4-fred.2`.
 - Built, published, installed `4.0.4-1.3` on this workstation.
-- `omarchy-fred-ecosystem verify omarchy` **PASS** (when stamp matches).
+- `tam-ecosystem verify omarchy` **PASS** (when stamp matches).
 - Automated Dell `grim` captures (Fred-assisted): right-bar hovers (`fred.monitor`, `fred.agents`, `fred.sysinfo`) looked **OK** in accent-pixel analysis (`bot/top ≈ 2.5`). Workspace hovers **1–5** were hard to capture reliably in one script; left-side crops often had **no tooltip** (timing) — do **not** treat old `ws*- CLIPPED?` analyzer output as proof without a fresh Fred-held hover.
 
 ## What is **not** done / next agent

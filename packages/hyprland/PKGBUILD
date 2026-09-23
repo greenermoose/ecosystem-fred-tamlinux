@@ -6,8 +6,8 @@
 pkgname=(hyprland hyprpm)
 pkgver=0.56.2
 pkgrel=3.3
-# patches: exported from https://github.com/greenermoose/Hyprland tag v0.56.2-fred.3 by 'omarchy-fred-ecosystem export hyprland'
-# (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/hyprland)
+# patches: exported from https://github.com/greenermoose/Hyprland tag v0.56.2-fred.3 by 'tam-ecosystem export hyprland'
+# (registry: https://github.com/greenermoose/ecosystem-fred-tamlinux/tree/main/packages/hyprland)
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/${pkgname^}"

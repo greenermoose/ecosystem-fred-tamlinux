@@ -2,8 +2,8 @@
 pkgname=omawrite
 pkgver=0.5.0
 pkgrel=1.5
-# patches: exported from https://github.com/greenermoose/omawrite tag v0.5.0-fred.5 by 'omarchy-fred-ecosystem export omawrite'
-# (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/omawrite)
+# patches: exported from https://github.com/greenermoose/omawrite tag v0.5.0-fred.5 by 'tam-ecosystem export omawrite'
+# (registry: https://github.com/greenermoose/ecosystem-fred-tamlinux/tree/main/packages/omawrite)
 pkgdesc='Dead-simple Markdown writing app built with Qt Quick'
 arch=('x86_64')
 url='https://github.com/omacom-io/omawrite'
