@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "omarchy-fred-ecosystem",
   "version": "0.1.0",
-  "description": "Third-party packages Fred's Omarchy workstations run patched, and the software of his that depends on those patches",
+  "description": "Third-party packages Fred's Tamlinux workstations run patched, and the software of his that depends on those patches",
   "conventions": {
     "fork_branches": "patch/<slug> per patch and patchset/<release-tag> integration branch, both off the upstream release tag the PKGBUILD builds; `fred` always points at the current patchset and is the fork's default branch",
     "fork_tags": "<release-tag>-fred.<N>, N bumped whenever the patch set changes (independent of pkgrel)",

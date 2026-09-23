@@ -1,6 +1,6 @@
 # omarchy-fred-ecosystem
 
-The public record of every third-party package Fred's Omarchy workstations
+The public record of every third-party package Fred's Tamlinux workstations
 run **patched**, and of the software of his that depends on those patches.
 
 Each entry answers: what is broken upstream, what the fix is, where to read it
