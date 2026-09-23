@@ -71,3 +71,14 @@ themselves were authored in earlier sessions recorded in
   `patched`, and `omarchy-fred-ecosystem verify aquamarine` passes.
 - A live Hyprland shutdown has not been used as a test; the new library is
   loaded when a new graphical session starts.
+
+## Session: 2026-09-22 — Rename the registry CLI to tam-ecosystem
+
+- **CLI Tool**: Cursor `3.21.16`
+- **Model**: `composer`
+- **Commit**: `30bb5a6`
+- **Transcript Reference**: `68f9fa04-2323-4102-841a-25ab29a68985`
+
+Daily command is `tam-ecosystem`; long alias is `ecosystem-fred-tamlinux`.
+No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
+

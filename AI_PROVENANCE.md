@@ -30,6 +30,7 @@ Versions captured 2026-09-17 (`claude --version`); others as last recorded in
 | Milestone | Version | Primary AI Partner | Notes |
 | :-- | :-- | :-- | :-- |
 | Registry design, policy, scaffold, first four packages | `v0.1.0` | Claude Code `2.1.274` (Claude Opus 5) | Fork/registry/consumer three-tier design; upstream-engagement policy after Hyprland#16290 was auto-closed; `omarchy-fred-ecosystem` command. |
+| CLI rename to `tam-ecosystem` | `v0.1.0` | Cursor `3.21.16` (`composer`) | Daily name `tam-ecosystem`; long alias `ecosystem-fred-tamlinux`. |
 
 ## 3. Per-package origin of the patches
 
