@@ -1,13 +1,15 @@
 #!/bin/bash
-# Reports the status of the local aquamarine disable-KMS-before-disconnect
-# patch after any aquamarine install/upgrade. Driven by
+# Reports the status of both local aquamarine patches after any
+# aquamarine install/upgrade. Driven by
 # /etc/pacman.d/hooks/50-aquamarine-local-patch.hook.
 #
 # The patch fixes a 0.15.0 regression: a connector that disappears while
 # driving a CRTC leaves that CRTC active in the kernel, so after a
 # suspend/resume hotplug race the outputs get each other's CRTC and every
 # modeset fails with EINVAL (compositor alive, screens frozen, input "dead").
-# Upstream: hyprwm/aquamarine#386, fix PR #395.
+# The second patch guards null connector slots during async commit event
+# flushing on multi-output shutdown (hyprwm/aquamarine#383).
+# Upstream: hyprwm/aquamarine#386, fix PR #395, and #383.
 # See docs/agent-runbooks/local-package-patching.md and
 # docs/agent-runbooks/display-output-instability.md (Fault D).
 #
@@ -22,8 +24,8 @@ state_dir=/var/lib/aquamarine-local-patch
 stamp="$state_dir/patched-version"
 status="$state_dir/status"
 
-# First Arch release known to contain the upstream fix. Empty until #395 (or an
-# equivalent) is merged and released; fill it in then, e.g. "0.16.0-1".
+# First Arch release known to contain both upstream fixes. Empty until #395
+# (or equivalent) and #383 are merged and released; fill it in then.
 fixed_upstream_version=""
 
 installed=$(pacman -Q aquamarine 2>/dev/null | awk '{print $2}')
@@ -43,7 +45,7 @@ if fixed_upstream "$installed"; then
   note "upstream-fixed"
   cat <<EOF
 
->> aquamarine $installed carries the upstream disconnect fix (aquamarine #386/#395).
+>> aquamarine $installed carries both upstream fixes (#386/#395 and #383).
 >> The local patch has done its job and should now be retired:
 >>
 >>     repo-remove /var/cache/local-patches/local-patches.db.tar.zst aquamarine aquamarine-debug
@@ -68,14 +70,15 @@ note "PATCH-LOST"
 cat <<EOF
 
 !! aquamarine $installed replaced the locally patched ${expected:-<none recorded>}.
-!! Unless this release contains the upstream fix, the post-resume CRTC wedge
-!! (Fault D) is BACK: after suspend/resume the screens can freeze with input
-!! apparently dead. Check first:
+!! Unless this release contains both upstream fixes, the post-resume CRTC
+!! wedge (Fault D) and/or the multi-output shutdown SIGSEGV can recur.
+!! Check first:
 !!
 !!     https://github.com/hyprwm/aquamarine/issues/386   (is #395 merged/released?)
+!!     https://github.com/hyprwm/aquamarine/issues/383   (is the null guard merged/released?)
 !!     grep -c 'before disconnect' /usr/lib/libaquamarine.so.*   # 0 = no such path
 !!
-!! If the fix is in: set fixed_upstream_version in this script and retire the
+!! If both fixes are in: set fixed_upstream_version in this script and retire the
 !! patch (see above). If not, rebuild the patched package:
 !!
 !!     cd ~/pkgs/aquamarine && git pull      # refresh Arch's PKGBUILD

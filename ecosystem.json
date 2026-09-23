@@ -39,17 +39,17 @@
       "name": "aquamarine",
       "status": "active",
       "added": "2026-09-11",
-      "summary": "Disable the KMS pipeline before tearing down a disconnected connector; without it a resume or hotplug can hand a still-active CRTC to another connector and every atomic commit fails (Fault D)",
+      "summary": "Disable KMS before disconnect cleanup to prevent the CRTC wedge (Fault D), and skip cleared connector slots while flushing async events to prevent a shutdown SIGSEGV (aquamarine #383)",
       "upstream": { "repo": "https://github.com/hyprwm/aquamarine", "license": "BSD-3-Clause" },
       "upstream_version": "0.15.0",
       "arch_version": "0.15.0-2",
-      "local_version": "0.15.0-2.1",
+      "local_version": "0.15.0-2.2",
       "fork": {
         "repo": "https://github.com/greenermoose/aquamarine",
         "checkout": "~/Code/aquamarine",
         "release_tag": "v0.15.0",
-        "tag": "v0.15.0-fred.1",
-        "compare_url": "https://github.com/hyprwm/aquamarine/compare/v0.15.0...greenermoose:aquamarine:v0.15.0-fred.1"
+        "tag": "v0.15.0-fred.2",
+        "compare_url": "https://github.com/hyprwm/aquamarine/compare/v0.15.0...greenermoose:aquamarine:v0.15.0-fred.2"
       },
       "patches": [
         {
@@ -59,10 +59,18 @@
           "commit": "cf638ba",
           "author": "Nico Duldhardt (klaudworks) — cherry-picked from upstream PR #395 with authorship preserved",
           "filed": { "url": "https://github.com/hyprwm/aquamarine/pull/395", "state": "closed 2026-09-09, unvouched author (not ours); tracking issue hyprwm/aquamarine#386" }
+        },
+        {
+          "file": "aquamarine-guard-null-connectors.patch",
+          "subject": "drm: skip null connectors when flushing async commit events",
+          "branch": "patch/guard-null-connectors",
+          "commit": "1cda9c3",
+          "author": "Codex API (GPT-6), directed by Fred",
+          "filed": { "url": "https://github.com/hyprwm/aquamarine/issues/383", "state": "upstream issue open; no fix PR linked as of 2026-09-22" }
         }
       ],
-      "retires_when": "an Arch aquamarine release whose SDRMConnector::disconnect() disables KMS before the teardown (watch hyprwm/aquamarine#386); version unknown until it lands",
-      "verify_binary": "strings /usr/lib/libaquamarine.so.0.15.0 | grep -q 'Disabled KMS output'",
+      "retires_when": "an Arch aquamarine release containing both the KMS disable in SDRMConnector::disconnect() (#386/#395) and a null connector guard in flushAsyncCommitEvents() (#383); version unknown until both land",
+      "verify_binary": "strings /usr/lib/libaquamarine.so.0.15.0 | grep -q 'Disabled KMS output' && grep -q 'if (connector && connector->output' /usr/src/debug/aquamarine/aquamarine-0.15.0/src/backend/drm/DRM.cpp",
       "depended_on_by": ["omarchy-fred-config", "fred.monitor (planned)"],
       "notes": "packages/aquamarine/README.md"
     },

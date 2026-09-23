@@ -3,8 +3,8 @@
 
 pkgname=aquamarine
 pkgver=0.15.0
-pkgrel=2.1
-# patches: exported from https://github.com/greenermoose/aquamarine tag v0.15.0-fred.1 by 'omarchy-fred-ecosystem export aquamarine'
+pkgrel=2.2
+# patches: exported from https://github.com/greenermoose/aquamarine tag v0.15.0-fred.2 by 'omarchy-fred-ecosystem export aquamarine'
 # (registry: https://github.com/greenermoose/omarchy-fred-ecosystem/tree/main/packages/aquamarine)
 pkgdesc='a very light linux rendering backend library'
 arch=(x86_64 aarch64)
@@ -30,16 +30,21 @@ makedepends=(cmake
 provides=("lib$pkgname.so")
 _archive="$pkgname-$pkgver"
 source=("$url/archive/v$pkgver/$_archive.tar.gz"
-        aquamarine-disable-kms-before-disconnect.patch)
+        aquamarine-disable-kms-before-disconnect.patch
+        aquamarine-guard-null-connectors.patch)
 sha256sums=('bb5323f58cd2f379cb11c39893336e49980fe2e9fb101745addd87cebde3d13d'
-            '0c520567c1ceadea262dac06444be68a57908c8813b96258762a6d2cc5d0cdb8')
+            '0c520567c1ceadea262dac06444be68a57908c8813b96258762a6d2cc5d0cdb8'
+            'a0ef8e48164b27e99ceb9b3964bc082771b125b3d9b80b65fa3818cae2b3e8c1')
 
 prepare() {
 	cd "$_archive"
 	# Local patch (see the .patch header): disable the KMS pipeline before a
 	# disconnected connector is torn down, upstream PR #395 / issue #386.
-	# This patch and the pkgrel=2.1 bump retire themselves when Arch ships it.
+	# These patches and the local pkgrel suffix retire when Arch ships both fixes.
 	patch -Np1 -i "$srcdir/aquamarine-disable-kms-before-disconnect.patch"
+	# Guard connector slots cleared by the destructor before later outputs flush
+	# async commit events (aquamarine #383).
+	patch -Np1 -i "$srcdir/aquamarine-guard-null-connectors.patch"
 }
 
 build() {
