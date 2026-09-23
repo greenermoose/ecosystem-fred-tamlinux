@@ -1,8 +1,8 @@
 # AI Collaboration Session Archive: `omarchy-fred-ecosystem`
 
 Prompt history, tools, models and key decisions for this repository. Patches
-themselves were authored in earlier sessions recorded in
-`omarchy-fred-config` (private) and summarised in `AI_PROVENANCE.md` §3.
+themselves were authored in earlier sessions recorded in the private
+workstation config and summarised in `AI_PROVENANCE.md` §3.
 
 ---
 

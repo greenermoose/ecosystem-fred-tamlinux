@@ -69,9 +69,9 @@ pkexec pacman -U ./<pkg>-*.pkg.tar.zst
 `omarchy-fred-ecosystem install <pkg>` does the same and also publishes into a
 local `[local-patches]` pacman repository so upgrades keep the precedence rule
 above. The full procedure — building, the local repo, the retirement hook,
-rollback — is Fred's runbook `local-package-patching.md` in
-[`omarchy-fred-config`](https://github.com/greenermoose/config-fred-tamlinux)
-(private; the relevant parts are reproduced in each package's `README.md`).
+rollback — is Fred's `local-package-patching.md` runbook in the private
+workstation config (the relevant parts are reproduced in each package's
+`README.md`).
 
 ## Licence
 

@@ -8,7 +8,7 @@
     "fork_tags": "<release-tag>-fred.<N>, N bumped whenever the patch set changes (independent of pkgrel)",
     "local_version": "Arch's version with pkgrel <archrel>.<N>: outranks Arch's build of the same version, loses to any newer Arch build, so the patch retires itself",
     "patches": "exported from the fork with `omarchy-fred-ecosystem export <pkg>` (git format-patch, one file per commit, in order); builds stay tarball + patches",
-    "posting_upstream": "see docs/agent-guides/upstream-engagement.md in omarchy-fred-config: agents never post on hyprwm/*; issue-first elsewhere with AI use disclosed"
+    "posting_upstream": "see the workstation upstream-engagement guide: agents never post on hyprwm/*; issue-first elsewhere with AI use disclosed"
   },
   "packages": [
     {
@@ -32,7 +32,7 @@
       ],
       "retires_when": "Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison",
       "verify_binary": "DEBUGINFOD_URLS= gdb -q -batch -ex 'disassemble /s linux_dmabuf_format_table' /usr/lib/libgtk-4.so.1 | grep -q 'mov    0x20(%rdi),%rdi'",
-      "depended_on_by": ["omarchy-fred-config"],
+      "depended_on_by": ["private workstation checkout"],
       "notes": "packages/gtk4/README.md"
     },
     {
@@ -71,7 +71,7 @@
       ],
       "retires_when": "an Arch aquamarine release containing both the KMS disable in SDRMConnector::disconnect() (#386/#395) and a null connector guard in flushAsyncCommitEvents() (#383); version unknown until both land",
       "verify_binary": "strings /usr/lib/libaquamarine.so.0.15.0 | grep -q 'Disabled KMS output' && grep -q 'if (connector && connector->output' /usr/src/debug/aquamarine/aquamarine-0.15.0/src/backend/drm/DRM.cpp",
-      "depended_on_by": ["omarchy-fred-config", "fred.monitor (planned)"],
+      "depended_on_by": ["private workstation checkout", "fred.monitor (planned)"],
       "notes": "packages/aquamarine/README.md"
     },
     {
@@ -116,7 +116,7 @@
       "retires_when": "an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1",
       "verify_binary": "test \"$(strings /usr/bin/Hyprland | grep -c 'connected while DPMS is off')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'inhibit state unchanged')\" = 1 && test \"$(strings /usr/bin/Hyprland | grep -c 'compositor-wide')\" = 1",
       "abi_note": "same tarball, same GIT_COMMIT_HASH, so the plugin ABI string is unchanged and hyprbars keeps loading; never build from the fork's git tree",
-      "depended_on_by": ["omarchy-fred-config", "omarchy-fred-workspaces", "fred.monitor (planned)"],
+      "depended_on_by": ["private workstation checkout", "omarchy-fred-workspaces", "fred.monitor (planned)"],
       "notes": "packages/hyprland/README.md"
     },
     {
@@ -145,7 +145,7 @@
       ],
       "retires_when": "Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release",
       "verify_binary": "test \"$(strings -el /usr/bin/omawrite | grep -c 'no longer on disk')\" = 1",
-      "depended_on_by": ["omarchy-fred-config (omawrite-review, skill omawrite-review)"],
+      "depended_on_by": ["private workstation checkout (omawrite-review, skill omawrite-review)"],
       "notes": "packages/omawrite/README.md"
     },
     {
@@ -189,7 +189,7 @@
       ],
       "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via omarchy-fred-ecosystem retire omarchy",
       "verify_binary": "rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml && rg -q 'scaleSafeSize' /usr/share/omarchy/shell/plugins/bar/Bar.qml",
-      "depended_on_by": ["omarchy-fred-config", "fred.agents", "fred.monitor", "fred.sysinfo", "fred.clock", "fred.workspaces"],
+      "depended_on_by": ["private workstation checkout", "fred.agents", "fred.monitor", "fred.sysinfo", "fred.clock", "fred.workspaces"],
       "notes": "packages/omarchy/README.md"
     }
   ]

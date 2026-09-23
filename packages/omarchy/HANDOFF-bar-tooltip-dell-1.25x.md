@@ -75,4 +75,4 @@ Cursor plan: `~/.cursor/plans/scale-safe_tooltip_height_25713f94.plan.md`
 
 ## fred.agents
 
-**No plugin change** required for this fix (uses stock bar `tooltipText`). No pending `fred.agents` commits from this hover work in `omarchy-fred-agents` or `omarchy-fred-config`.
+**No plugin change** required for this fix (uses stock bar `tooltipText`). No pending `fred.agents` commits from this hover work in the published `agents-fred-tamlinux` tree or the local workstation checkout.
