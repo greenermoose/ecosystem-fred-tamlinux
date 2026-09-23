@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# omarchy-fred-ecosystem — keep Fred's patched third-party packages honest:
+# tam-ecosystem — keep Fred's patched third-party packages honest:
 # the fork branch is the source of truth for a change, ~/pkgs/<pkg> builds it,
 # and this registry (ecosystem.json + packages/<pkg>/) records it publicly.
 #
@@ -24,7 +24,7 @@
 set -euo pipefail
 
 VERSION="0.1.0"
-SELF="omarchy-fred-ecosystem"
+SELF="tam-ecosystem"
 
 ECO_DIR="${FRED_ECOSYSTEM_DIR:-$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)}"
 PKGS_DIR="${FRED_PKGS_DIR:-$HOME/pkgs}"
