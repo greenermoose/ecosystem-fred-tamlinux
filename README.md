@@ -60,7 +60,7 @@ packages/<pkg>/                this repo — the recipe, the hook, the notes
 ## Building one package
 
 ```bash
-git clone https://github.com/greenermoose/omarchy-fred-ecosystem ~/Code/omarchy-fred-ecosystem
+git clone https://github.com/greenermoose/ecosystem-fred-tamlinux ~/Code/omarchy-fred-ecosystem
 cd ~/Code/omarchy-fred-ecosystem/packages/<pkg>
 makepkg -Cf --noconfirm              # as your user, never root
 pkexec pacman -U ./<pkg>-*.pkg.tar.zst
@@ -70,7 +70,7 @@ pkexec pacman -U ./<pkg>-*.pkg.tar.zst
 local `[local-patches]` pacman repository so upgrades keep the precedence rule
 above. The full procedure — building, the local repo, the retirement hook,
 rollback — is Fred's runbook `local-package-patching.md` in
-[`omarchy-fred-config`](https://github.com/greenermoose/omarchy-fred-config)
+[`omarchy-fred-config`](https://github.com/greenermoose/config-fred-tamlinux)
 (private; the relevant parts are reproduced in each package's `README.md`).
 
 ## Licence
@@ -84,7 +84,7 @@ omawrite, LGPL-2.1+ for GTK). `PKGBUILD` files derive from Arch Linux packaging
 
 ## Related
 
-- [`omarchy-fred-plugin`](https://github.com/greenermoose/omarchy-fred-plugin)
+- [`omarchy-fred-plugin`](https://github.com/greenermoose/plugin-fred-tamlinux)
   — the `fred.*` plugin suite manager and the ecosystem showcase site.
 - [`AI_PROVENANCE.md`](AI_PROVENANCE.md) and
   [`docs/ai/sessions.md`](docs/ai/sessions.md) — which tools and models did what.

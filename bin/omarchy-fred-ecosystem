@@ -3,7 +3,7 @@
 # the fork branch is the source of truth for a change, ~/pkgs/<pkg> builds it,
 # and this registry (ecosystem.json + packages/<pkg>/) records it publicly.
 #
-# Part of https://github.com/greenermoose/omarchy-fred-ecosystem
+# Part of https://github.com/greenermoose/ecosystem-fred-tamlinux
 # License: GPL-3.0-or-later
 #
 # Subcommands:

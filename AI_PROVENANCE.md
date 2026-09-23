@@ -50,3 +50,7 @@ Session ids are transcript identifiers in the workstation's local session
 stores (Claude: `~/.claude/projects/-home-fred/<id>.jsonl`; Antigravity:
 `~/.gemini/antigravity-cli/brain/<id>/`), listed so the provenance can be
 audited, not reconstructed.
+
+## 2026-09-22 repository rename
+
+Codex CLI `0.155.1` (`gpt-6-sol`) updated canonical GitHub links for `ecosystem-fred-tamlinux`. [Session record](docs/ai/2026-09-22-github-repository-rename.md).
