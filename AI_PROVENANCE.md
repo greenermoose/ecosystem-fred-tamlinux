@@ -16,7 +16,7 @@ pull requests. See [`README.md`](README.md) §"Why this exists".
 | Tool & Interface | CLI Version | Backing Models | Primary Role |
 | :-- | :-- | :-- | :-- |
 | **Claude Code** (`claude`) | `2.1.274` | Claude Opus 5 (`claude-opus-5`) | Architecture, planning, this repository's design and first content; diagnosis and patches for the hyprland and omawrite rigs. |
-| **Codex CLI** (`codex`) | `0.154.0` | `gpt-6-astra`, `gpt-5.6-sol` | Second opinion on plans. |
+| **Codex CLI** (`codex`) | `0.156.1` | `gpt-6-astra`, `gpt-5.6-sol`, `gpt-6-sol` | Second opinion on plans and upstream survey documentation. |
 | **Codex API** | N/A (API session) | GPT-6 | Diagnosed and patched the Aquamarine null connector shutdown crash. |
 | **Antigravity CLI** (`agy`) | `1.2.3` | Gemini 3.8 Flash (High) | Coding and implementation on the plugin side; omawrite close-button and 80-column patches. |
 | **OpenCode** (`opencode`) | `1.18.30` | Big Pickle | Arch/Omarchy Q&A. |
@@ -56,3 +56,10 @@ audited, not reconstructed.
 ## 2026-09-22 repository rename
 
 Codex CLI `0.155.1` (`gpt-6-sol`) updated canonical GitHub links for `ecosystem-fred-tamlinux`. [Session record](docs/ai/2026-09-22-github-repository-rename.md).
+
+## 2026-09-23 upstream survey foundation
+
+Codex CLI `0.156.1` (`gpt-6-sol`) established the root upstream reference
+and dated survey directory for this repository. This was documentation only;
+no field survey or runtime change was made.
+[Session record](docs/ai/2026-09-23-upstream-survey-foundation.md).

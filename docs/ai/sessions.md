@@ -82,3 +82,6 @@ workstation config and summarised in `AI_PROVENANCE.md` §3.
 Daily command is `tam-ecosystem`; long alias is `ecosystem-fred-tamlinux`.
 No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
 
+## 2026-09-23 upstream survey foundation
+
+- [Codex session record](2026-09-23-upstream-survey-foundation.md).
