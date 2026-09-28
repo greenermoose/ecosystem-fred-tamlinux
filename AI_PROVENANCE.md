@@ -11,6 +11,17 @@ the Hyprland organisation) refuse AI-authored contributions, which is one
 reason these fixes are published as fork branches and recipes rather than
 pull requests. See [`README.md`](README.md) §"Why this exists".
 
+## How to read this record
+
+This repository follows the Tamlinux [AI provenance standard](https://github.com/greenermoose/tamlinux/blob/main/docs/ai-provenance-standard.md). In
+brief: commits made with AI help carry `AI-Tool` and `AI-Model` trailers, and
+each session record in [`docs/ai/`](docs/ai/) gives the date, tool version,
+model, Fred's guiding prompts verbatim, the commits, and the decisions. Session
+transcripts are retained privately by the author, so the records carry no
+session IDs or local transcript paths.
+
+---
+
 ## 1. Fred's Multi-Agent AI Toolchain
 
 | Tool & Interface | CLI Version | Backing Models | Primary Role |
@@ -37,21 +48,20 @@ Versions captured 2026-09-17 (`claude --version`); others as last recorded in
 
 | Package | Patch | Written by | Human decisions |
 | :-- | :-- | :-- | :-- |
-| gtk4 | dmabuf format-table munmap | upstream (GTK MR !10166); backport and rig by Claude Code (session `d35cb8fc`, 2026-09-06) | Fred: patch rather than wait; retire-when rule |
+| gtk4 | dmabuf format-table munmap | upstream (GTK MR !10166); backport and rig by Claude Code (2026-09-06) | Fred: patch rather than wait; retire-when rule |
 | aquamarine | disable KMS before disconnect | klaudworks (upstream PR #395), carried unchanged; rig by Claude Code (2026-09-11) | Fred: adopt the closed PR; authorship preserved on the fork |
 | aquamarine | guard null connectors during async event flush | Codex API (GPT-6; fork patchset commit `1cda9c3`, 2026-09-22) | Fred: asked to fix the proven shutdown segfault locally; keep the KMS patch |
 | hyprland | inherit DPMS state on connect | Claude Code (Claude Opus 5; fork commit `13fd6355`, 2026-09-13) | Fred: reproduce with a 15 s idle timeout, ship locally |
-| hyprland | idle-notify inhibit unchanged no-op | Claude Code (Claude Opus 5; session `cee8d980`, 2026-09-17) | Fred: overnight incident triage, ship locally |
-| omawrite | in-window close button | Antigravity `agy` (Gemini 3.8 Flash (High); session `41fe8bbb`, 2026-09-10) | Fred: requested the control |
+| hyprland | idle-notify inhibit unchanged no-op | Claude Code (Claude Opus 5; 2026-09-17) | Fred: overnight incident triage, ship locally |
+| omawrite | in-window close button | Antigravity `agy` (Gemini 3.8 Flash (High); 2026-09-10) | Fred: requested the control |
 | omawrite | always open the CLI file | Claude Code, 2026-09-11 (`fix(omawrite): verify desktop review documents`) | Fred: `omawrite-review` must be able to prove which file is shown |
 | omawrite | stale "File removed" dialog | Claude Code (Claude Opus 5; 2026-09-11, config commit `d5c9187`) | Fred: agents rewrite open files; Reload must work |
 | omawrite | shortcuts dialog binding loop | Claude Code (Claude Opus 5; fork commit `fab54d3`, 2026-09-17; PR omacom/omawrite#72) | — |
-| omawrite | editor width 65 → 80 columns | Antigravity `agy` (Gemini 3.8 Flash (High); session `97c52d40`, 2026-09-17) | Fred: 65 columns wrapped standard text on wide displays |
+| omawrite | editor width 65 → 80 columns | Antigravity `agy` (Gemini 3.8 Flash (High); 2026-09-17) | Fred: 65 columns wrapped standard text on wide displays |
 
-Session ids are transcript identifiers in the workstation's local session
-stores (Claude: `~/.claude/projects/-home-fred/<id>.jsonl`; Antigravity:
-`~/.gemini/antigravity-cli/brain/<id>/`), listed so the provenance can be
-audited, not reconstructed.
+Each attribution above was taken from the session transcript, not
+reconstructed from memory. The transcripts are retained privately by the
+author; see [How to read this record](#how-to-read-this-record).
 
 ## 2026-09-22 repository rename
 
@@ -63,3 +73,10 @@ Codex CLI `0.156.1` (`gpt-6-sol`) established the root upstream reference
 and dated survey directory for this repository. This was documentation only;
 no field survey or runtime change was made.
 [Session record](docs/ai/2026-09-23-upstream-survey-foundation.md).
+
+## 2026-09-28 private session IDs
+
+Claude Code `2.1.283` (`claude-opus-5-5`) removed session IDs and local
+transcript paths from this repository's AI records and linked the public
+provenance standard. Documentation only.
+[Session record](docs/ai/2026-09-28-private-session-ids.md).

@@ -10,7 +10,7 @@ workstation config and summarised in `AI_PROVENANCE.md` §3.
 
 - **CLI Tool**: `claude` `2.1.274` (Claude Code)
 - **Model**: Claude Opus 5 (`claude-opus-5`)
-- **Transcript Reference**: `d6c65ea2-7efb-41ed-bae1-86bc3f78d651`
+- **Transcript**: Retained privately by the author.
 - **Participants**: Fred (@greenermoose), Claude Code
 
 ### Guiding Prompt
@@ -77,7 +77,7 @@ workstation config and summarised in `AI_PROVENANCE.md` §3.
 - **CLI Tool**: Cursor `3.21.16`
 - **Model**: `composer`
 - **Commit**: `30bb5a6`
-- **Transcript Reference**: `68f9fa04-2323-4102-841a-25ab29a68985`
+- **Transcript**: Retained privately by the author.
 
 Daily command is `tam-ecosystem`; long alias is `ecosystem-fred-tamlinux`.
 No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
@@ -85,3 +85,7 @@ No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
 ## 2026-09-23 upstream survey foundation
 
 - [Codex session record](2026-09-23-upstream-survey-foundation.md).
+
+## 2026-09-28 private session IDs
+
+- [Claude Code session record](2026-09-28-private-session-ids.md).
