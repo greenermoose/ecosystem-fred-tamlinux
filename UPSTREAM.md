@@ -4,7 +4,8 @@ This repository records carried patches to third-party packages. Start with
 [ECOSYSTEM.md](ECOSYSTEM.md), [ecosystem.json](ecosystem.json), and the
 [package records](packages/) for the exact upstream release, fork branch,
 patch source, and retirement condition of each carried fix. The current
-package set includes Omarchy, Hyprland, aquamarine, GTK, and Omawrite.
+active package set includes aquamarine, Hyprland, omawrite, and omarchy
+(with gtk4 retired on 2026-10-04).
 
 For a Fred-requested survey of a patch or replacement, inspect the recorded
 upstream project first, then its newer releases, issues, forks, and independent

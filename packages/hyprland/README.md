@@ -4,8 +4,8 @@
 |---|---|
 | Upstream | [hyprwm/Hyprland](https://github.com/hyprwm/Hyprland) (BSD-3-Clause) |
 | Fork | [greenermoose/Hyprland](https://github.com/greenermoose/Hyprland), tag `v0.56.2-fred.3` — [compare with v0.56.2](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) |
-| Patched version | `0.56.2-3.3` (Arch packaging tag `0.56.2-3` + 3 patches; only `hyprland` and `hyprland-debug` are built, `hyprpm` is left to Arch) |
-| Added | 2026-09-13 (patch 1), 2026-09-17 (patches 2 and 3) |
+| Patched version | `0.56.2-4.1` (Arch packaging tag `0.56.2-4` + 3 patches; only `hyprland` and `hyprland-debug` are built, `hyprpm` is left to Arch) |
+| Added | 2026-09-13 (patch 1), 2026-09-17 (patches 2 and 3); rebuilt against Arch 0.56.2-4 on 2026-10-04 |
 | Retires when | an Arch hyprland release containing **all three** fixes. If only some land first, drop those patches from the PKGBUILD and rebuild as `<arch>.1` |
 | Upstream state | patch 1 was filed as [#16290](https://github.com/hyprwm/Hyprland/pull/16290) and closed 2026-09-17 by the vouch bot; patches 2 and 3 were never filed. None will be (re-)filed — hyprwm's AI-usage policy bans AI-authored PRs and these are AI-authored. The draft texts stay in `upstream-pr.md` as documentation |
 
@@ -108,4 +108,4 @@ compositor keeps the old binary — log out and back in after installing.
 `PKGBUILD` / `PKGBUILD.arch-orig`, the three patches (exported from fork commits
 `68a4dfe2`, `a7a03d6f` and `3e4303a7`, in that order), `50-hyprland-local-patch.hook`,
 `hyprland-local-patch-check`, `upstream-pr.md` (draft texts, not to be filed).
-Rollback: Arch's `hyprland-0.56.2-2` package, then log out and back in.
+Rollback: Arch's `hyprland-0.56.2-4` package, then log out and back in.

@@ -12,7 +12,7 @@ patch is rebased or retired; a newer Arch build is reported, not installed.
 | [gtk4](retired/gtk4/README.md) | retired | `1:4.22.4-1.1` | none (upstream has it) | 1 | — | Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison | private workstation checkout |
 | [aquamarine](packages/aquamarine/README.md) | active | `0.15.1-1.1` | [v0.15.1-fred.1](https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1) | 1 | [hyprwm/aquamarine/issues/383](https://github.com/hyprwm/aquamarine/issues/383) | an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383) | private workstation checkout, fred.monitor (planned) |
 | [hyprland](packages/hyprland/README.md) | active | `0.56.2-4.1` | [v0.56.2-fred.3](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) | 3 | [hyprwm/Hyprland/pull/16290](https://github.com/hyprwm/Hyprland/pull/16290) | an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1 | private workstation checkout, workspaces-fred-tamlinux, fred.monitor (planned) |
-| [omawrite](packages/omawrite/README.md) | active | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout (omawrite-review, skill omawrite-review) |
+| [omawrite](packages/omawrite/README.md) | active | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout |
 | [omarchy](packages/omarchy/README.md) | active | `4.0.4-1.3` | [v4.0.4-fred.2](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) | 3 | — | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy | private workstation checkout, fred.agents, fred.monitor, fred.sysinfo, fred.clock, fred.workspaces |
 <!-- registry:end -->
 
@@ -33,11 +33,16 @@ patch is rebased or retired; a newer Arch build is reported, not installed.
 
 | Repository | Needs | Because |
 |---|---|---|
-| Private workstation checkout | all four | the workstation itself; `omawrite-review` (how agents show Fred their plans) hard-depends on the omawrite patches |
+| Private workstation checkout | all four | the workstation itself (aquamarine shutdown crash guard, hyprland DPMS/idle blanking, omawrite editor usability, omarchy bar tooltip scale safety) |
 | [workspaces-fred-tamlinux](https://github.com/greenermoose/workspaces-fred-tamlinux) | hyprland | its per-monitor idle blanking depends on per-output DPMS isolation (patch 3); its hotplug `reconcile` focuses windows, which on stock Hyprland resets the idle clock (patch 2); and a reconnecting monitor stays dark (patch 1) |
-| fred.monitor (planned) | aquamarine, hyprland | per-display reset/retrain assumes a KMS teardown that does not wedge on resume (Fault D) and DPMS-aware reconnects |
+| Omarchy bar plugins (`fred.agents`, `fred.monitor`, `fred.sysinfo`, `fred.clock`, `fred.workspaces`) | omarchy | its shared bar tooltip reserves border padding and sizes the popup so logical size × DPR is integer physical pixels; without it, bottom border clips on fractional scale (Dell 1.25×) across bar widgets |
+| fred.monitor (planned) | aquamarine, hyprland | per-display reset/retrain assumes stable shutdown/reconnect (aquamarine null-connector guard #383) and DPMS-aware reconnects (the Fault D KMS teardown fix is upstream in aquamarine 0.15.1) |
 
 ## Retired
 
-Nothing yet. Retired entries move to [`retired/`](retired/) with their last
-recipe and README so the history stays readable; the fork tag stays in place.
+Retired entries move to [`retired/`](retired/) with their last recipe and
+README so the history stays readable; the fork tag stays in place.
+
+| Package | Retired | Upstream resolution |
+|---|---|---|
+| [gtk4](retired/gtk4/README.md) | 2026-10-04 | Arch shipped `1:4.22.5-1`, which includes GTK MR !10166 fixing the Wayland dmabuf format table munmap crash |

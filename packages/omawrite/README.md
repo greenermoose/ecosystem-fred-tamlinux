@@ -1,4 +1,4 @@
-# omawrite — five fixes the `omawrite-review` workflow depends on
+# omawrite — five fixes for the Omawrite editor
 
 | | |
 |---|---|
@@ -9,10 +9,12 @@
 | Retires when | Arch ships omawrite ≥ 0.5.1 with a native close button, reliable CLI opening, a working Reload in the "File removed" dialog, a loop-free shortcuts dialog and ≥ 80-column width; otherwise rebase the stack onto the new release |
 | Upstream state | [#72](https://github.com/omacom/omawrite/pull/72) (PR, patch 4) and [#73](https://github.com/omacom/omawrite/issues/73) (issue with patch 3 inline) open since 2026-09-17; one PR at a time, AI use disclosed |
 
-**Why it matters:** `omawrite-review` is how every agent on Fred's workstation
-shows him a plan or draft — it launches `omawrite <file>` and verifies the
-window title. Stock 0.5.0 can ignore the file argument and open `Untitled.md`,
-so losing this patch set means agents cannot show their work.
+**Why it matters:** The workstation agent review workflow previously used
+`omawrite-review` before transitioning to `micro-review`. These five patches
+remain active to fix core editor usability issues: stock 0.5.0 lacks an in-window
+close button, can ignore CLI file arguments to open `Untitled.md`, leaves the
+Reload button broken when a file is modified/re-created externally, logs
+shortcuts-dialog binding loops on startup, and clamps text width to 65 columns.
 
 ## The stack (fork branch `patchset/v0.5.0`)
 
@@ -50,7 +52,7 @@ stops doing what it claims. Build with `makepkg -Cf`.
 ```bash
 strings -el /usr/bin/omawrite | grep -c 'no longer on disk'   # 1
 QT_FORCE_STDERR_LOGGING=1 QT_QPA_PLATFORM=offscreen timeout -s TERM 4 omawrite ~/some.md 2>&1 | grep -c 'Binding loop'   # 0 (4 on stock)
-omawrite-review /absolute/path/file.md   # Hyprland reports that exact filename in the window title
+omawrite /absolute/path/file.md   # Hyprland reports that exact filename in the window title
 ```
 
 Windows opened before the install still run the old binary — reopen them.

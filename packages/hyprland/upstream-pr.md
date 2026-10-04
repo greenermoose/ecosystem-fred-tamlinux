@@ -1,6 +1,6 @@
 # NOTE (2026-09-17): both drafts below are documentation only. hyprwm auto-closes PRs from unvouched
 # contributors and its AI-usage policy bans AI-authored PRs, so neither is (re-)filed; the patches are
-# published on greenermoose/Hyprland (patch/*, patchset/v0.56.2, tag v0.56.2-fred.2) and in
+# published on greenermoose/Hyprland (patch/*, patchset/v0.56.2, tag v0.56.2-fred.3) and in
 # greenermoose/ecosystem-fred-tamlinux. See docs/agent-guides/upstream-engagement.md.
 
 # Draft PR for hyprwm/Hyprland

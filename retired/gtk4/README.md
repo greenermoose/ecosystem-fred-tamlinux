@@ -6,6 +6,7 @@
 | Fork | **none** — the fix is already upstream; this is a backport of GTK MR [!10166](https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10166) |
 | Patched version | `1:4.22.4-1.1` (Arch `1:4.22.4-1` + patch) |
 | Added | 2026-09-06 |
+| Retired | 2026-10-04 (Arch shipped `1:4.22.5-1` containing MR !10166) |
 | Retires when | Arch ships gtk4 ≥ 4.22.5 (but not 4.23.0–4.23.2) or ≥ 4.23.3 — the hook does the comparison |
 
 ## Bug
@@ -38,7 +39,9 @@ Offset `+0x20` is `dmabuf_format_table`; the crashing build loaded `+0x28`
 
 `PKGBUILD` (diff against `PKGBUILD.arch-orig` is the whole change), the patch,
 Arch's own `*.hook`/`*.script` install hooks (unchanged, sourced by the
-PKGBUILD), and — on the machine — `/etc/pacman.d/hooks/50-gtk4-local-patch.hook`,
-`/usr/local/bin/gtk4-local-patch-check`, `/var/lib/gtk4-local-patch/`.
+PKGBUILD), and the historical recipe files. Following retirement on 2026-10-04,
+the local package was retired and `/etc/pacman.d/hooks/50-gtk4-local-patch.hook`,
+`/usr/local/bin/gtk4-local-patch-check`, and `/var/lib/gtk4-local-patch/` were
+removed from the workstation.
 
 Rollback: `pkexec pacman -U /var/cache/pacman/pkg/gtk4-1:4.22.4-1-x86_64.pkg.tar.zst`.

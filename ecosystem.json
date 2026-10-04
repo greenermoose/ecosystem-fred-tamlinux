@@ -6,7 +6,7 @@
   "conventions": {
     "fork_branches": "patch/<slug> per patch and patchset/<release-tag> integration branch, both off the upstream release tag the PKGBUILD builds; `fred` always points at the current patchset and is the fork's default branch",
     "fork_tags": "<release-tag>-fred.<N>, N bumped whenever the patch set changes (independent of pkgrel)",
-    "local_version": "Arch's version with pkgrel <archrel>.<N>: outranks Arch's build of the same version, loses to any newer Arch build, so the patch retires itself",
+    "local_version": "Arch's version with pkgrel <archrel>.<N>: listed first in pacman.conf so it stays pinned until rebased or retired; local-patches-upstream-check warns when Arch moves ahead",
     "patches": "exported from the fork with `tam-ecosystem export <pkg>` (git format-patch, one file per commit, in order); builds stay tarball + patches",
     "posting_upstream": "see the workstation upstream-engagement guide: agents never post on hyprwm/*; issue-first elsewhere with AI use disclosed"
   },
@@ -116,7 +116,7 @@
       "name": "omawrite",
       "status": "active",
       "added": "2026-09-10",
-      "summary": "Five fixes the omawrite-review workflow depends on: in-window close button, always open the CLI file, a 'File removed' dialog that recovers and whose Reload works, no shortcuts-dialog binding loop, 80-column editor width",
+      "summary": "Five fixes for Omawrite: in-window close button, always open the CLI file, a 'File removed' dialog that recovers and whose Reload works, no shortcuts-dialog binding loop, 80-column editor width (agent review workflow transitioned to micro-review)",
       "upstream": { "repo": "https://github.com/omacom/omawrite", "license": "MIT" },
       "upstream_version": "0.5.0",
       "arch_version": "0.5.0-1",
@@ -138,7 +138,7 @@
       ],
       "retires_when": "Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release",
       "verify_binary": "test \"$(strings -el /usr/bin/omawrite | grep -c 'no longer on disk')\" = 1",
-      "depended_on_by": ["private workstation checkout (omawrite-review, skill omawrite-review)"],
+      "depended_on_by": ["private workstation checkout"],
       "notes": "packages/omawrite/README.md"
     },
     {
