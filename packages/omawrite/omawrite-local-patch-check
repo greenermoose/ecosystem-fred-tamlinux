@@ -34,8 +34,9 @@ if fixed_upstream "$installed"; then
   note "upstream-newer"
   cat <<END
 >> omawrite $installed is newer than the locally patched 0.5.0-1.5.
->> The local patches are GONE until you act. \`omawrite-review\` (how agents show
->> Fred their plans) depends on the CLI-file patch, so check now, not later:
+>> The local patches are GONE until you act. The agent review workflow now uses
+>> micro-review and does not depend on these Omawrite patches. Check the Omawrite
+>> behaviors themselves:
 >>
 >>   1. Does \`omawrite /abs/path/file.md\` open that file (not Untitled.md)?
 >>   2. Is there an in-window close button?
