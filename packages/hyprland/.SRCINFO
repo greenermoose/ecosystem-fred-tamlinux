@@ -1,7 +1,7 @@
 pkgbase = hyprland
 	pkgdesc = a highly customizable dynamic tiling Wayland compositor
 	pkgver = 0.56.2
-	pkgrel = 3.3
+	pkgrel = 4.1
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
 	arch = aarch64

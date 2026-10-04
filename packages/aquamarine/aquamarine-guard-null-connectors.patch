@@ -1,4 +1,4 @@
-From 1cda9c3ef3d6fe87df36ee37afdef48455c02334 Mon Sep 17 00:00:00 2001
+From 1291a490232c3594cb68993f0f4a645150a59325 Mon Sep 17 00:00:00 2001
 From: Fred Horch <fred.horch@gmail.com>
 Date: Tue, 22 Sep 2026 20:48:20 -0400
 Subject: drm: skip null connectors when flushing async commit events
@@ -15,7 +15,7 @@ AI-Model: GPT-6
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/backend/drm/DRM.cpp b/src/backend/drm/DRM.cpp
-index ee8b5a4b09e31c9eb6a05aece4ab7670b5a05ef6..539b2cf53c57f4ed7c7be9987054a6de009e4e1e 100644
+index 431247b5f958f24512e964b45e89a5e6237d8651..75007bf67d46ae003362363a3e4d57bc3ce222bb 100644
 --- a/src/backend/drm/DRM.cpp
 +++ b/src/backend/drm/DRM.cpp
 @@ -497,7 +497,7 @@ void Aquamarine::CDRMBackend::emitAsyncCommitEvent(SP<CDRMOutput> output) {

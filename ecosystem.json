@@ -13,7 +13,7 @@
   "packages": [
     {
       "name": "gtk4",
-      "status": "active",
+      "status": "retired",
       "added": "2026-09-06",
       "summary": "Wayland dmabuf format table: munmap of the wrong pointer crashed every GTK4 Wayland app on the second dmabuf feedback round",
       "upstream": { "repo": "https://gitlab.gnome.org/GNOME/gtk", "license": "LGPL-2.1-or-later" },
@@ -33,44 +33,37 @@
       "retires_when": "Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison",
       "verify_binary": "DEBUGINFOD_URLS= gdb -q -batch -ex 'disassemble /s linux_dmabuf_format_table' /usr/lib/libgtk-4.so.1 | grep -q 'mov    0x20(%rdi),%rdi'",
       "depended_on_by": ["private workstation checkout"],
-      "notes": "packages/gtk4/README.md"
+      "notes": "retired/gtk4/README.md",
+      "retired": "2026-10-04"
     },
     {
       "name": "aquamarine",
       "status": "active",
       "added": "2026-09-11",
-      "summary": "Disable KMS before disconnect cleanup to prevent the CRTC wedge (Fault D), and skip cleared connector slots while flushing async events to prevent a shutdown SIGSEGV (aquamarine #383)",
+      "summary": "Skip cleared connector slots while flushing async events to prevent a shutdown SIGSEGV (aquamarine #383). The KMS-disable-before-disconnect patch (Fault D) retired in 0.15.1: upstream #410 is the same fix",
       "upstream": { "repo": "https://github.com/hyprwm/aquamarine", "license": "BSD-3-Clause" },
-      "upstream_version": "0.15.0",
-      "arch_version": "0.15.0-2",
-      "local_version": "0.15.0-2.2",
+      "upstream_version": "0.15.1",
+      "arch_version": "0.15.1-1",
+      "local_version": "0.15.1-1.1",
       "fork": {
         "repo": "https://github.com/greenermoose/aquamarine",
         "checkout": "~/Code/aquamarine",
-        "release_tag": "v0.15.0",
-        "tag": "v0.15.0-fred.2",
-        "compare_url": "https://github.com/hyprwm/aquamarine/compare/v0.15.0...greenermoose:aquamarine:v0.15.0-fred.2"
+        "release_tag": "v0.15.1",
+        "tag": "v0.15.1-fred.1",
+        "compare_url": "https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1"
       },
       "patches": [
-        {
-          "file": "aquamarine-disable-kms-before-disconnect.patch",
-          "subject": "drm: disable KMS output before disconnect cleanup",
-          "branch": "patch/disable-kms-before-disconnect",
-          "commit": "cf638ba",
-          "author": "Nico Duldhardt (klaudworks) — cherry-picked from upstream PR #395 with authorship preserved",
-          "filed": { "url": "https://github.com/hyprwm/aquamarine/pull/395", "state": "closed 2026-09-09, unvouched author (not ours); tracking issue hyprwm/aquamarine#386" }
-        },
         {
           "file": "aquamarine-guard-null-connectors.patch",
           "subject": "drm: skip null connectors when flushing async commit events",
           "branch": "patch/guard-null-connectors",
-          "commit": "1cda9c3",
+          "commit": "1291a49",
           "author": "Codex API (GPT-6), directed by Fred",
-          "filed": { "url": "https://github.com/hyprwm/aquamarine/issues/383", "state": "upstream issue open; no fix PR linked as of 2026-09-22" }
+          "filed": { "url": "https://github.com/hyprwm/aquamarine/issues/383", "state": "upstream issue open; no fix in v0.15.1 (checked 2026-10-04)" }
         }
       ],
-      "retires_when": "an Arch aquamarine release containing both the KMS disable in SDRMConnector::disconnect() (#386/#395) and a null connector guard in flushAsyncCommitEvents() (#383); version unknown until both land",
-      "verify_binary": "strings /usr/lib/libaquamarine.so.0.15.0 | grep -q 'Disabled KMS output' && grep -q 'if (connector && connector->output' /usr/src/debug/aquamarine/aquamarine-0.15.0/src/backend/drm/DRM.cpp",
+      "retires_when": "an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383)",
+      "verify_binary": "grep -q 'if (connector && connector->output' /usr/src/debug/aquamarine/aquamarine-0.15.1/src/backend/drm/DRM.cpp",
       "depended_on_by": ["private workstation checkout", "fred.monitor (planned)"],
       "notes": "packages/aquamarine/README.md"
     },
@@ -81,8 +74,8 @@
       "summary": "Three fixes: a monitor that connects while DPMS is off stays dark, an unchanged idle-inhibit re-evaluation (every focus change) no longer resets ext-idle-notify timers, and a per-monitor `dpms off` no longer makes the next mouse move anywhere re-light it",
       "upstream": { "repo": "https://github.com/hyprwm/Hyprland", "license": "BSD-3-Clause" },
       "upstream_version": "0.56.2",
-      "arch_version": "0.56.2-3",
-      "local_version": "0.56.2-3.3",
+      "arch_version": "0.56.2-4",
+      "local_version": "0.56.2-4.1",
       "fork": {
         "repo": "https://github.com/greenermoose/Hyprland",
         "checkout": "~/Code/Hyprland",

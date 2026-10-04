@@ -245,7 +245,7 @@ cmd_render() {
     def filed: [.patches[] | select(.filed != null and .filed.url != null) | "[\(.filed.url | sub("https://github.com/";""))](\(.filed.url))"] | join(", ") | if . == "" then "—" else . end;
     "| Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |",
     "|---|---|---|---|---|---|---|---|",
-    (.packages[] | "| [\(.name)](packages/\(.name)/README.md) | \(.status) | `\(.local_version)` | \(fork) | \(.patches | length) | \(filed) | \(.retires_when) | \(.depended_on_by | join(", ")) |")
+    (.packages[] | "| [\(.name)](\(.notes)) | \(.status) | `\(.local_version)` | \(fork) | \(.patches | length) | \(filed) | \(.retires_when) | \(.depended_on_by | join(", ")) |")
   ' "$REGISTRY")
   local tmp; tmp=$(mktemp)
   awk -v b="$begin" -v e="$end" -v t="$table" '
@@ -262,6 +262,10 @@ cmd_retire() {
   [[ "$(pkg_field "$pkg" .status)" == "active" ]] || fail "$pkg is not active"
   [[ -d "$ECO_DIR/packages/$pkg" ]] || fail "no packages/$pkg to retire"
   local today; today=$(date +%F)
+  if [[ ${DRY_RUN:-0} == 1 ]]; then
+    log "[dry-run] would git mv packages/$pkg retired/$pkg, mark it retired ($today) in ecosystem.json, and re-render ECOSYSTEM.md"
+    return 0
+  fi
   (cd "$ECO_DIR" && git mv "packages/$pkg" "retired/$pkg")
   jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "retired/\($n)/README.md")' \
     "$REGISTRY" > "$REGISTRY.tmp" && mv -f "$REGISTRY.tmp" "$REGISTRY"

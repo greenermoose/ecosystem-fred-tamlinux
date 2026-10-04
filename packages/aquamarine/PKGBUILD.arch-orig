@@ -2,8 +2,8 @@
 # Contributor: Aaron Blasko <blaskoazzolaaaron [at] gmail.com>
 
 pkgname=aquamarine
-pkgver=0.15.0
-pkgrel=2
+pkgver=0.15.1
+pkgrel=1
 pkgdesc='a very light linux rendering backend library'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/$pkgname"
@@ -28,7 +28,7 @@ makedepends=(cmake
 provides=("lib$pkgname.so")
 _archive="$pkgname-$pkgver"
 source=("$url/archive/v$pkgver/$_archive.tar.gz")
-sha256sums=('bb5323f58cd2f379cb11c39893336e49980fe2e9fb101745addd87cebde3d13d')
+sha256sums=('2f9de98c0bd1b7b1b09c576e390a2fef436449762fb334163c414f0c300296f2')
 
 build() {
 	cd "$_archive"

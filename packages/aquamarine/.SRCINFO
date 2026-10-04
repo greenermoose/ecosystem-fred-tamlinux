@@ -1,7 +1,7 @@
 pkgbase = aquamarine
 	pkgdesc = a very light linux rendering backend library
-	pkgver = 0.15.0
-	pkgrel = 2.2
+	pkgver = 0.15.1
+	pkgrel = 1.1
 	url = https://github.com/hyprwm/aquamarine
 	arch = x86_64
 	arch = aarch64
@@ -30,11 +30,9 @@ pkgbase = aquamarine
 	depends = libwayland-client.so
 	depends = wayland-protocols
 	provides = libaquamarine.so
-	source = https://github.com/hyprwm/aquamarine/archive/v0.15.0/aquamarine-0.15.0.tar.gz
-	source = aquamarine-disable-kms-before-disconnect.patch
+	source = https://github.com/hyprwm/aquamarine/archive/v0.15.1/aquamarine-0.15.1.tar.gz
 	source = aquamarine-guard-null-connectors.patch
-	sha256sums = bb5323f58cd2f379cb11c39893336e49980fe2e9fb101745addd87cebde3d13d
-	sha256sums = 0c520567c1ceadea262dac06444be68a57908c8813b96258762a6d2cc5d0cdb8
-	sha256sums = a0ef8e48164b27e99ceb9b3964bc082771b125b3d9b80b65fa3818cae2b3e8c1
+	sha256sums = 2f9de98c0bd1b7b1b09c576e390a2fef436449762fb334163c414f0c300296f2
+	sha256sums = 91b97d3fc9e6a7f78f9f66bb68cecd946329027d246a3162c591ac3b5a04721a
 
 pkgname = aquamarine

@@ -50,10 +50,17 @@ packages/<pkg>/                this repo — the recipe, the hook, the notes
 - **Builds stay tarball + patches.** The fork is for reading and for
   `format-patch`; `makepkg` keeps consuming Arch's source tarball, so things
   like Hyprland's plugin-ABI hash are unchanged.
-- **Patches retire themselves.** The rebuilt package carries `pkgrel <arch>.N`,
-  which outranks Arch's build of the same version and loses to any newer Arch
-  build. A pacman hook (`packages/<pkg>/50-*.hook`) reports whether the newer
-  build contains the fix. Nothing is pinned; `IgnorePkg` is never used.
+- **Patches are pinned loudly, then retired by hand.** The rebuilt package
+  carries `pkgrel <arch>.N`, and the local repository is listed first in
+  `pacman.conf`. pacman takes a package from the first repository that lists
+  it, so the patched build stays installed even after Arch ships a newer one.
+  (An earlier version of this README said version arithmetic made Arch's newer
+  build win. It does not.) A check run after every pacman transaction compares
+  each local package with Arch's and warns when Arch is ahead (`vercmp` <
+  0 against the `<arch>` base). The per-package hook
+  (`packages/<pkg>/50-*.hook`) says whether the installed build is still the
+  patched one. Then the patch is rebased onto the new release or retired.
+  `IgnorePkg`, which pins silently, is never used.
 - **No binaries are published.** This repo shares recipes, not packages. Build
   them yourself: see below.
 
