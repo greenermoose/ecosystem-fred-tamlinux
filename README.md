@@ -82,7 +82,7 @@ tam-ecosystem retire <pkg>           # retire a carried patch
 
 Open-source projects are closing their pull-request queues. Writing code got cheap; reviewing it did not, and maintainers are drowning in machine-generated submissions — GitHub shipped collaborator-only PR controls in August 2026, and projects from Ghostty and tldraw to Zig, GIMP, and QEMU now refuse outside code (background: [arXiv 2609.12236](https://arxiv.org/html/2609.12236), [The Register](https://www.theregister.com/2026/02/03/github_kill_switch_pull_requests_ai/)). The Hyprland organisation gates on a hand-written vouch and [forbids](https://github.com/hyprwm/.github/blob/main/policies/AI_USAGE.md) AI-written PRs outright.
 
-The patches here are produced by AI coding agents working under Fred's direction, with the tool, model, and prompts recorded ([`AI_PROVENANCE.md`](AI_PROVENANCE.md)). That is honest — and it is exactly what those projects do not want to review. So the fixes are published the way that costs nobody a review: a branch on a public fork that anyone, upstream included, can read in context and take, plus the recipe that turns it into a package. An upstream merge is welcome; it is not the deliverable.
+The patches here are produced by AI coding agents working under Fred's direction, with the tool, model, and prompts recorded ([`AI_PROVENANCE.md`](AI_PROVENANCE.md)). That is exactly what those projects do not want to review. So the fixes are published the way that costs nobody a review: a branch on a public fork that anyone, upstream included, can read in context and take, plus the recipe that turns it into a package. An upstream merge is welcome; it is not the deliverable.
 
 ### How a Patch Is Carried
 
