@@ -13,9 +13,10 @@
 #                       reproduce the fork tag's tree; the tarball in ~/pkgs matches the
 #                       release tag; versions agree; pkgrel carries the .N suffix
 #   status  [pkg]       one line per package: registry, installed, hook status
-#   render              rewrite the tables in ECOSYSTEM.md from ecosystem.json
-#   retire  <pkg>       move packages/<pkg> to retired/<pkg>, mark it retired
-#   install <pkg>       (new machine) build packages/<pkg>, publish into the
+#   render              rewrite the tables in ECOSYSTEM.md and rebuild knowledge indexes
+#   index               rebuild knowledge/index.tsv and knowledge/index.json
+#   retire  <pkg>       mark patches/<pkg> retired in ecosystem.json
+#   install <pkg>       (new machine) build patches/<pkg>, publish into the
 #                       [local-patches] repo, install, install the pacman hook
 #   survey  [cat|pkg]   query evaluated packages and architectural dossiers
 #   guide   [page]      open the ecosystem offline guide via tam (or text fallback)
@@ -70,7 +71,7 @@ fork_checkout() {
 # Which directory holds the build recipe: ~/pkgs/<pkg> when it exists (this is
 # the workstation that builds), else the registry copy (a fresh machine).
 recipe_dir() {
-  if [[ -d "$PKGS_DIR/$1" ]]; then echo "$PKGS_DIR/$1"; else echo "$ECO_DIR/packages/$1"; fi
+  if [[ -d "$PKGS_DIR/$1" ]]; then echo "$PKGS_DIR/$1"; elif [[ -d "$ECO_DIR/patches/$1" ]]; then echo "$ECO_DIR/patches/$1"; else echo "$ECO_DIR/packages/$1"; fi
 }
 
 # format-patch flags shared by export and verify so the two agree byte for byte.
@@ -292,6 +293,79 @@ print('\n'.join(lines))
     mv -f "$tmp" "$md"
     log "rendered considered packages table in ECOSYSTEM.md"
   fi
+  cmd_index
+}
+
+# --- index --------------------------------------------------------------------
+cmd_index() {
+  python3 - "$ECO_DIR" << 'PYEOF'
+import json, re, sys
+from pathlib import Path
+
+def extract_attr(tag, attr):
+    m = re.search(r'\b' + re.escape(attr) + r'\s*=\s*["\']([^"\']*)["\']', tag, re.I)
+    return m.group(1).strip() if m else None
+
+def parse_page(path, rel_path):
+    text = path.read_text(encoding="utf-8", errors="replace")
+    m_title = re.search(r'<title>(.*?)</title>', text, re.I | re.S)
+    title = m_title.group(1).strip() if m_title else ""
+    m_h1 = re.search(r'<h1>(.*?)</h1>', text, re.I | re.S)
+    h1 = m_h1.group(1).strip() if m_h1 else ""
+    if not title:
+        title = h1
+
+    topic, summary, keywords = None, None, []
+    level, track = "beginner", "improve"
+
+    for tag in re.findall(r'<meta\b(?:[^>"\'/]|"[^"]*"|\'[^\']*\')*>', text, re.I):
+        name = extract_attr(tag, "name")
+        content = extract_attr(tag, "content")
+        if not name or content is None:
+            continue
+        n = name.lower()
+        if n == "topic": topic = content.strip()
+        elif n == "summary": summary = content.strip()
+        elif n == "keywords": keywords.extend([k.strip() for k in content.split(",") if k.strip()])
+        elif n == "level": level = content.strip().lower()
+        elif n == "track": track = content.strip().lower()
+
+    if not topic: topic = rel_path.replace(".html", "").replace("/", "-")
+    if not summary: summary = title
+
+    return {
+        "topic": topic,
+        "path": rel_path,
+        "title": title,
+        "summary": summary,
+        "keywords": keywords,
+        "level": level,
+        "track": track,
+    }
+
+root = Path(sys.argv[1])
+knowledge_dir = root / "knowledge"
+entries = []
+for html_file in sorted(knowledge_dir.rglob("*.html")):
+    rel = html_file.relative_to(knowledge_dir).as_posix()
+    entries.append(parse_page(html_file, rel))
+
+entries.sort(key=lambda e: e["topic"])
+
+tsv_path = knowledge_dir / "index.tsv"
+with open(tsv_path, "w", encoding="utf-8") as f:
+    f.write("topic\tpath\ttitle\tsummary\tkeywords\tlevel\ttrack\n")
+    for e in entries:
+        kws = ", ".join(e["keywords"])
+        f.write(f"{e['topic']}\t{e['path']}\t{e['title']}\t{e['summary']}\t{kws}\t{e['level']}\t{e['track']}\n")
+
+json_path = knowledge_dir / "index.json"
+with open(json_path, "w", encoding="utf-8") as f:
+    json.dump(entries, f, indent=2)
+    f.write("\n")
+
+print(f"tam-ecosystem: indexed {len(entries)} knowledge pages into index.tsv and index.json")
+PYEOF
 }
 
 # --- survey -------------------------------------------------------------------
@@ -405,6 +479,8 @@ cmd_guide() {
 cmd_export_knowledge() {
   local dest="${1:-$CODE_DIR/tamlinux/tam/knowledge}"
   dest=$(expand_home "$dest")
+  log "rebuilding local knowledge index..."
+  cmd_index
   log "exporting ecosystem knowledge pages to $dest"
   mkdir -p "$dest/ecosystem"
   cp -rf "$ECO_DIR/knowledge/ecosystem/." "$dest/ecosystem/"
@@ -420,14 +496,13 @@ cmd_retire() {
   local pkg=${1:?usage: $SELF retire <pkg>}
   pkg_json "$pkg" >/dev/null
   [[ "$(pkg_field "$pkg" .status)" == "active" ]] || fail "$pkg is not active"
-  [[ -d "$ECO_DIR/packages/$pkg" ]] || fail "no packages/$pkg to retire"
+  [[ -d "$ECO_DIR/patches/$pkg" || -d "$ECO_DIR/packages/$pkg" ]] || fail "no patches/$pkg to retire"
   local today; today=$(date +%F)
   if [[ ${DRY_RUN:-0} == 1 ]]; then
-    log "[dry-run] would git mv packages/$pkg retired/$pkg, mark it retired ($today) in ecosystem.json, and re-render ECOSYSTEM.md"
+    log "[dry-run] would mark $pkg retired ($today) in ecosystem.json, and re-render ECOSYSTEM.md"
     return 0
   fi
-  (cd "$ECO_DIR" && git mv "packages/$pkg" "retired/$pkg")
-  jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "retired/\($n)/README.md")' \
+  jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "patches/\($n)/README.md")' \
     "$REGISTRY" > "$REGISTRY.tmp" && mv -f "$REGISTRY.tmp" "$REGISTRY"
   cmd_render
   log "retired $pkg in the registry. Still to do on the machine (runbook §8): remove the rig, the repo entries, the hook, the check script and the state dir; leave the fork tag in place."
@@ -497,6 +572,7 @@ case "${1:-}" in
   verify)  cmd_verify "${2:-}";;
   status)  cmd_status "${2:-}";;
   render)  cmd_render;;
+  index)   cmd_index;;
   retire)  cmd_retire "${2:-}";;
   install) cmd_install "${2:-}";;
   survey)  cmd_survey "${2:-}";;

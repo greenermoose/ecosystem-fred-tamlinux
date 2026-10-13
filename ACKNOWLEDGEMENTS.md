@@ -6,7 +6,7 @@ Names are ordered alphabetically by the displayed public name (case and accents 
 
 Tamlinux additions are distributed under GPL-3.0-or-later; see [LICENSE](LICENSE). Upstream works retain their own terms. Copyright notices are attributed to works and their stated holders, not inferred from contributor counts. The Free Software Foundation copyright on a GPL/LGPL license document is not treated as ownership of the software. These thanks supplement, and do not replace, required license and source notices.
 
-[UPSTREAM.md](UPSTREAM.md) records this repository’s code ancestry and design references. A runtime dependency, design inspiration, bug report and copied component are different contributions; the entries say which connection is established.
+[ECOSYSTEM.md](ECOSYSTEM.md) and [README.md](README.md) record this repository’s code ancestry, upstream relationships, and design references. A runtime dependency, design inspiration, bug report and copied component are different contributions; the entries say which connection is established.
 
 Each named entry identifies an authored component, a documented design influence, a specific change or public report, or responsibility for a foundation used by this repository. Contributor-roster membership alone is not enough for a named entry. Wider communities are credited collectively below.
 

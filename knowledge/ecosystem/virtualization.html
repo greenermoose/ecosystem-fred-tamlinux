@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Virtualization, Emulation & Containment: QEMU, Docker, and Suspra</title>
+<meta name="topic" content="ecosystem-virtualization">
+<meta name="summary" content="Virtualization and emulation: QEMU, Docker, WSL, UTM, and clean-room testing">
+<meta name="keywords" content="virtualization, emulation, qemu, docker, wsl, utm, tart, orbstack, containers, suspra">
+<meta name="level" content="intermediate">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>Virtualization, Emulation & Containment</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>Operating system development requires rigorous isolation, clean-room installation testing,
+cross-architecture compilation, and cross-platform validation. Tamlinux evaluates virtualization
+and containerization tools across two primary operational domains:</p>
+
+<ul>
+<li><strong>Clean-Room Testing & Emulation:</strong> Verifying Tamlinux installers, kernels, and
+software rendering backends in pristine virtual environments without risking physical hardware.</li>
+<li><strong>Cross-Platform Compatibility (Suspra Tier 2):</strong> Providing virtualized Tamlinux
+environments on macOS and Windows hosts as part of the broader Suspra multi-tier architecture (D116).</li>
+</ul>
+
+<h2>1. Evaluated Engines</h2>
+
+<ul>
+<li><strong>QEMU:</strong> Selected foundational machine emulator and virtualizer. Leveraging KVM
+acceleration on Linux development hosts, QEMU enables clean-room automated ISO installation testing
+and can emulate legacy graphics adapters (Bochs VBE, Cirrus, standard VGA) to verify that Tamlinux's
+software <code>pixman</code> CPU renderer boots without hardware OpenGL acceleration.</li>
+<li><strong>Docker:</strong> Selected container engine for reproducible build environments. Provides
+lightweight process isolation via Linux kernel namespaces and cgroups v2 to compile C commands (<code>tam</code>)
+and test dependencies inside minimal Void, Arch, and Debian root filesystems.</li>
+<li><strong>WSL (Windows Subsystem for Linux):</strong> Evaluated compatibility layer. Provides a native
+Linux kernel VM on Windows 10/11, enabling Windows developers to run Tamlinux CLI tools under Suspra Tier 2.</li>
+<li><strong>UTM:</strong> Evaluated open-source QEMU-based virtualization tool for macOS, running ARM64 and
+emulated x86_64 guest machines.</li>
+<li><strong>Tart:</strong> Evaluated command-line VM runner built on Apple's native Virtualization.framework
+for high-speed ephemeral CI/CD automation.</li>
+<li><strong>OrbStack:</strong> Evaluated lightweight commercial macOS hypervisor; serves as an energy-efficiency
+benchmark for developer VM tooling.</li>
+</ul>
+
+<h2>2. The Suspra Multi-Tier Model (D116)</h2>
+
+<p>Fred defined the three Suspra tiers:</p>
+<ol>
+<li><strong>Tier 1:</strong> Web-delivered interfaces and lightweight remote services.</li>
+<li><strong>Tier 2:</strong> Virtualized or containerized Tamlinux environments running on macOS and Windows hosts.</li>
+<li><strong>Tier 3:</strong> Bare-metal native Tamlinux workstation with direct hardware modesetting.</li>
+</ol>
+
+<p>By coupling QEMU for bare-metal emulation with Docker for clean compilation sandboxes, Tamlinux ensures
+that every release is verified against pristine baselines before touching bare-metal drives.</p>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+</body>
+</html>

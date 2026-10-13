@@ -47,7 +47,7 @@
       "depended_on_by": [
         "private workstation checkout"
       ],
-      "notes": "retired/gtk4/README.md",
+      "notes": "patches/gtk4/README.md",
       "retired": "2026-10-04"
     },
     {
@@ -88,7 +88,7 @@
         "private workstation checkout",
         "fred.monitor (planned)"
       ],
-      "notes": "packages/aquamarine/README.md"
+      "notes": "patches/aquamarine/README.md"
     },
     {
       "name": "hyprland",
@@ -117,7 +117,7 @@
           "commit": "68a4dfe2",
           "filed": {
             "url": "https://github.com/hyprwm/Hyprland/pull/16290",
-            "state": "closed 2026-09-17 by bot (unvouched); not to be re-filed \u2014 hyprwm AI policy"
+            "state": "closed 2026-09-17 by bot (unvouched); not to be re-filed — hyprwm AI policy"
           }
         },
         {
@@ -127,7 +127,7 @@
           "commit": "a7a03d6f",
           "filed": {
             "url": null,
-            "state": "not filed and not to be filed \u2014 hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md"
+            "state": "not filed and not to be filed — hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md"
           }
         },
         {
@@ -137,7 +137,7 @@
           "commit": "3e4303a7",
           "filed": {
             "url": null,
-            "state": "not filed and not to be filed \u2014 hyprwm AI policy"
+            "state": "not filed and not to be filed — hyprwm AI policy"
           }
         }
       ],
@@ -149,7 +149,7 @@
         "workspaces-fred-tamlinux",
         "fred.monitor (planned)"
       ],
-      "notes": "packages/hyprland/README.md"
+      "notes": "patches/hyprland/README.md"
     },
     {
       "name": "omawrite",
@@ -219,14 +219,14 @@
       "depended_on_by": [
         "private workstation checkout"
       ],
-      "notes": "retired/omawrite/README.md",
+      "notes": "patches/omawrite/README.md",
       "retired": "2026-10-04"
     },
     {
       "name": "omarchy",
       "status": "active",
       "added": "2026-09-21",
-      "summary": "Bar tooltip reserves border padding like PanelToolTip and ceils width/height so logical size \u00d7 DPR is an integer physical pixel count (fixes Dell 1.25\u00d7 bottom-border clip)",
+      "summary": "Bar tooltip reserves border padding like PanelToolTip and ceils width/height so logical size × DPR is an integer physical pixel count (fixes Dell 1.25× bottom-border clip)",
       "upstream": {
         "repo": "https://github.com/basecamp/omarchy",
         "license": "MIT"
@@ -273,7 +273,7 @@
           }
         }
       ],
-      "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size \u00d7 DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy",
+      "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy",
       "verify_binary": "rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml && rg -q 'scaleSafeSize' /usr/share/omarchy/shell/plugins/bar/Bar.qml",
       "depended_on_by": [
         "private workstation checkout",
@@ -283,7 +283,7 @@
         "fred.clock",
         "fred.workspaces"
       ],
-      "notes": "packages/omarchy/README.md"
+      "notes": "patches/omarchy/README.md"
     }
   ],
   "philosophy": {
@@ -418,7 +418,7 @@
       "license": "LGPL-2.1-or-later",
       "status": "active",
       "role": "Current standard C library on Arch Linux workstation and primary Void tier",
-      "decision_ref": "base-operating-system.md \u00a7C Library Evaluation",
+      "decision_ref": "base-operating-system.md §C Library Evaluation",
       "summary": "The ubiquitous, feature-complete standard C library for GNU/Linux systems.",
       "resource_profile": "Standard memory footprint, dynamic linker NSS modules, locale support",
       "rationale": "glibc is the active userland anchor on Arch Linux. Provides total binary compatibility with upstream binaries (Google Chrome, VS Code, Cursor, proprietary graphics drivers) and comprehensive POSIX/GNU extensions. Evaluated against musl for the upcoming Void pilot."
@@ -431,7 +431,7 @@
       "license": "MIT",
       "status": "deferred",
       "role": "Alternative C library evaluated for minimal footprint Void/Alpine profiles",
-      "decision_ref": "base-operating-system.md \u00a7C Library Evaluation",
+      "decision_ref": "base-operating-system.md §C Library Evaluation",
       "summary": "A clean, lightweight, standards-conformant C library designed for static linking and efficiency.",
       "resource_profile": "Ultra-small memory and disk footprint (~600 KB total size), fast thread creation",
       "rationale": "musl offers unmatched simplicity, strict POSIX compliance, and minimal memory usage. Deferred to Void pilot milestone 1.2 to measure real-world workstation impact. Showstoppers to test include proprietary browser/IDE execution and proprietary GPU driver support."
@@ -470,7 +470,7 @@
       "license": "GPL and various",
       "status": "fallback",
       "role": "Designated fallback distribution if Void presents showstoppers",
-      "decision_ref": "D68, D126; base-operating-system.md \u00a7Target and fallback",
+      "decision_ref": "D68, D126; base-operating-system.md §Target and fallback",
       "summary": "A fast, lightweight, systemd-free desktop/core distribution built on Debian Stable/Testing.",
       "resource_profile": "Extremely low RAM footprint (~150MB base), runit init, older hardware optimization",
       "rationale": "antiX Core with runit is the designated fallback target. Its Debian foundation offers vast binary package availability while completely decoupling from systemd. Chosen for its proven track record keeping older hardware useful."
@@ -548,7 +548,7 @@
       "license": "GPL and various",
       "status": "evaluated",
       "role": "Enterprise-grade rolling and stable RPM distribution",
-      "decision_ref": "Peer survey \u00a710",
+      "decision_ref": "Peer survey §10",
       "summary": "A community distribution sponsored by SUSE, featuring Zypper, YaST, and Open Build Service.",
       "resource_profile": "Full-featured RPM distribution, Snapper Btrfs integration",
       "rationale": "openSUSE's implementation of Snapper Btrfs snapshots for rollback was analyzed as a design reference for Tamlinux's Btrfs recovery plan on Void."
@@ -600,7 +600,7 @@
       "license": "LGPL-2.1-only",
       "status": "selected",
       "role": "Reproducible package and deployment framework for Tamlinux software",
-      "decision_ref": "D132, D114, D72; LIFECYCLE.md \u00a73",
+      "decision_ref": "D132, D114, D72; LIFECYCLE.md §3",
       "summary": "A purely functional package manager providing reproducible builds, atomic upgrades, and instant rollback.",
       "resource_profile": "Immutable /nix/store, symlink trees, flake.lock pinning, no runtime daemon",
       "rationale": "Nix is selected for Tamlinux's software delivery layer (tamlinux-packages and Home Manager). It allows Tamlinux to package its shell, tools, and plugins into immutable, bit-for-bit reproducible store paths. Test and Run deployments point to exact flake commits, making rollbacks instantaneous and rock-solid across any host."
@@ -626,7 +626,7 @@
       "license": "BSD-2-Clause",
       "status": "selected",
       "role": "Target native package manager on Void Linux base",
-      "decision_ref": "D68, D126; base-operating-system.md \u00a7Package and service ownership",
+      "decision_ref": "D68, D126; base-operating-system.md §Package and service ownership",
       "summary": "A fast, native C package manager developed for Void Linux, featuring atomic transactions and xbps-src.",
       "resource_profile": "Fastest package manager in its class, clean library design, no background daemon",
       "rationale": "XBPS was built from scratch in C for Void. It offers atomic package transactions, rapid dependency resolution, and xbps-src, a clean chroot-based source package build system. Tamlinux will maintain native xbps-src templates for its workstation components."
@@ -665,7 +665,7 @@
       "license": "BSD-3-Clause",
       "status": "selected",
       "role": "Selected init and service supervision system for Void/antiX base",
-      "decision_ref": "D68, D126; base-operating-system.md \u00a7Target and fallback",
+      "decision_ref": "D68, D126; base-operating-system.md §Target and fallback",
       "summary": "A UNIX init scheme with service supervision, created by Gerrit Pape.",
       "resource_profile": "Tiny memory footprint (~sub-megabyte), near-instant boot, process supervision via runsvdir/runsv",
       "rationale": "runit embodies the Unix philosophy of doing one thing well. It provides deterministic, rock-solid service supervision (automatically restarting failed daemons), lightning-fast boot times, and tiny memory usage without creeping into network, logging, or device management."
@@ -716,7 +716,7 @@
       "url": "https://swaywm.org/",
       "license": "MIT",
       "status": "selected",
-      "role": "Selected long-term tiling Wayland compositor for Tamlinux (0.7\u20131.0+)",
+      "role": "Selected long-term tiling Wayland compositor for Tamlinux (0.7–1.0+)",
       "decision_ref": "D64, D119, D120, D124, D126; compositor survey 2026-10-03",
       "summary": "An i3-compatible Wayland compositor built on wlroots, written in clean C.",
       "resource_profile": "Minimal idle CPU/RAM usage (~30-50MB), wlroots pixman CPU rendering for vintage GPUs, seatd compatibility",
@@ -743,7 +743,7 @@
       "license": "GPL-3.0-or-later",
       "status": "evaluated",
       "role": "Scrollable-tiling Wayland compositor written in Rust",
-      "decision_ref": "compositor survey 2026-10-03, peer survey \u00a711",
+      "decision_ref": "compositor survey 2026-10-03, peer survey §11",
       "summary": "A scrollable-tiling Wayland compositor offering an infinite horizontal ribbon workflow.",
       "resource_profile": "Written in Rust on Smithay; requires hardware OpenGL/Vulkan (rejects software EGL)",
       "rationale": "Niri offers an intuitive horizontal window ribbon paradigm. Evaluated during the 2026-10-03 compositor survey. Disqualified for the baseline because it strictly requires hardware OpenGL/Vulkan and cannot run on software pixman renderers for older hardware."
@@ -756,7 +756,7 @@
       "license": "GPL-3.0-only",
       "status": "evaluated",
       "role": "Dynamic tiling Wayland compositor written in Zig",
-      "decision_ref": "compositor survey 2026-10-03, peer survey \u00a711",
+      "decision_ref": "compositor survey 2026-10-03, peer survey §11",
       "summary": "A dynamic tiling Wayland compositor with a modular external layout generator architecture.",
       "resource_profile": "Written in Zig on wlroots, low idle footprint, external layout processes",
       "rationale": "river's architecture separates window management from layout generation (layouts run as external standalone processes). Highly regarded, but Sway's mature i3 IPC and established multi-display output management made Sway the superior choice for Tamlinux."
@@ -860,7 +860,7 @@
       "license": "MIT",
       "status": "evaluated",
       "role": "Rust framework for building custom Wayland compositors",
-      "decision_ref": "Peer survey \u00a711",
+      "decision_ref": "Peer survey §11",
       "summary": "A modular engine for building Wayland compositors in Rust, powering Cosmic Epoch and Niri.",
       "resource_profile": "Memory-safe Rust implementation, modern GPU backend focus",
       "rationale": "Smithay is the leading Rust foundation for Wayland. Evaluated during compositor surveys; its reliance on modern GPU hardware acceleration limits its use for Tamlinux's vintage hardware targets."
@@ -1042,7 +1042,7 @@
       "license": "GPL-3.0 / MIT",
       "status": "evaluated",
       "role": "Family of native Wayland desktop tools and shell components",
-      "decision_ref": "Peer survey \u00a710",
+      "decision_ref": "Peer survey §10",
       "summary": "An open collection of native Wayland projects designed for lightweight desktop workflows.",
       "resource_profile": "Modular Wayland clients",
       "rationale": "Studied during peer project surveys (2026-10-08) as an example of modular, native Wayland desktop component architecture."
@@ -1055,7 +1055,7 @@
       "license": "GPL-3.0-only",
       "status": "evaluated",
       "role": "Material Design desktop shell for Wayland",
-      "decision_ref": "Peer survey \u00a71",
+      "decision_ref": "Peer survey §1",
       "summary": "A complete desktop shell adhering to Google Material Design standards on Wayland.",
       "resource_profile": "Full desktop environment shell",
       "rationale": "Surveyed as a peer project building a standalone shell across compositors; reinforced Tamlinux's decision to use standard protocol layers (ext-workspace-v1) rather than compositor-specific private IPC."

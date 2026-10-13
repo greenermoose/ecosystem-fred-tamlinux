@@ -206,6 +206,26 @@
     "track": "improve"
   },
   {
+    "topic": "ecosystem-virtualization",
+    "path": "ecosystem/virtualization.html",
+    "title": "Virtualization, Emulation & Containment: QEMU, Docker, and Suspra",
+    "summary": "Virtualization and emulation: QEMU, Docker, WSL, UTM, and clean-room testing",
+    "keywords": [
+      "virtualization",
+      "emulation",
+      "qemu",
+      "docker",
+      "wsl",
+      "utm",
+      "tart",
+      "orbstack",
+      "containers",
+      "suspra"
+    ],
+    "level": "intermediate",
+    "track": "improve"
+  },
+  {
     "topic": "guide",
     "path": "index.html",
     "title": "Tamlinux Ecosystem Guide",

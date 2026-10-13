@@ -14,11 +14,11 @@ Generated table from [`ecosystem.json`](ecosystem.json) (`tam-ecosystem render`)
 <!-- registry:begin -->
 | Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |
 |---|---|---|---|---|---|---|---|
-| [gtk4](retired/gtk4/README.md) | retired | `1:4.22.4-1.1` | none (upstream has it) | 1 | — | Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison | private workstation checkout |
-| [aquamarine](packages/aquamarine/README.md) | active | `0.15.1-1.1` | [v0.15.1-fred.1](https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1) | 1 | [hyprwm/aquamarine/issues/383](https://github.com/hyprwm/aquamarine/issues/383) | an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383) | private workstation checkout, fred.monitor (planned) |
-| [hyprland](packages/hyprland/README.md) | active | `0.56.2-4.1` | [v0.56.2-fred.3](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) | 3 | [hyprwm/Hyprland/pull/16290](https://github.com/hyprwm/Hyprland/pull/16290) | an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1 | private workstation checkout, workspaces-fred-tamlinux, fred.monitor (planned) |
-| [omawrite](retired/omawrite/README.md) | retired | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout |
-| [omarchy](packages/omarchy/README.md) | active | `4.0.4-1.3` | [v4.0.4-fred.2](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) | 3 | — | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy | private workstation checkout, fred.agents, fred.monitor, fred.sysinfo, fred.clock, fred.workspaces |
+| [gtk4](patches/gtk4/README.md) | retired | `1:4.22.4-1.1` | none (upstream has it) | 1 | — | Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison | private workstation checkout |
+| [aquamarine](patches/aquamarine/README.md) | active | `0.15.1-1.1` | [v0.15.1-fred.1](https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1) | 1 | [hyprwm/aquamarine/issues/383](https://github.com/hyprwm/aquamarine/issues/383) | an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383) | private workstation checkout, fred.monitor (planned) |
+| [hyprland](patches/hyprland/README.md) | active | `0.56.2-4.1` | [v0.56.2-fred.3](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) | 3 | [hyprwm/Hyprland/pull/16290](https://github.com/hyprwm/Hyprland/pull/16290) | an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1 | private workstation checkout, workspaces-fred-tamlinux, fred.monitor (planned) |
+| [omawrite](patches/omawrite/README.md) | retired | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout |
+| [omarchy](patches/omarchy/README.md) | active | `4.0.4-1.3` | [v4.0.4-fred.2](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) | 3 | — | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy | private workstation checkout, fred.agents, fred.monitor, fred.sysinfo, fred.clock, fred.workspaces |
 <!-- registry:end -->
 
 ### Reading a row
@@ -38,12 +38,12 @@ Generated table from [`ecosystem.json`](ecosystem.json) (`tam-ecosystem render`)
 
 ### Retired Patches
 
-Retired entries move to [`retired/`](retired/) with their last recipe and README so the history stays readable; the fork tag stays in place.
+Retired entries remain in [`patches/`](patches/) with their status marked retired and their full history preserved; the fork tag stays in place.
 
 | Package | Retired | Upstream resolution |
 |---|---|---|
-| [gtk4](retired/gtk4/README.md) | 2026-10-04 | Arch shipped `1:4.22.5-1`, which includes GTK MR !10166 fixing the Wayland dmabuf format table munmap crash |
-| [omawrite](retired/omawrite/README.md) | 2026-10-04 | Agent review workflow transitioned to `micro-review` skill; editor retired from workstation suite |
+| [gtk4](patches/gtk4/README.md) | 2026-10-04 | Arch shipped `1:4.22.5-1`, which includes GTK MR !10166 fixing the Wayland dmabuf format table munmap crash |
+| [omawrite](patches/omawrite/README.md) | 2026-10-04 | Agent review workflow transitioned to `micro-review` skill; editor retired from workstation suite |
 
 ---
 
@@ -61,21 +61,21 @@ Tamlinux picks and chooses among a large field of possibilities to construct an 
 - **`retired`:** Previously used or supported; now systematically phased out or decoupled (Omarchy at 0.4.3, OpenClaw at D139, Hermes at D140).
 - **`rejected`:** Excluded due to fundamental incompatibilities with Tamlinux tenets (monolithic compositors, raw .deb/.rpm installs, non-deterministic agent daemons).
 
-### Detailed Architectural Surveys
+### Detailed Architectural Knowledge Guides
 
-In-depth technical dossiers are documented in [`surveys/`](surveys/):
+Comprehensive survey dossiers and architectural chapters are maintained in [`knowledge/ecosystem/`](knowledge/ecosystem/) (accessible in the terminal via `tam explain <topic>` or `tam-ecosystem guide <page>`):
 
-1. [`01-free-software-and-standards.md`](surveys/01-free-software-and-standards.md) — Free Software Foundation, copyleft (GPL-3.0), freedesktop.org XDG standards, and Linux kernel.
-2. [`02-c-libraries.md`](surveys/02-c-libraries.md) — C standard libraries: `glibc` vs `musl libc` on developer workstations.
-3. [`03-distributions-and-base-os.md`](surveys/03-distributions-and-base-os.md) — Survey of 12 distributions: Arch, Void, antiX, Debian, Alpine, Puppy, Tiny Core, Gentoo, openSUSE, CentOS/RHEL, Ubuntu/Lubuntu, Bedrock.
-4. [`04-package-management.md`](surveys/04-package-management.md) — Nix reproducible delivery, Pacman local patches, Void XBPS, Debian APT/dpkg, and Gentoo Portage.
-5. [`05-system-managers-and-init.md`](surveys/05-system-managers-and-init.md) — `runit` deterministic service supervision versus `systemd` monolithic management.
-6. [`06-windowing-and-protocols.md`](surveys/06-windowing-and-protocols.md) — Modern Wayland display protocols versus legacy X11; security, tearing, and fractional scaling.
-7. [`07-compositors-and-building-blocks.md`](surveys/07-compositors-and-building-blocks.md) — Wayland compositors (Sway, Hyprland, Niri, river, labwc, Wayfire, Weston) and backends (`wlroots`, `aquamarine`, `Smithay`, `Mir`, `libweston`).
-8. [`08-gui-toolkits-and-shells.md`](surveys/08-gui-toolkits-and-shells.md) — Desktop UI toolkits: Quickshell (Qt Quick/QML), Qt 6, GTK 3/4, Astal/AGS, EWW; Tamlinux Shell versus Omarchy, Waybar, Noctalia, DankMaterialShell.
-9. [`09-virtualization-and-compatibility.md`](surveys/09-virtualization-and-compatibility.md) — Virtualization and containment: QEMU, Docker, WSL, UTM, Tart, OrbStack.
-10. [`10-ai-and-developer-tooling.md`](surveys/10-ai-and-developer-tooling.md) — AI coding tools: Claude, Codex, Gemini, Cursor; public provenance, value per watt, and human agency (D139, D140).
-11. [`11-sustainability-and-hardware-longevity.md`](surveys/11-sustainability-and-hardware-longevity.md) — Sustainability: Suspra, community resilience, reducing e-waste, and supporting vintage 2006 hardware.
+1. [`knowledge/ecosystem/philosophy.html`](knowledge/ecosystem/philosophy.html) — Free Software Foundation, copyleft (GPL-3.0), freedesktop.org XDG standards, and Linux kernel.
+2. [`knowledge/ecosystem/c-libraries.html`](knowledge/ecosystem/c-libraries.html) — C standard libraries: `glibc` vs `musl libc` on developer workstations.
+3. [`knowledge/ecosystem/distros.html`](knowledge/ecosystem/distros.html) — Survey of 12 distributions: Arch, Void, antiX, Debian, Alpine, Puppy, Tiny Core, Gentoo, openSUSE, CentOS/RHEL, Ubuntu/Lubuntu, Bedrock.
+4. [`knowledge/ecosystem/packaging.html`](knowledge/ecosystem/packaging.html) — Nix reproducible delivery, Pacman local patches, Void XBPS, Debian APT/dpkg, and Gentoo Portage.
+5. [`knowledge/ecosystem/init-systems.html`](knowledge/ecosystem/init-systems.html) — `runit` deterministic service supervision versus `systemd` monolithic management.
+6. [`knowledge/ecosystem/compositors.html`](knowledge/ecosystem/compositors.html) — Wayland display protocols, Sway on wlroots, Hyprland retirement, and compositors (Niri, river, labwc, Wayfire).
+7. [`knowledge/ecosystem/toolkits.html`](knowledge/ecosystem/toolkits.html) — Desktop UI toolkits: Quickshell (Qt Quick/QML), Qt 6, GTK 3/4, Astal/AGS, EWW; Tamlinux Shell versus Omarchy.
+8. [`knowledge/ecosystem/virtualization.html`](knowledge/ecosystem/virtualization.html) — Virtualization and containment: QEMU, Docker, WSL, UTM, Tart, OrbStack.
+9. [`knowledge/ecosystem/patches.html`](knowledge/ecosystem/patches.html) — Carried patches: public forks, patch rigs, and upstream relationships.
+10. [`knowledge/ecosystem/ai-and-agency.html`](knowledge/ecosystem/ai-and-agency.html) — AI coding tools: Claude, Codex, Gemini, Cursor; public provenance, value per watt, and human agency (D139, D140).
+11. [`knowledge/ecosystem/sustainability.html`](knowledge/ecosystem/sustainability.html) — Sustainability: Suspra, community resilience, reducing e-waste, and supporting vintage 2006 hardware.
 
 ### Complete Considered Packages Dossier
 

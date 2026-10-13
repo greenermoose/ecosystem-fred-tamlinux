@@ -99,3 +99,14 @@ Antigravity CLI `1.2.16` (`gemini-3.8-flash-high`) audited all repository
 records against the live workstation state, aligning `ecosystem.json`,
 `ECOSYSTEM.md`, `UPSTREAM.md`, `packages/hyprland/README.md`,
 `packages/omawrite/README.md`, `retired/gtk4/README.md`, and AI session history.
+
+## 2026-10-13 ecosystem expansion and architectural consolidation
+
+Antigravity CLI `1.3.3` (`gemini-3.8-flash-high`) expanded and consolidated the
+repository:
+1. Ingested bookmarks and expanded `ecosystem.json` to 66 considered package dossiers across 14 categories with core tenets.
+2. Unified documentation and technical surveys into a single offline semantic HTML corpus in `knowledge/`, indexed via `index.tsv` and `index.json` for the `tam` command (`tam explain`, `tam show`, `tam search`).
+3. Consolidated `packages/` and `retired/` into a single, cohesive `patches/` directory with a backward-compatibility `packages` symlink, removing artificial root sprawl.
+4. Eliminated the unused `upstream/` directory and consolidated upstream engagement policy into `README.md` and `ECOSYSTEM.md`.
+5. Consolidated loose scripts into `bin/tam-ecosystem` (`index`, `render`, `survey`, `guide`, `export-knowledge`). Version bumped to `0.2.0`.
+
