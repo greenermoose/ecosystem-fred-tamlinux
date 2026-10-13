@@ -193,3 +193,12 @@ No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
 - Rendered `ECOSYSTEM.md` and indexed knowledge corpus into `knowledge/index.tsv` and `knowledge/index.json`.
 
 
+
+---
+
+## Session: 2026-10-13 — Guide chapters moved to `tam`; public-content cleanup (v0.3.0)
+
+- **CLI Tool**: `claude` `2.1.296` (Claude Code)
+- **Model**: Claude Opus 5.5 (`claude-opus-5-5`)
+- **Transcript**: Retained privately by the author.
+- [Session record](2026-10-13-tam-corpus-move-and-public-cleanup.md).

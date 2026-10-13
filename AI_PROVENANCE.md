@@ -43,8 +43,9 @@ Versions captured 2026-10-04, updated 2026-10-13 (`agy --version 1.3.4`).
 | Registry design, policy, scaffold, first four packages | `v0.1.0` | Claude Code `2.1.274` (Claude Opus 5) | Fork/registry/consumer three-tier design; upstream-engagement policy after Hyprland#16290 was auto-closed; `omarchy-fred-ecosystem` command. |
 | CLI rename to `tam-ecosystem` | `v0.1.0` | Cursor `3.21.16` (`composer`) | Daily name `tam-ecosystem`; long alias `ecosystem-fred-tamlinux`. |
 | Tamlinux branding | `v0.1.0` | Cursor `3.21.16` (`composer`) | README and `ecosystem.json` description say Fred's Tamlinux workstations. |
-| Considered packages survey & tam offline resource | `v0.2.0` | Antigravity CLI `agy` (`1.2.16`, Gemini 3.8 Flash (High)) | Expanded scope from patches-only to complete ecosystem registry; ingested bookmarks_10_13_26b.html; added 66 considered packages across 14 categories in ecosystem.json; authored 11 technical survey dossiers in surveys/; created semantic HTML knowledge corpus and index in knowledge/ecosystem/ for tam; added survey, guide, export-knowledge to bin/tam-ecosystem. |
+| Considered packages survey & tam offline resource | `v0.2.0` | Antigravity CLI `agy` (`1.2.16`, Gemini 3.8 Flash (High)) | Expanded scope from patches-only to complete ecosystem registry; ingested a list of bookmarked projects; added 66 considered packages across 14 categories in ecosystem.json; authored 11 technical survey dossiers in surveys/; created semantic HTML knowledge corpus and index in knowledge/ecosystem/ for tam; added survey, guide, export-knowledge to bin/tam-ecosystem. |
 | Desktop application suites survey & botanical evaluation | `v0.2.1` | Antigravity CLI `agy` (`1.3.4`, Gemini 3.8 Flash (High)) | Researched KDE Gear and GNOME Core/Circle application suites; authored `docs/desktop-application-suites.md`; created semantic knowledge chapter `knowledge/ecosystem/desktop-suites.html`; added `desktop_application_suites` category and 11 evaluated packages to `ecosystem.json`; re-rendered `ECOSYSTEM.md` and rebuilt knowledge index. |
+| Guide chapters moved to `tam`; public-content cleanup | `v0.3.0` | Claude Code `2.1.296` (Claude Opus 5.5) | Removed `knowledge/` and the `index`, `guide`, `export-knowledge` subcommands; chapters now live in the `tam` repository. Removed references to private records and unpublished plans from the registry, README and survey. |
 
 ## 3. Per-package origin of the patches
 
@@ -105,9 +106,16 @@ records against the live workstation state, aligning `ecosystem.json`,
 
 Antigravity CLI `1.3.3` (`gemini-3.8-flash-high`) expanded and consolidated the
 repository:
-1. Ingested bookmarks and expanded `ecosystem.json` to 66 considered package dossiers across 14 categories with core tenets.
+1. Ingested a list of bookmarked projects and expanded `ecosystem.json` to 66 considered package dossiers across 14 categories with core tenets.
 2. Unified documentation and technical surveys into a single offline semantic HTML corpus in `knowledge/`, indexed via `index.tsv` and `index.json` for the `tam` command (`tam explain`, `tam show`, `tam search`).
 3. Consolidated `packages/` and `retired/` into a single, cohesive `patches/` directory with a backward-compatibility `packages` symlink, removing artificial root sprawl.
 4. Eliminated the unused `upstream/` directory and consolidated upstream engagement policy into `README.md` and `ECOSYSTEM.md`.
 5. Consolidated loose scripts into `bin/tam-ecosystem` (`index`, `render`, `survey`, `guide`, `export-knowledge`). Version bumped to `0.2.0`.
 
+## 2026-10-13 guide chapters moved to `tam`; public-content cleanup
+
+Claude Code `2.1.296` (`claude-opus-5-5`) moved the offline guide chapters to
+the `tam` repository, removed the `knowledge/` corpus and its subcommands from
+`tam-ecosystem` (0.3.0), and removed references to private records and
+unpublished plans from `ecosystem.json`, `ECOSYSTEM.md`, `README.md` and
+`docs/`. [Session record](docs/ai/2026-10-13-tam-corpus-move-and-public-cleanup.md).

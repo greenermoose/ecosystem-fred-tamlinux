@@ -13,21 +13,18 @@
 #                       reproduce the fork tag's tree; the tarball in ~/pkgs matches the
 #                       release tag; versions agree; pkgrel carries the .N suffix
 #   status  [pkg]       one line per package: registry, installed, hook status
-#   render              rewrite the tables in ECOSYSTEM.md and rebuild knowledge indexes
-#   index               rebuild knowledge/index.tsv and knowledge/index.json
+#   render              rewrite the tables in ECOSYSTEM.md
 #   retire  <pkg>       mark patches/<pkg> retired in ecosystem.json
 #   install <pkg>       (new machine) build patches/<pkg>, publish into the
 #                       [local-patches] repo, install, install the pacman hook
-#   survey  [cat|pkg]   query evaluated packages and architectural dossiers
-#   guide   [page]      open the ecosystem offline guide via tam (or text fallback)
-#   export-knowledge [dir] export knowledge pages to tam knowledge corpus
+#   survey  [cat|pkg]   query the considered packages
 #
 # Environment: FRED_PKGS_DIR (default ~/pkgs), FRED_ECOSYSTEM_DIR (default: this
 # script's repo), FRED_CODE_DIR (default ~/Code, where fork checkouts live).
 
 set -euo pipefail
 
-VERSION="0.2.0"
+VERSION="0.3.0"
 SELF="tam-ecosystem"
 
 ECO_DIR="${FRED_ECOSYSTEM_DIR:-$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)}"
@@ -45,7 +42,7 @@ log()  { echo "$SELF: $*"; }
 usage() {
   sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'
   echo
-  echo "Usage: $SELF <export|verify|status|render|retire|install|survey|guide|export-knowledge> [arg] [--dry-run]"
+  echo "Usage: $SELF <export|verify|status|render|retire|install|survey> [arg] [--dry-run]"
   echo "       $SELF --version"
 }
 
@@ -274,14 +271,14 @@ with open('$REGISTRY') as f:
 pkgs = data.get('considered_packages', [])
 cats = data.get('categories', {})
 lines = [
-    '| Package | Category | Status | Role | License | Decision / Survey |',
+    '| Package | Category | Status | Role | License | References |',
     '|---|---|---|---|---|---|'
 ]
 for p in pkgs:
     status_fmt = f'**{p[\"status\"]}**' if p['status'] in ('selected', 'active') else f'*{p[\"status\"]}*'
     cat_title = cats.get(p['category'], {}).get('title', p['category'])
     name_link = f'[{p[\"display_name\"]}]({p[\"url\"]})'
-    dec_ref = p.get('decision_ref', '—')
+    dec_ref = p.get('decision_ref') or '—'
     lines.append(f'| {name_link} | {cat_title} | {status_fmt} | {p[\"role\"]} | {p[\"license\"]} | {dec_ref} |')
 print('\n'.join(lines))
 ")
@@ -293,79 +290,6 @@ print('\n'.join(lines))
     mv -f "$tmp" "$md"
     log "rendered considered packages table in ECOSYSTEM.md"
   fi
-  cmd_index
-}
-
-# --- index --------------------------------------------------------------------
-cmd_index() {
-  python3 - "$ECO_DIR" << 'PYEOF'
-import json, re, sys
-from pathlib import Path
-
-def extract_attr(tag, attr):
-    m = re.search(r'\b' + re.escape(attr) + r'\s*=\s*["\']([^"\']*)["\']', tag, re.I)
-    return m.group(1).strip() if m else None
-
-def parse_page(path, rel_path):
-    text = path.read_text(encoding="utf-8", errors="replace")
-    m_title = re.search(r'<title>(.*?)</title>', text, re.I | re.S)
-    title = m_title.group(1).strip() if m_title else ""
-    m_h1 = re.search(r'<h1>(.*?)</h1>', text, re.I | re.S)
-    h1 = m_h1.group(1).strip() if m_h1 else ""
-    if not title:
-        title = h1
-
-    topic, summary, keywords = None, None, []
-    level, track = "beginner", "improve"
-
-    for tag in re.findall(r'<meta\b(?:[^>"\'/]|"[^"]*"|\'[^\']*\')*>', text, re.I):
-        name = extract_attr(tag, "name")
-        content = extract_attr(tag, "content")
-        if not name or content is None:
-            continue
-        n = name.lower()
-        if n == "topic": topic = content.strip()
-        elif n == "summary": summary = content.strip()
-        elif n == "keywords": keywords.extend([k.strip() for k in content.split(",") if k.strip()])
-        elif n == "level": level = content.strip().lower()
-        elif n == "track": track = content.strip().lower()
-
-    if not topic: topic = rel_path.replace(".html", "").replace("/", "-")
-    if not summary: summary = title
-
-    return {
-        "topic": topic,
-        "path": rel_path,
-        "title": title,
-        "summary": summary,
-        "keywords": keywords,
-        "level": level,
-        "track": track,
-    }
-
-root = Path(sys.argv[1])
-knowledge_dir = root / "knowledge"
-entries = []
-for html_file in sorted(knowledge_dir.rglob("*.html")):
-    rel = html_file.relative_to(knowledge_dir).as_posix()
-    entries.append(parse_page(html_file, rel))
-
-entries.sort(key=lambda e: e["topic"])
-
-tsv_path = knowledge_dir / "index.tsv"
-with open(tsv_path, "w", encoding="utf-8") as f:
-    f.write("topic\tpath\ttitle\tsummary\tkeywords\tlevel\ttrack\n")
-    for e in entries:
-        kws = ", ".join(e["keywords"])
-        f.write(f"{e['topic']}\t{e['path']}\t{e['title']}\t{e['summary']}\t{kws}\t{e['level']}\t{e['track']}\n")
-
-json_path = knowledge_dir / "index.json"
-with open(json_path, "w", encoding="utf-8") as f:
-    json.dump(entries, f, indent=2)
-    f.write("\n")
-
-print(f"tam-ecosystem: indexed {len(entries)} knowledge pages into index.tsv and index.json")
-PYEOF
 }
 
 # --- survey -------------------------------------------------------------------
@@ -459,38 +383,6 @@ print(f'No considered package or category found matching \"{query}\".')
 " "$query"
 }
 
-# --- guide --------------------------------------------------------------------
-cmd_guide() {
-  local page="${1:-ecosystem}"
-  local kdir="$ECO_DIR/knowledge"
-  if command -v tam >/dev/null 2>&1; then
-    TAM_KNOWLEDGE_DIR="$kdir" tam show "$page"
-  elif [[ -x "$CODE_DIR/tamlinux/tam/build/tam" ]]; then
-    TAM_KNOWLEDGE_DIR="$kdir" "$CODE_DIR/tamlinux/tam/build/tam" show "$page"
-  else
-    local target="$kdir/$page.html"
-    [[ -f "$target" ]] || target="$kdir/ecosystem/$page.html"
-    [[ -f "$target" ]] || target="$kdir/index.html"
-    sed -e 's/<[^>]*>//g' -e '/^ *$/d' "$target"
-  fi
-}
-
-# --- export-knowledge ---------------------------------------------------------
-cmd_export_knowledge() {
-  local dest="${1:-$CODE_DIR/tamlinux/tam/knowledge}"
-  dest=$(expand_home "$dest")
-  log "rebuilding local knowledge index..."
-  cmd_index
-  log "exporting ecosystem knowledge pages to $dest"
-  mkdir -p "$dest/ecosystem"
-  cp -rf "$ECO_DIR/knowledge/ecosystem/." "$dest/ecosystem/"
-  if [[ -f "$dest/../tools/build-index.py" ]]; then
-    log "rebuilding index in $dest"
-    (cd "$dest/.." && python3 tools/build-index.py)
-  fi
-  log "export complete"
-}
-
 # --- retire -------------------------------------------------------------------
 cmd_retire() {
   local pkg=${1:?usage: $SELF retire <pkg>}
@@ -572,12 +464,9 @@ case "${1:-}" in
   verify)  cmd_verify "${2:-}";;
   status)  cmd_status "${2:-}";;
   render)  cmd_render;;
-  index)   cmd_index;;
   retire)  cmd_retire "${2:-}";;
   install) cmd_install "${2:-}";;
   survey)  cmd_survey "${2:-}";;
-  guide)   cmd_guide "${2:-}";;
-  export-knowledge) cmd_export_knowledge "${2:-}";;
   --version|-V) echo "$SELF $VERSION";;
   -h|--help|help|"") usage;;
   *) usage >&2; fail "unknown command: $1";;

@@ -17,12 +17,12 @@ Fred's guiding prompt verbatim:
    - Evaluated candidate applications against the Tamlinux botanical architecture:
      - **The Root-stock:** Minimal Void Linux with `runit` and `seatd` (primary target; strictly no systemd PID 1 or elogind), antiX Core (fallback), and Arch Linux (current development base).
      - **The Cultivar:** Sway (wlroots) compositor + Quickshell (Qt Quick/QML) shell + Tamarack design system.
-   - Core tenets assessed: User Freedom (GPL-3.0+), Value per Watt (D139 - no perpetual background polling or runaway loops), and Hardware Longevity (circa-2006 hardware floor).
+   - Core tenets assessed: User Freedom (GPL-3.0+), Resource Efficiency (no perpetual background polling or runaway loops), and Hardware Longevity (circa-2006 hardware floor).
 
 2. **Technical Findings:**
    - **KDE Frameworks 6 (KF6) & KDE Gear:** Superior architectural fit. KF6 Tiers 1–3 are POSIX/libc clean and completely decoupled from systemd, running cleanly on Void Linux with runit + seatd. Because Tamlinux's Quickshell desktop is built with Qt Quick/QML, KDE apps share Qt 6 runtimes, font rendering, and memory allocations. They support Server-Side Decorations (SSD), surrendering borders cleanly to Sway.
    - **GNOME Core & Libadwaita:** Heavy friction. Libadwaita enforces Client-Side Decorations (CSD headerbars) that consume 40–50 vertical pixels in tiling Sway. GNOME applications increasingly rely on systemd user units, `org.freedesktop.login1`, and background indexing daemons (TinySPARQL/Tracker).
-   - **Daemon Pruning:** Heavy PIM engines (Akonadi in KDE, Evolution-Data-Server in GNOME) and background file indexing (Baloo in KDE, Tracker in GNOME) violate Value per Watt and thrash 2006 hardware. However, Baloo is trivially disabled via `baloofilerc` (`Indexing-Enabled=false`), whereas Tracker is tightly bound to GNOME Core file operations.
+   - **Daemon Pruning:** Heavy PIM engines (Akonadi in KDE, Evolution-Data-Server in GNOME) and background file indexing (Baloo in KDE, Tracker in GNOME) violate resource efficiency and thrash 2006 hardware. However, Baloo is trivially disabled via `baloofilerc` (`Indexing-Enabled=false`), whereas Tracker is tightly bound to GNOME Core file operations.
 
 3. **Deliverables:**
    - Authored comprehensive architectural report: `docs/desktop-application-suites.md`.

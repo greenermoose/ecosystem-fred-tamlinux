@@ -2,7 +2,7 @@
 
 **Repository:** `ecosystem-fred-tamlinux`  
 **Date:** 2026-10-13  
-**Status:** Evaluated Architectural Dossier  
+**Status:** Evaluated Architectural Dossier. Its verdicts are survey recommendations, not project decisions.  
 **Topic:** Desktop Application Suites (KDE Gear & Plasma Apps vs. GNOME Core & Circle)  
 **Target Architecture:** Tamlinux Cultivar (Sway + Quickshell) grafted onto Root-stock (Minimal Void Linux with `runit` + `seatd`, antiX fallback, Arch development base)
 
@@ -36,7 +36,7 @@ This survey evaluates the software suites delivered by the two major open-source
 1. **Functionality:** Breadth, ergonomics, and suitability for keyboard-driven tiling workflows.
 2. **Dependencies & Couplings:** Required runtimes, background daemons, IPC buses, and system integration points.
 3. **Root-stock Portability:** Whether applications can operate on a minimal `runit` + `seatd` Void Linux host without `systemd` daemons or monolithic session managers.
-4. **Cultivar Harmony:** How cleanly applications integrate with a Qt Quick / Sway desktop, respect external color themes (Tamarack), and adhere to Tamlinux's core tenet of **Value per Watt** (zero unnecessary background polling, no runaway indexing loops, 2006 hardware longevity).
+4. **Cultivar Harmony:** How cleanly applications integrate with a Qt Quick / Sway desktop, respect external color themes (Tamarack), and adhere to Tamlinux's core tenet of **resource efficiency** (zero unnecessary background polling, no runaway indexing loops, 2006 hardware longevity).
 
 ---
 
@@ -50,7 +50,7 @@ This survey evaluates the software suites delivered by the two major open-source
 | **Window Decorations** | Client-Side Decorations (CSD) enforced by Libadwaita | Server-Side Decorations (SSD) native; clean protocol negotiation | Libadwaita forces large headerbars that waste vertical space in tiling Sway; KDE apps cleanly surrender window frames to Sway. |
 | **Theming Sovereignty** | Rigidly restricted by Libadwaita stylesheet | Declarative palette (`kdeglobals`), Qt style engines (`breeze`, `kvantum`) | Tamarack palette easily themes KDE/Qt apps; Libadwaita actively resists user CSS overriding. |
 | **Init & Supervisor Dependency** | Increasing coupling to `systemd` (logind, user units, timedated) | Protocol-based; zero hard systemd requirement across apps | KDE apps run cleanly on Void (`runit` + `seatd`); GNOME apps frequently expect `logind`/`elogind`. |
-| **Background Indexing Daemons** | `TinySPARQL` / `Tracker3` / `localsearch` | `Baloo` (`baloo_file`) | Both indexing daemons violate **Value per Watt** on vintage hardware, but Baloo is trivially disabled via config. |
+| **Background Indexing Daemons** | `TinySPARQL` / `Tracker3` / `localsearch` | `Baloo` (`baloo_file`) | Both indexing daemons violate **resource efficiency** on vintage hardware, but Baloo is trivially disabled via config. |
 | **Personal Information (PIM)** | Evolution-Data-Server (EDS) | Akonadi (embedded MariaDB/SQLite + D-Bus agents) | **Both are disqualified** for lean default delivery; heavy database daemons choke 2006 hardware floor. |
 | **Hardware Floor (RAM/CPU)** | Moderate: ~40–120 MB per app; GJS apps carry JavaScript engine overhead | Highly variable: Tier 1/2 apps are tiny (~15–35 MB); WebEngine apps are heavy | KDE's standalone utilities (KCalc, Kate, Okular) are exceptionally lightweight. |
 
@@ -144,7 +144,7 @@ This survey evaluates the software suites delivered by the two major open-source
   - *Showtime:* Clean GStreamer-backed video player introduced in GNOME 47.
   - *Totem:* Legacy GNOME Videos player.
 - **Dependencies:** GTK 4, Libadwaita, GStreamer (`gst-plugins-base`, `gst-plugins-good`, `gst-plugins-bad`), `gjs` (JavaScript runtime for Decibels).
-- **Assessment:** Decibels utilizes `gjs`, pulling a full SpiderMonkey JavaScript engine for a simple audio player—inefficient from a "Value per Watt" perspective.
+- **Assessment:** Decibels utilizes `gjs`, pulling a full SpiderMonkey JavaScript engine for a simple audio player—inefficient from a resource-efficiency perspective.
 
 #### KDE: Haruna (`haruna`), Elisa (`elisa`) & Kdenlive
 - **Functionality:**
@@ -217,7 +217,7 @@ Under Tamlinux's botanical design, the PIM stacks of both environments represent
 └──────────────────────────────────┴─────────────────────┘
 ```
 
-- **Violation of Value per Watt (D139):** Akonadi runs continuous database transactions and polling threads, preventing the CPU from entering deep C-states.
+- **Violates resource efficiency:** Akonadi runs continuous database transactions and polling threads, preventing the CPU from entering deep C-states.
 - **Violation of 2006 Hardware Floor:** On an Intel Core 2 Duo with 2 GB RAM, launching Akonadi induces immediate disk swap thrashing.
 - **Init Fragility on Void Linux:** Both Akonadi and EDS assume complex D-Bus autostart and session lifecycle management typically handled by `systemd --user`. Under `runit`, orphaned daemon processes and locked SQLite sockets frequently occur during abrupt logouts.
 - **Tamlinux Decision:** **Reject both Akonadi and EDS suites from standard Tamlinux installations.** Provide terminal-based PIM tools (`calcurse`, `aerc`, `neomutt`) and lean, file-backed Quickshell widgets for calendar display.
@@ -338,7 +338,7 @@ Areas where both KDE and GNOME software are ill-suited (due to monolithic deskto
 | **Papers** | GNOME | Modern Document Viewer | GTK 4 / Libadwaita | Poppler-glib, libarchive | **High** | **Moderate** (CSD bar) | **Evaluated** |
 | **Nautilus** | GNOME | File Manager | GTK 4 / Libadwaita | GVFS, TinySPARQL/Tracker, dconf | **Moderate** (heavy indexers)| **Moderate** (CSD bar) | **Evaluated / Alternative** |
 | **GNOME Text Editor** | GNOME | Clean Text Notepad | GTK 4 / Libadwaita | GtkSourceView5, libspelling | **High** | **Moderate** (CSD bar) | **Evaluated** |
-| **Decibels** | GNOME | Waveform Audio Player | GTK 4 / GJS | GStreamer, GJS (JavaScript runtime) | **High** | **Low** (GJS memory) | **Rejected** (Value per Watt) |
+| **Decibels** | GNOME | Waveform Audio Player | GTK 4 / GJS | GStreamer, GJS (JavaScript runtime) | **High** | **Low** (GJS memory) | **Rejected** (resource efficiency) |
 | **KMail / Akonadi** | KDE | Email Client & Engine | Qt 6 / KF6 | Akonadi, MariaDB/SQLite, agents | **Poor** (daemon fragility) | **Low** (memory/poll churn)| **Rejected** (Resource Tax) |
 | **GNOME Calendar (EDS)**| GNOME | Calendar Client | GTK 4 / Libadwaita | Evolution-Data-Server, geoclue | **Poor** (daemon fragility) | **Low** (daemon sprawl) | **Rejected** (Resource Tax) |
 | **GNOME Control Center** | GNOME | System Settings | GTK 4 / Libadwaita | GNOME Shell, Mutter, systemd | **Incompatible** | **Incompatible** | **Rejected** (Hard Coupling) |
@@ -353,5 +353,5 @@ The survey reveals a decisive architectural alignment:
 1. **KDE Frameworks 6 and modular KDE Gear applications align substantially better with Tamlinux than GNOME's software stack.** Because Tamlinux's Cultivar shell is built on **Qt Quick / QML**, KDE applications naturally share memory pages, font rendering caches, and graphics contexts with the desktop shell.
 2. **KDE applications respect windowing protocols under Sway.** They support Server-Side Decorations, allowing Sway to manage window borders cleanly without wasting vertical screen space on redundant headerbars.
 3. **KDE's modular libraries (KF6 Tiers 1–3) are completely free of `systemd` couplings**, compiling and executing flawlessly on minimal **Void Linux (`runit` + `seatd`)** and **antiX** root-stocks.
-4. **Care must be taken to prune heavy daemons.** The background indexing daemons (Baloo in KDE, Tracker/TinySPARQL in GNOME) and the heavy PIM database daemons (Akonadi in KDE, Evolution-Data-Server in GNOME) must be excluded or disabled by default to uphold Tamlinux's **Value per Watt** and preserve the 2006 vintage hardware floor.
+4. **Care must be taken to prune heavy daemons.** The background indexing daemons (Baloo in KDE, Tracker/TinySPARQL in GNOME) and the heavy PIM database daemons (Akonadi in KDE, Evolution-Data-Server in GNOME) must be excluded or disabled by default to uphold Tamlinux's **resource efficiency** and preserve the 2006 vintage hardware floor.
 5. **Standout applications (Okular, Kate, KCalc, Filelight, Ark, Dolphin without Baloo) can be directly included in Tamlinux.** System settings, status indicators, and desktop menus should remain native Tamlinux Cultivar components built in Quickshell and `libtam`.
