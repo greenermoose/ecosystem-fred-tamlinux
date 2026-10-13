@@ -40,14 +40,14 @@ Root cause (confirmed in session):
 
 ## What is **not** done / next agent
 
-1. **Fred sign-off on Dell** — deliberate hovers with `fred-plugin-hover` choreography ([`docs/agent-guides/plugin-hover-messages.md`](file:///home/fred/docs/agent-guides/plugin-hover-messages.md), [`docs/agent-guides/omarchy-customization.md#screenshots-of-hover-states`](file:///home/fred/docs/agent-guides/omarchy-customization.md)). Targets: workspace **1, 2, 4, 5** (previously bad heights), plus `fred.monitor` / `fred.agents` / `fred.sysinfo`.
-2. **Upstream issue** — draft only: `upstream-issue-bar-tooltip.md`. Do **not** file until Fred confirms verification (see [`docs/agent-guides/upstream-engagement.md`](file:///home/fred/docs/agent-guides/upstream-engagement.md)).
+1. **Fred sign-off on Dell** — deliberate hovers with `fred-plugin-hover` choreography (`docs/agent-guides/plugin-hover-messages.md`, `docs/agent-guides/omarchy-customization.md#screenshots-of-hover-states`). Targets: workspace **1, 2, 4, 5** (previously bad heights), plus `fred.monitor` / `fred.agents` / `fred.sysinfo`.
+2. **Upstream issue** — draft only: `upstream-issue-bar-tooltip.md`. Do **not** file until Fred confirms verification (see `docs/agent-guides/upstream-engagement.md`).
 3. **Workspace horizontal slide** — tooltips stay pinned to output left edge on wide workspace hovers (`PopupAdjustment.Slide`); separate from bottom-border clip; out of scope unless Fred asks.
 4. **Push fork tag** if `git ls-remote origin v4.0.4-fred.2` is empty: `git push origin v4.0.4-fred.2` and ensure `fred` / `patchset/v4.0.4` match.
 
 ## Rebuild recipe (if needed)
 
-Runbook: [`docs/agent-runbooks/local-package-patching.md`](file:///home/fred/docs/agent-runbooks/local-package-patching.md).
+Runbook: `docs/agent-runbooks/local-package-patching.md`.
 
 ```bash
 cd ~/pkgs/omarchy
