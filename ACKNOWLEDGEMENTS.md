@@ -19,15 +19,20 @@ Each named entry identifies an authored component, a documented design influence
 | **Aleksandra Samuļenkova** — IBM Plex contributor: Cyrillic and Greek design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Andrew Gaspar (`AndrewGaspar`)** — Author of the upstream wrong-pointer munmap fix backported for GTK4 and later retired from the local patch set. [Work, license and copyright](#gtk). [Evidence](https://github.com/GNOME/gtk/commit/a8a5692ce3c334672ac325cf8f1257a138843bf6) | @facebook [Public profile / project contact](https://github.com/AndrewGaspar) |
 | **Barbara Bigosińska** — IBM Plex contributor: Font production and Latin design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
+| **Christian Neukirchen (`chneukirchen`)** — Creator of Void Linux; author of XBPS utilities and pioneer of the independent non-systemd/musl distribution ecosystem. [Work, license and copyright](#void). [Evidence](https://voidlinux.org/) | Void Linux [Public profile / project contact](https://chneukirchen.org/) |
 | **David Heinemeier Hansson (`dhh`)** — Creator of Omarchy. Its shell, UI conventions and plugin host form the current base and the documented ancestry of several fred.* components. [Work, license and copyright](#omarchy). Original Omawrite author; the editor source is the base of the Tamlinux patch fork. [Work, license and copyright](#omawrite). [Evidence 1](https://github.com/omacom/omarchy) [Evidence 2](https://github.com/omacom/omawrite) [Evidence 3](https://github.com/omacom/omarchy/commit/b83505d7380bbe0525f56f5dc556c103848d34d5) | 37signals [Public profile / project contact](https://github.com/dhh); [Website](https://dhh.dk); [Public email](mailto:dhh@hey.com) |
 | **Diana Ovezea** — IBM Plex contributor: Font production and Latin design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **DK (`dkIT25`)** — Public reporter of issue #383, with a matching null-connector diagnosis and proposed guard independently corroborating the local crash fix. This does not assign authorship of Fred’s separately recorded patch. [Work, license and copyright](#aquamarine). [Evidence](https://github.com/hyprwm/aquamarine/issues/383) | No affiliation stated in the inspected public profile/credit. [Public profile / project contact](https://github.com/dkIT25) |
+| **Drew DeVault (`ddevault`)** — Creator of Sway and wlroots; founding author of the modular C Wayland compositor foundation and standards-based display ecosystem. [Work, license and copyright](#sway). [Evidence](https://swaywm.org/) | SourceHut [Public profile / project contact](https://drewdevault.com/) |
 | **Edgar Walthert** — IBM Plex contributor: Font engineering and Latin design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Fred Horch (`greenermoose`)** — Tamlinux creator and maintainer. Directed this repository’s design, implementation, testing and upstream integration, including the separately documented AI-assisted work. [Evidence](https://github.com/greenermoose/tamlinux) | No affiliation stated in the inspected public profile/credit. [Public profile / project contact](https://github.com/greenermoose) |
+| **Gerrit Pape** — Creator of `runit`; architect of the deterministic Unix service supervision model selected for Tamlinux. [Work, license and copyright](#runit). [Evidence](https://smarden.org/runit/) | Smarden.org [Public profile / project contact](https://smarden.org/) |
 | **Jasper Terra** — IBM Plex contributor: Font engineering and Latin design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
+| **Juan RP (`xtraeme`)** — Creator of the X Binary Package System (`XBPS`) and co-founder of Void Linux. [Work, license and copyright](#xbps). [Evidence](https://docs.voidlinux.org/xbps/) | Void Linux [Public profile / project contact](https://github.com/xtraeme) |
 | **Kristian Høgsberg** — Wayland’s original author and a named copyright holder. Its client/compositor protocol enables both the current shell and the planned Sway desktop. [Work, license and copyright](#wayland). [Evidence](https://github.com/wayland-mirror/wayland/blob/main/COPYING) | Wayland project [Public profile / project contact](https://wayland.freedesktop.org/) |
 | **Lars Knoll** — Longtime Qt engineer and Qt chief maintainer at the time of the project’s 2020 technical conference. His engineering leadership helped develop the UI framework used by Quickshell and Omawrite. [Work, license and copyright](#qt). [Evidence](https://www.qt.io/development/resources/videos/foundation-for-the-future-are-we-excited-qt-virtual-tech-con-2020) | Qt project; historical role stated in the 2020 source [Public profile / project contact](https://www.qt.io/development/resources/videos/foundation-for-the-future-are-we-excited-qt-virtual-tech-con-2020) |
 | **lemachinarbo (`lemachinarbo`)** — Omawrite developer whose source changes improve editor/theme colors, prevent link-paste layout freezes and bound portal D-Bus calls. These changes are part of the editor inherited by the Tamlinux fork. [Work, license and copyright](#omawrite). [Evidence](https://github.com/omacom/omawrite/commit/c885e935c9cd142418364528cc5d48bd52c06d19) | No affiliation stated in the inspected public profile/credit. [Public profile / project contact](https://github.com/lemachinarbo) |
+| **Linus Torvalds** — Creator of the Linux kernel and Git. [Work, license and copyright](#linux). [Evidence](https://www.kernel.org/) | Linux Foundation [Public profile / project contact](https://kernel.org/) |
 | **Marko Hrastovec** — IBM Plex contributor: Font production. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | IBM Plex project [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Mike Abbink** — IBM Plex contributor: Creative direction and design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | IBM Design [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Nico Duldhardt (`klaudworks`)** — Author of the KMS disconnect fix in PR #395, carried historically by Tamlinux before it was superseded; retained here as historical patch credit. [Work, license and copyright](#aquamarine). [Evidence](https://github.com/hyprwm/aquamarine/pull/395) | Self-employed Contractor [Public profile / project contact](https://github.com/klaudworks) |
@@ -35,6 +40,8 @@ Each named entry identifies an authored component, a documented design influence
 | **Pablo Gámez** — IBM Plex contributor: Font production. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | IBM Plex project [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Paul van der Laan** — IBM Plex contributor: Type direction and design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
 | **Pieter van Rosmalen** — IBM Plex contributor: Type direction and design. Omawrite includes the font family; this credits the upstream typeface project, not authorship of the editor. [Work, license and copyright](#ibm-plex). [Evidence](https://www.ibm.com/plex/specs/) | Bold Monday [Public profile / project contact](https://www.ibm.com/plex/specs/) |
+| **Rich Felker (`dalias`)** — Creator and chief maintainer of `musl libc`. [Work, license and copyright](#musl). [Evidence](https://musl.libc.org/) | musl libc project [Public profile / project contact](https://musl.libc.org/) |
+| **Richard Stallman (`rms`)** — Founder of the Free Software Foundation (FSF), author of the GNU General Public License (GPL) and pioneer of the Free Software movement. [Work, license and copyright](#fsf). [Evidence](https://www.fsf.org/) | Free Software Foundation [Public profile / project contact](https://stallman.org/) |
 | **Ryan Hughes (`ryanrhughes`)** — Omarchy shell and plugin-system contributor. The v4.0.4 history records work on widget scaling, theme tokens, built-in plugins and plugin management. [Work, license and copyright](#omarchy). [Evidence 1](https://github.com/omacom/omarchy) [Evidence 2](https://github.com/omacom/omarchy/commit/4f0bdb790b75603a6506daa6603b3576349373d6) [Evidence 3](https://github.com/omacom/omarchy/commit/e8fc2ef08f3aad9f6219b85a8ab8884f27fc953a) | Oodle [Public profile / project contact](https://github.com/ryanrhughes); [Website](https://heyoodle.com); [Public email](mailto:ryan@heyoodle.com) |
 | **Vaxry (`vaxerski`)** — Hypr Development contributor; upstream display-backend maintenance supports the carried display fixes, including PR #410. [Work, license and copyright](#aquamarine). Creator of Hyprland. Its monitor/workspace control and IPC support the current 0.x desktop while Tamlinux moves to Sway; this dependency credit ends when Hyprland is removed. [Work, license and copyright](#hyprland). [Evidence 1](https://github.com/hyprwm/Hyprland) [Evidence 2](https://github.com/hyprwm/aquamarine/pull/410) | @hyprwm [Public profile / project contact](https://github.com/vaxerski); [Website](https://vaxry.net) |
 
@@ -113,6 +120,53 @@ The source links below are the authority for complete notices and exceptions. A 
 - **License:** MIT-style license; consult individual file notices. [License/source notices](https://github.com/wayland-mirror/wayland/blob/main/COPYING).
 - **Stated copyright / limits:** Copyright © 2008-2012 Kristian Høgsberg; Copyright © 2010-2012 Intel Corporation; Copyright © 2011 Benjamin Franzke; Copyright © 2012 Collabora, Ltd.
 - **Source:** [Upstream project](https://wayland.freedesktop.org/). [Wider contributor community](https://github.com/wayland-mirror/wayland/graphs/contributors).
+
+<a id="sway"></a>
+### Sway & wlroots
+
+- **Connection:** Selected long-term tiling Wayland compositor and modular backend library for Tamlinux 0.7–1.0+.
+- **License:** MIT. [Sway License](https://github.com/swaywm/sway/blob/master/LICENSE) · [wlroots License](https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/LICENSE).
+- **Stated copyright / limits:** Copyright (c) 2015-2026 Drew DeVault and Sway/wlroots contributors.
+- **Source:** [Sway Project](https://swaywm.org/) · [wlroots Project](https://gitlab.freedesktop.org/wlroots/wlroots).
+
+<a id="void"></a>
+### Void Linux & XBPS
+
+- **Connection:** Selected target base distribution and native package manager for Tamlinux 1.2+.
+- **License:** BSD-2-Clause. [XBPS License](https://github.com/void-linux/xbps/blob/master/LICENSE).
+- **Stated copyright / limits:** Copyright (c) 2008-2026 Juan Romero Pardines and Void Linux contributors.
+- **Source:** [Void Linux Project](https://voidlinux.org/) · [XBPS Project](https://github.com/void-linux/xbps).
+
+<a id="runit"></a>
+### runit
+
+- **Connection:** Selected init and service supervision system for Tamlinux's independent base.
+- **License:** BSD-3-Clause. [License/source notices](https://smarden.org/runit/).
+- **Stated copyright / limits:** Copyright (c) Gerrit Pape.
+- **Source:** [Upstream project](https://smarden.org/runit/).
+
+<a id="musl"></a>
+### musl libc
+
+- **Connection:** Evaluated alternative C standard library for minimal resource profiles on Void.
+- **License:** MIT. [musl License](https://git.musl-libc.org/cgit/musl/tree/COPYRIGHT).
+- **Stated copyright / limits:** Copyright (c) 2005-2026 Rich Felker and musl contributors.
+- **Source:** [Upstream project](https://musl.libc.org/).
+
+<a id="linux"></a>
+### Linux Kernel
+
+- **Connection:** Operating system kernel providing hardware abstraction, DRM/KMS, and scheduling.
+- **License:** GPL-2.0-only. [License](https://kernel.org/).
+- **Stated copyright / limits:** Linus Torvalds and many kernel contributors.
+- **Source:** [Kernel Archives](https://www.kernel.org/).
+
+<a id="fsf"></a>
+### Free Software Foundation & GNU
+
+- **Connection:** Philosophical and ethical foundation of user freedom; author of copyleft and GPL-3.0.
+- **License:** GPL-3.0 / FDL.
+- **Source:** [Free Software Foundation](https://www.fsf.org/).
 
 ## Community credit and coverage
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Desktop Shell & UI Toolkits: Quickshell and Tamlinux Shell</title>
+<meta name="topic" content="ecosystem-toolkits">
+<meta name="summary" content="Desktop shell and UI: Quickshell, Qt Quick, QML, and Tamlinux Shell">
+<meta name="keywords" content="toolkit, quickshell, qt, qml, gtk, shell, tamlinux shell, omarchy, waybar, layer shell">
+<meta name="level" content="intermediate">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>Desktop Shell: Quickshell & Tamlinux Shell</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>The desktop shell provides the visible interface: status bars, menus, workspace
+switchers, notifications, and panel popups. Tamlinux separates window management (Sway)
+from desktop presentation, running an independent shell powered by <strong>Quickshell</strong>
+and <strong>Qt Quick</strong>.</p>
+
+<h2>1. Why Quickshell Was Selected</h2>
+
+<p><strong>Quickshell</strong> (created by outfoxxed) is a desktop shell development
+toolkit built atop Qt Quick and QML:</p>
+
+<ul>
+<li><strong>Reactive Declarative UI:</strong> QML binds properties directly to system state. When battery levels shift or network connections drop, UI elements react automatically without manual polling.</li>
+<li><strong>Direct Wayland Layer Shell Integration:</strong> Talks natively to <code>wlr-layer-shell</code>. Panels anchor cleanly to screen edges, reserve desktop struts, and handle keyboard focus seamlessly.</li>
+<li><strong>Multi-Monitor Resilience:</strong> Automatically duplicates bars and synchronizes layouts across connected screens without restarting the session.</li>
+<li><strong>Lightweight Memory Profile (D126):** A full multi-display Quickshell session consumes only ~60–80 MB of RAM, far less than Electron or GNOME Shell.</li>
+</ul>
+
+<h2>2. Decoupling from Omarchy (Step 0.4.3 & D136)</h2>
+
+<p>The Tamlinux Shell originally inherited visual conventions from Omarchy 4.0.4.
+However, Tamlinux executed a complete, clean fork and decoupling (Decisions D102, D103,
+D124, D136):</p>
+
+<ul>
+<li><strong>No Monolithic Omarchy Dependencies:</strong> All hardcoded <code>/usr/share/omarchy</code> paths, invasive update hooks, and external servers were purged. Step 0.4.3 proves that Tamlinux installs on a fresh machine with zero Omarchy code.</li>
+<li><strong>Compositor Protocol Neutrality (D125):</strong> Rewrote the shell's state engine into <code>ProtocolState.qml</code>, which talks standard Wayland protocols (<code>ext-workspace-v1</code>) and Sway rather than private Hyprland IPC.</li>
+<li><strong>Unified Hover Architecture (D128):</strong> Standardized all plugin hover tooltips and panel footers onto a shared, dimmed caption component (<code>Tam.Ui.VersionFooter</code>).</li>
+<li><strong>GPL-3.0-or-later Ownership:</strong> All ported components are maintained publicly in the <code>tamlinux</code> repository under copyleft terms.</li>
+</ul>
+
+<h2>3. Evaluated Alternatives</h2>
+
+<ul>
+<li><strong>Waybar:</strong> Excellent, lightweight C++ status bar, but limited to static bar formats; cannot render interactive rich panels, calendars, or sliders.</li>
+<li><strong>Astal & AGS (GTK Shell):</strong> Uses TypeScript and GJS; higher memory footprint and JavaScript garbage collection pauses compared to compiled QML.</li>
+<li><strong>EWW (ElKowars wacky widgets):</strong> Standalone Rust widget engine; custom Yuck S-expression language becomes unmaintainable for complex multi-screen panels.</li>
+</ul>
+</body>
+</html>

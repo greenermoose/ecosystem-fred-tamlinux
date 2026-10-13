@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Tamlinux Ecosystem & Architectural Choices</title>
+<meta name="topic" content="ecosystem">
+<meta name="summary" content="The Tamlinux software, architectural, and cultural ecosystem">
+<meta name="keywords" content="ecosystem, choices, packages, dependencies, architecture, philosophy, survey, free software">
+<meta name="level" content="beginner">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>The Tamlinux Ecosystem & Choices</h1>
+
+<p>Welcome to the guide to the <strong>Tamlinux ecosystem</strong>. Tamlinux is an
+independent, continuing Linux workstation environment engineered to deliver the
+best possible user experience while maximizing resource efficiency, hardware
+longevity, and user sovereignty.</p>
+
+<p>Modern Linux offers a vast landscape of possibilities. Rather than assembling a
+haphazard collection of tools, Tamlinux picks and chooses with deliberate care:
+evaluating alternatives across every layer of the operating system to construct a
+coherent, enduring workstation.</p>
+
+<h2>Explore the Ecosystem Topics</h2>
+
+<ul>
+<li><a href="philosophy.html">Philosophy & Principles</a> &mdash; Free Software ethics, user sovereignty, and "value per watt".</li>
+<li><a href="distros.html">Operating System Distributions</a> &mdash; From Arch Linux today to Void Linux and antiX Core.</li>
+<li><a href="compositors.html">Compositors & Windowing</a> &mdash; Why Sway on Wayland replaces Hyprland for 1.0.</li>
+<li><a href="packaging.html">Packaging & Delivery</a> &mdash; Reproducible Nix deployments paired with native Pacman and XBPS.</li>
+<li><a href="init-systems.html">Init & Service Supervision</a> &mdash; Why Tamlinux chose runit over monolithic systemd.</li>
+<li><a href="toolkits.html">Desktop Shell & UI Toolkits</a> &mdash; Quickshell, declarative QML, and complete Omarchy decoupling.</li>
+<li><a href="c-libraries.html">C Standard Libraries</a> &mdash; Evaluating glibc versus musl libc on workstations.</li>
+<li><a href="patches.html">Carried Patches & Recipes</a> &mdash; Why Tamlinux carries patches on public forks instead of stalled PRs.</li>
+<li><a href="ai-and-agency.html">AI Tooling & Human Agency</a> &mdash; Supervised AI pair programming vs autonomous daemons.</li>
+<li><a href="sustainability.html">Sustainability & Suspra</a> &mdash; Hardware longevity, fighting e-waste, and community computing.</li>
+</ul>
+
+<h2>Core Design Pillars</h2>
+
+<p>Every architectural choice in Tamlinux serves six core principles:</p>
+
+<ol>
+<li><strong>User Freedom:</strong> Licensed under GPL-3.0-or-later, protecting your right to run, study, change, and share your system.</li>
+<li><strong>Value per Watt:</strong> Eliminating background polling, daemons, and runaway loops so your machine uses energy efficiently.</li>
+<li><strong>Hardware Longevity:</strong> Capable of running on vintage circa-2006 computers up through modern high-end multi-display rigs.</li>
+<li><strong>Decoupled Modularity:</strong> Following the Unix philosophy; communicating via open, standard protocols.</li>
+<li><strong>Offline Sovereignty:</strong> Complete offline local guides and tools; zero mandatory cloud dependencies.</li>
+<li><strong>Deterministic Human Agency:</strong> Prioritizing deterministic tools directed by humans, not opaque black boxes.</li>
+</ol>
+
+<h2>Learning More</h2>
+
+<p>Use <code>tam explain &lt;topic&gt;</code> to learn about specific commands and tools,
+or read the full technical survey dossiers in <code>surveys/</code> within the
+<code>ecosystem-fred-tamlinux</code> repository.</p>
+</body>
+</html>

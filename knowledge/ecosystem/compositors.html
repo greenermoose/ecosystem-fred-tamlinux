@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Compositors & Windowing: Sway, Wayland, and wlroots</title>
+<meta name="topic" content="ecosystem-compositors">
+<meta name="summary" content="Windowing and compositors: Sway, Wayland, wlroots, and Hyprland">
+<meta name="keywords" content="compositor, compositors, sway, hyprland, wayland, wlroots, niri, river, labwc, pixman">
+<meta name="level" content="intermediate">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>Windowing & Compositors: Why Sway</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>In a Wayland environment, the compositor is the display server, window manager, and
+hardware modesetting coordinator. Tamlinux is standardizing on <strong>Sway</strong>,
+built on the <strong>wlroots</strong> library, replacing interim Hyprland for version 1.0.</p>
+
+<h2>1. Why Wayland Over X11</h2>
+
+<p>The 40-year-old X Window System (X11) has been completely retired from Tamlinux:</p>
+
+<ul>
+<li><strong>Security Isolation:</strong> Under X11, any connected client can spy on keystrokes and window buffers. Wayland enforces strict client isolation.</li>
+<li><strong>Tear-Free Direct Rendering:</strong> Wayland clients render directly into GPU or shared memory buffers, which the compositor scans out to DRM/KMS. Every frame is synchronized without latency or tearing.</li>
+<li><strong>Independent Multi-Monitor DPI:</strong> Wayland supports mixed-resolution, fractional display scaling (e.g. 1.25&times;) per monitor.</li>
+</ul>
+
+<h2>2. Why Sway Was Selected (0.7–1.0+)</h2>
+
+<p>On 2026-10-03, Fred chose <strong>Sway</strong> as Tamlinux's permanent compositor
+(Decisions D64, D124):</p>
+
+<ul>
+<li><strong>Clean C Codebase:</strong> Written in disciplined C99. Free from heavy C++ template bloat, complex compiler dependencies, and rapid breaking ABI churn.</li>
+<li><strong>Software CPU Rendering (<code>WLR_RENDERER=pixman</code>):</strong> Sway can run using pure CPU rendering via <code>pixman</code>. This enables Tamlinux to boot and display a responsive graphical desktop on vintage circa-2006 hardware where GPU drivers lack OpenGL 3 support.</li>
+<li><strong>systemd-Free Rootless Execution (<code>seatd</code>):</strong> Sway works natively with <code>seatd</code> / <code>libseat</code>, requiring zero systemd or elogind daemons.</li>
+<li><strong>Stable i3 IPC:</strong> Sway's rock-solid JSON IPC allows Tamlinux plugins (like <code>fred.workspaces</code> and <code>fred.monitor</code>) to manage outputs, focus, and layout reliably.</li>
+</ul>
+
+<h2>3. Why Hyprland Is Retiring at 1.0</h2>
+
+<p>Hyprland provided the early environment for Tamlinux 0.x, but is being phased out:</p>
+
+<ul>
+<li><strong>Hardware Requirements:</strong> Written in C++23; strictly requires modern GPU acceleration and cannot run with software CPU rendering on vintage hardware.</li>
+<li><strong>Rapid Breaking Changes:</strong> Frequent internal refactoring causes plugin ABI mismatches across minor updates.</li>
+<li><strong>Upstream Friction:</strong> Hyprwm's policy bans AI-assisted pull requests outright; because Tamlinux uses AI pair programming, carrying fixes upstream created friction.</li>
+<li><strong>Carried Local Patches:</strong> Tamlinux had to maintain multiple local patches (DPMS inheritance on connect, idle timer no-ops) to keep multi-monitor setups stable.</li>
+</ul>
+
+<h2>4. Other Evaluated Compositors</h2>
+
+<ul>
+<li><strong>Niri:</strong> Intuitive horizontal scrollable ribbon layout in Rust; however, it strictly requires hardware OpenGL/Vulkan and cannot run on software pixman renderers.</li>
+<li><strong>river:</strong> Dynamic tiling in Zig with separate external layout generators. Elegant, but less mature IPC ecosystem.</li>
+<li><strong>labwc:</strong> Stacking compositor on wlroots with Openbox configuration; kept in view as a lightweight floating desktop option.</li>
+<li><strong>Wayfire:</strong> 3D Compiz-style effects; creates unnecessary GPU energy consumption.</li>
+</ul>
+</body>
+</html>

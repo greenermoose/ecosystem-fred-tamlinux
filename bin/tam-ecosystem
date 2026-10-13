@@ -13,17 +13,20 @@
 #                       reproduce the fork tag's tree; the tarball in ~/pkgs matches the
 #                       release tag; versions agree; pkgrel carries the .N suffix
 #   status  [pkg]       one line per package: registry, installed, hook status
-#   render              rewrite the table in ECOSYSTEM.md from ecosystem.json
+#   render              rewrite the tables in ECOSYSTEM.md from ecosystem.json
 #   retire  <pkg>       move packages/<pkg> to retired/<pkg>, mark it retired
 #   install <pkg>       (new machine) build packages/<pkg>, publish into the
 #                       [local-patches] repo, install, install the pacman hook
+#   survey  [cat|pkg]   query evaluated packages and architectural dossiers
+#   guide   [page]      open the ecosystem offline guide via tam (or text fallback)
+#   export-knowledge [dir] export knowledge pages to tam knowledge corpus
 #
 # Environment: FRED_PKGS_DIR (default ~/pkgs), FRED_ECOSYSTEM_DIR (default: this
 # script's repo), FRED_CODE_DIR (default ~/Code, where fork checkouts live).
 
 set -euo pipefail
 
-VERSION="0.1.0"
+VERSION="0.2.0"
 SELF="tam-ecosystem"
 
 ECO_DIR="${FRED_ECOSYSTEM_DIR:-$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)}"
@@ -41,7 +44,7 @@ log()  { echo "$SELF: $*"; }
 usage() {
   sed -n '2,/^$/p' "$0" | sed 's/^# \{0,1\}//'
   echo
-  echo "Usage: $SELF <export|verify|status|render|retire|install> [pkg] [--dry-run]"
+  echo "Usage: $SELF <export|verify|status|render|retire|install|survey|guide|export-knowledge> [arg] [--dry-run]"
   echo "       $SELF --version"
 }
 
@@ -236,23 +239,180 @@ cmd_status() {
 
 # --- render -------------------------------------------------------------------
 cmd_render() {
-  local md="$ECO_DIR/ECOSYSTEM.md" begin='<!-- registry:begin -->' end='<!-- registry:end -->'
+  local md="$ECO_DIR/ECOSYSTEM.md"
   [[ -f "$md" ]] || fail "no $md"
-  grep -q "$begin" "$md" && grep -q "$end" "$md" || fail "$md lacks the $begin / $end markers"
-  local table
-  table=$(jq -r '
-    def fork: if .fork == null then "none (upstream has it)" else "[\(.fork.tag)](\(.fork.compare_url))" end;
-    def filed: [.patches[] | select(.filed != null and .filed.url != null) | "[\(.filed.url | sub("https://github.com/";""))](\(.filed.url))"] | join(", ") | if . == "" then "—" else . end;
-    "| Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |",
-    "|---|---|---|---|---|---|---|---|",
-    (.packages[] | "| [\(.name)](\(.notes)) | \(.status) | `\(.local_version)` | \(fork) | \(.patches | length) | \(filed) | \(.retires_when) | \(.depended_on_by | join(", ")) |")
-  ' "$REGISTRY")
-  local tmp; tmp=$(mktemp)
-  awk -v b="$begin" -v e="$end" -v t="$table" '
-    $0 == b { print; print t; skip=1; next }
-    $0 == e { skip=0 }
-    !skip { print }' "$md" > "$tmp"
-  mv -f "$tmp" "$md"; log "rendered table in ECOSYSTEM.md"
+
+  # 1. Render registry table
+  local begin_reg='<!-- registry:begin -->' end_reg='<!-- registry:end -->'
+  if grep -q "$begin_reg" "$md" && grep -q "$end_reg" "$md"; then
+    local reg_table
+    reg_table=$(jq -r '
+      def fork: if .fork == null then "none (upstream has it)" else "[\(.fork.tag)](\(.fork.compare_url))" end;
+      def filed: [.patches[] | select(.filed != null and .filed.url != null) | "[\(.filed.url | sub("https://github.com/";""))](\(.filed.url))"] | join(", ") | if . == "" then "—" else . end;
+      "| Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |",
+      "|---|---|---|---|---|---|---|---|",
+      (.packages[] | "| [\(.name)](\(.notes)) | \(.status) | `\(.local_version)` | \(fork) | \(.patches | length) | \(filed) | \(.retires_when) | \(.depended_on_by | join(", ")) |")
+    ' "$REGISTRY")
+    local tmp; tmp=$(mktemp)
+    awk -v b="$begin_reg" -v e="$end_reg" -v t="$reg_table" '
+      $0 == b { print; print t; skip=1; next }
+      $0 == e { skip=0 }
+      !skip { print }' "$md" > "$tmp"
+    mv -f "$tmp" "$md"
+    log "rendered patch registry table in ECOSYSTEM.md"
+  fi
+
+  # 2. Render considered packages table
+  local begin_cons='<!-- considered:begin -->' end_cons='<!-- considered:end -->'
+  if grep -q "$begin_cons" "$md" && grep -q "$end_cons" "$md"; then
+    local cons_table
+    cons_table=$(python3 -c "
+import json
+with open('$REGISTRY') as f:
+    data = json.load(f)
+pkgs = data.get('considered_packages', [])
+cats = data.get('categories', {})
+lines = [
+    '| Package | Category | Status | Role | License | Decision / Survey |',
+    '|---|---|---|---|---|---|'
+]
+for p in pkgs:
+    status_fmt = f'**{p[\"status\"]}**' if p['status'] in ('selected', 'active') else f'*{p[\"status\"]}*'
+    cat_title = cats.get(p['category'], {}).get('title', p['category'])
+    name_link = f'[{p[\"display_name\"]}]({p[\"url\"]})'
+    dec_ref = p.get('decision_ref', '—')
+    lines.append(f'| {name_link} | {cat_title} | {status_fmt} | {p[\"role\"]} | {p[\"license\"]} | {dec_ref} |')
+print('\n'.join(lines))
+")
+    local tmp; tmp=$(mktemp)
+    awk -v b="$begin_cons" -v e="$end_cons" -v t="$cons_table" '
+      $0 == b { print; print t; skip=1; next }
+      $0 == e { skip=0 }
+      !skip { print }' "$md" > "$tmp"
+    mv -f "$tmp" "$md"
+    log "rendered considered packages table in ECOSYSTEM.md"
+  fi
+}
+
+# --- survey -------------------------------------------------------------------
+cmd_survey() {
+  local query="${1:-}"
+  python3 -c "
+import json, sys
+
+query = sys.argv[1].strip().lower()
+with open('$REGISTRY') as f:
+    data = json.load(f)
+
+pkgs = data.get('considered_packages', [])
+cats = data.get('categories', {})
+
+if not query:
+    print('=== Tamlinux Considered Packages Survey ===\n')
+    print('Categories:')
+    from collections import Counter
+    by_cat = Counter(p['category'] for p in pkgs)
+    for cid, cinfo in cats.items():
+        print(f'  • {cid:28} ({by_cat[cid]} packages) — {cinfo[\"title\"]}')
+    print('\nStatus Breakdown:')
+    by_status = Counter(p['status'] for p in pkgs)
+    for s, count in sorted(by_status.items()):
+        print(f'  • {s:12} : {count} packages')
+    print(f'\nTotal Evaluated: {len(pkgs)} packages.')
+    print('\nUsage: tam-ecosystem survey <category|package> (e.g. tam-ecosystem survey sway)')
+    sys.exit(0)
+
+# 1. Exact package name
+matched_pkg = [p for p in pkgs if p['name'].lower() == query or p.get('display_name', '').lower() == query]
+if matched_pkg:
+    p = matched_pkg[0]
+    print(f'=== {p[\"display_name\"]} ({p[\"name\"]}) ===')
+    print(f'Category:         {cats.get(p[\"category\"], {}).get(\"title\", p[\"category\"])}')
+    print(f'Status:           {p[\"status\"].upper()}')
+    print(f'License:          {p[\"license\"]}')
+    print(f'Upstream URL:     {p[\"url\"]}')
+    print(f'Role in Tamlinux: {p[\"role\"]}')
+    if p.get('decision_ref'):
+        print(f'Decision / Ref:   {p[\"decision_ref\"]}')
+    if p.get('resource_profile'):
+        print(f'Resource Profile: {p[\"resource_profile\"]}')
+    print(f'\nSummary:\n  {p[\"summary\"]}')
+    print(f'\nRationale:\n  {p[\"rationale\"]}')
+    sys.exit(0)
+
+# 2. Category match
+matched_cat = []
+for cid, cinfo in cats.items():
+    c_id = cid.lower()
+    c_title = cinfo['title'].lower()
+    if query == c_id or query == c_id.replace('_', '-'):
+        matched_cat = [cid]
+        break
+    if query in c_id.split('_'):
+        matched_cat.append((1, cid))
+    elif query in c_id:
+        matched_cat.append((2, cid))
+    elif any(query == w.strip('(),&') for w in c_title.split()):
+        matched_cat.append((3, cid))
+    elif len(query) >= 3 and query in c_title:
+        matched_cat.append((4, cid))
+
+if matched_cat:
+    if isinstance(matched_cat[0], tuple):
+        matched_cat.sort(key=lambda x: x[0])
+        cid = matched_cat[0][1]
+    else:
+        cid = matched_cat[0]
+    cinfo = cats[cid]
+    cat_pkgs = [p for p in pkgs if p['category'] == cid]
+    print(f'=== Category: {cinfo[\"title\"]} ({len(cat_pkgs)} packages) ===')
+    print(f'{cinfo[\"description\"]}\n')
+    print(f'{\"PACKAGE\":<18} {\"STATUS\":<12} {\"LICENSE\":<18} {\"ROLE\"}')
+    print('-' * 80)
+    for p in cat_pkgs:
+        print(f'{p[\"name\"]:<18} {p[\"status\"]:<12} {p[\"license\"]:<18} {p[\"role\"][:45]}')
+    sys.exit(0)
+
+# 3. Partial keyword search
+partial = [p for p in pkgs if query in p['name'].lower() or query in p.get('display_name', '').lower() or query in p.get('summary', '').lower()]
+if partial:
+    print(f'Matches for \"{query}\":')
+    for p in partial:
+        print(f'  • {p[\"name\"]:16} [{p[\"status\"]:8}] {p[\"display_name\"]} — {p[\"summary\"][:60]}')
+    sys.exit(0)
+
+print(f'No considered package or category found matching \"{query}\".')
+" "$query"
+}
+
+# --- guide --------------------------------------------------------------------
+cmd_guide() {
+  local page="${1:-ecosystem}"
+  local kdir="$ECO_DIR/knowledge"
+  if command -v tam >/dev/null 2>&1; then
+    TAM_KNOWLEDGE_DIR="$kdir" tam show "$page"
+  elif [[ -x "$CODE_DIR/tamlinux/tam/build/tam" ]]; then
+    TAM_KNOWLEDGE_DIR="$kdir" "$CODE_DIR/tamlinux/tam/build/tam" show "$page"
+  else
+    local target="$kdir/$page.html"
+    [[ -f "$target" ]] || target="$kdir/ecosystem/$page.html"
+    [[ -f "$target" ]] || target="$kdir/index.html"
+    sed -e 's/<[^>]*>//g' -e '/^ *$/d' "$target"
+  fi
+}
+
+# --- export-knowledge ---------------------------------------------------------
+cmd_export_knowledge() {
+  local dest="${1:-$CODE_DIR/tamlinux/tam/knowledge}"
+  dest=$(expand_home "$dest")
+  log "exporting ecosystem knowledge pages to $dest"
+  mkdir -p "$dest/ecosystem"
+  cp -rf "$ECO_DIR/knowledge/ecosystem/." "$dest/ecosystem/"
+  if [[ -f "$dest/../tools/build-index.py" ]]; then
+    log "rebuilding index in $dest"
+    (cd "$dest/.." && python3 tools/build-index.py)
+  fi
+  log "export complete"
 }
 
 # --- retire -------------------------------------------------------------------
@@ -339,6 +499,9 @@ case "${1:-}" in
   render)  cmd_render;;
   retire)  cmd_retire "${2:-}";;
   install) cmd_install "${2:-}";;
+  survey)  cmd_survey "${2:-}";;
+  guide)   cmd_guide "${2:-}";;
+  export-knowledge) cmd_export_knowledge "${2:-}";;
   --version|-V) echo "$SELF $VERSION";;
   -h|--help|help|"") usage;;
   *) usage >&2; fail "unknown command: $1";;

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ecosystem Philosophy: Freedom and Value per Watt</title>
+<meta name="topic" content="ecosystem-philosophy">
+<meta name="summary" content="Free software, user sovereignty, and value per watt in Tamlinux">
+<meta name="keywords" content="philosophy, freedom, copyleft, gpl, fsf, freedesktop, value per watt, sovereignty, determinism">
+<meta name="level" content="beginner">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>Free Software & Value per Watt</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>Tamlinux is not just another desktop configuration; it is an expression of a
+philosophical stance on computing. It rests on the foundational principles of the
+Free Software movement, reinforced by a modern commitment to energy efficiency,
+hardware longevity, and human agency.</p>
+
+<h2>1. The Four Essential Freedoms</h2>
+
+<p>Tamlinux upholds the four essential freedoms articulated by the Free Software
+Foundation (FSF):</p>
+
+<ul>
+<li><strong>Freedom 0:</strong> The freedom to run the program as you wish, for any purpose.</li>
+<li><strong>Freedom 1:</strong> The freedom to study how the program works and adapt it to your needs.</li>
+<li><strong>Freedom 2:</strong> The freedom to redistribute copies to help others.</li>
+<li><strong>Freedom 3:</strong> The freedom to improve the program and release your improvements to the public.</li>
+</ul>
+
+<p>Tamlinux distributes its own software under <strong>GPL-3.0-or-later</strong>. Copyleft
+guarantees that your freedom cannot be stripped away by proprietary forks or commercial
+enclosure.</p>
+
+<h2>2. Standards and Interoperability (freedesktop.org)</h2>
+
+<p>Sovereignty requires interoperability. If software traps you in proprietary data
+structures or undocumented protocols, freedom is an illusion. Tamlinux embraces
+<strong>freedesktop.org (XDG) standards</strong>:</p>
+
+<ul>
+<li><strong>Clean Directories:</strong> Configuration belongs in <code>~/.config</code>, data in <code>~/.local/share</code>, and runtime state in <code>~/.local/state</code>. No hidden files cluttering your home root.</li>
+<li><strong>Standard Protocols:</strong> The desktop shell communicates with window managers using standard Wayland protocols (<code>wlr-layer-shell</code>, <code>ext-workspace-v1</code>), avoiding proprietary API locks.</li>
+<li><strong>Standard Formats:</strong> Applications are described by <code>.desktop</code> files; menus and icons follow shared specifications.</li>
+</ul>
+
+<h2>3. "Value per Watt": Energy-Conscious Computing</h2>
+
+<p>In modern computing, software often wastes massive amounts of electrical power and
+silicon cycles on useless background tasks. A typical modern OS runs dozens of
+daemons constantly polling network endpoints, indexing disks, and tracking user
+telemetry.</p>
+
+<p>Tamlinux operates under the principle of <strong>"value per watt"</strong> (Decision D139):</p>
+
+<ul>
+<li><strong>Zero Polling:</strong> Software must sleep cleanly until an actual event occurs. Polling loops that prevent the CPU from entering low-power sleep states are treated as bugs.</li>
+<li><strong>Minimal Daemons:</strong> Services must earn their place in memory. If a feature can be implemented as an on-demand tool, it should not run as a permanent daemon.</li>
+<li><strong>Deterministic Execution:</strong> Computers should do what users tell them to do, with predictable resource costs and immediate responsiveness.</li>
+</ul>
+
+<h2>4. Supervised Human Agency</h2>
+
+<p>Computers exist to serve humans, not the other way around. In an era where software
+increasingly surrenders control to non-deterministic algorithms and opaque autonomous
+loops, Tamlinux insists on <strong>human agency</strong>:</p>
+
+<ul>
+<li>AI tools are used as supervised assistants, directed by human engineers.</li>
+<li>All AI code changes carry public provenance in <code>AI_PROVENANCE.md</code>.</li>
+<li>Autonomous background agent loops (such as OpenClaw and Hermes) were retired from Tamlinux defaults (D139, D140) to keep system execution deterministic and energy-efficient.</li>
+</ul>
+</body>
+</html>

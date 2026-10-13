@@ -43,6 +43,7 @@ Versions captured 2026-10-04 (`claude --version`, `agy --version`, `codex --vers
 | Registry design, policy, scaffold, first four packages | `v0.1.0` | Claude Code `2.1.274` (Claude Opus 5) | Fork/registry/consumer three-tier design; upstream-engagement policy after Hyprland#16290 was auto-closed; `omarchy-fred-ecosystem` command. |
 | CLI rename to `tam-ecosystem` | `v0.1.0` | Cursor `3.21.16` (`composer`) | Daily name `tam-ecosystem`; long alias `ecosystem-fred-tamlinux`. |
 | Tamlinux branding | `v0.1.0` | Cursor `3.21.16` (`composer`) | README and `ecosystem.json` description say Fred's Tamlinux workstations. |
+| Considered packages survey & tam offline resource | `v0.2.0` | Antigravity CLI `agy` (`1.2.16`, Gemini 3.8 Flash (High)) | Expanded scope from patches-only to complete ecosystem registry; ingested bookmarks_10_13_26b.html; added 66 considered packages across 14 categories in ecosystem.json; authored 11 technical survey dossiers in surveys/; created semantic HTML knowledge corpus and index in knowledge/ecosystem/ for tam; added survey, guide, export-knowledge to bin/tam-ecosystem. |
 
 ## 3. Per-package origin of the patches
 

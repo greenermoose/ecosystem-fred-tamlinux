@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Tooling & Human Agency</title>
+<meta name="topic" content="ecosystem-ai">
+<meta name="summary" content="AI coding agents, human supervision, and rejecting autonomous loops">
+<meta name="keywords" content="ai, agents, claude, codex, gemini, cursor, supervision, provenance, value per watt">
+<meta name="level" content="intermediate">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>AI Coding Tooling & Human Agency</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>Artificial Intelligence tools play a vital role in Tamlinux development. However,
+Tamlinux enforces strict ethical, operational, and efficiency policies regarding AI
+use.</p>
+
+<h2>1. Supervised Pair Programming vs Autonomous Daemons</h2>
+
+<p>In Decisions D139 and D140, Fred set a clear operational direction:
+<strong>favor deterministic programs that humans or supervised AI agents can control,
+minimize daemons and background activity, and keep AI under direct human supervision.</strong></p>
+
+<ul>
+<li><strong>Autonomous Loops Retired:</strong> Tamlinux retired OpenClaw and Hermes from supported defaults. Non-deterministic autonomous AI loops consume substantial compute and electrical power with unpredictable returns.</li>
+<li><strong>Deterministic Operating System:</strong> The operating system itself must remain predictable and deterministic. AI belongs in conscious development sessions, not running as uncontrolled background processes on end-user machines.</li>
+<li><strong>Direct Human Direction:</strong> Fred directs every architectural decision, conducts design interviews, and approves all package promotions. AI agents write code, run tests, and propose refactors, but never release software autonomously.</li>
+</ul>
+
+<h2>2. Public AI Provenance (<code>AI_PROVENANCE.md</code>)</h2>
+
+<p>Tamlinux believes in total honesty regarding AI assistance:</p>
+
+<ul>
+<li>Every public Tamlinux repository maintains an <code>AI_PROVENANCE.md</code> ledger.</li>
+<li>Each entry records the date, tool/model used, user prompt, and specific changes made.</li>
+<li>Respects upstream community boundaries: where projects request no AI pull requests (such as Hyprland or Void Linux), Tamlinux never submits machine-generated code to their queues.</li>
+</ul>
+
+<h2>3. Tools in the Tamlinux Development Suite</h2>
+
+<ul>
+<li><strong>Claude (Anthropic):</strong> Primary reasoning model for architectural orchestration and decision planning.</li>
+<li><strong>Codex (OpenAI):</strong> High-speed code synthesis, panel ports, and test verification via delegation briefs.</li>
+<li><strong>Gemini / agy (Google DeepMind):</strong> Multimodal codebase analysis, large-scale refactoring, and survey authoring.</li>
+<li><strong>Cursor IDE:</strong> AI-powered graphical code editor, packaged as a native Arch package for Tamlinux.</li>
+</ul>
+</body>
+</html>
