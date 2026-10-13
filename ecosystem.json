@@ -117,7 +117,7 @@
           "commit": "68a4dfe2",
           "filed": {
             "url": "https://github.com/hyprwm/Hyprland/pull/16290",
-            "state": "closed 2026-09-17 by bot (unvouched); not to be re-filed — hyprwm AI policy"
+            "state": "closed 2026-09-17 by bot (unvouched); not to be re-filed \u2014 hyprwm AI policy"
           }
         },
         {
@@ -127,7 +127,7 @@
           "commit": "a7a03d6f",
           "filed": {
             "url": null,
-            "state": "not filed and not to be filed — hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md"
+            "state": "not filed and not to be filed \u2014 hyprwm AI policy; draft kept in packages/hyprland/upstream-pr.md"
           }
         },
         {
@@ -137,7 +137,7 @@
           "commit": "3e4303a7",
           "filed": {
             "url": null,
-            "state": "not filed and not to be filed — hyprwm AI policy"
+            "state": "not filed and not to be filed \u2014 hyprwm AI policy"
           }
         }
       ],
@@ -226,7 +226,7 @@
       "name": "omarchy",
       "status": "active",
       "added": "2026-09-21",
-      "summary": "Bar tooltip reserves border padding like PanelToolTip and ceils width/height so logical size × DPR is an integer physical pixel count (fixes Dell 1.25× bottom-border clip)",
+      "summary": "Bar tooltip reserves border padding like PanelToolTip and ceils width/height so logical size \u00d7 DPR is an integer physical pixel count (fixes Dell 1.25\u00d7 bottom-border clip)",
       "upstream": {
         "repo": "https://github.com/basecamp/omarchy",
         "license": "MIT"
@@ -273,7 +273,7 @@
           }
         }
       ],
-      "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy",
+      "retires_when": "Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size \u00d7 DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy",
       "verify_binary": "rg -q 'tooltipBorderSpec' /usr/share/omarchy/shell/plugins/bar/Bar.qml && rg -q 'scaleSafeSize' /usr/share/omarchy/shell/plugins/bar/Bar.qml",
       "depended_on_by": [
         "private workstation checkout",
@@ -368,6 +368,10 @@
     "applications_and_mission": {
       "title": "Applications & Community Mission",
       "description": "Local applications embodying sustainability, community resilience, and civic utility"
+    },
+    "desktop_application_suites": {
+      "title": "Desktop Application Suites",
+      "description": "Graphical application suites evaluated for daily-driver workstation utility, resource efficiency, and root-stock portability"
     }
   },
   "considered_packages": [
@@ -418,7 +422,7 @@
       "license": "LGPL-2.1-or-later",
       "status": "active",
       "role": "Current standard C library on Arch Linux workstation and primary Void tier",
-      "decision_ref": "base-operating-system.md §C Library Evaluation",
+      "decision_ref": "base-operating-system.md \u00a7C Library Evaluation",
       "summary": "The ubiquitous, feature-complete standard C library for GNU/Linux systems.",
       "resource_profile": "Standard memory footprint, dynamic linker NSS modules, locale support",
       "rationale": "glibc is the active userland anchor on Arch Linux. Provides total binary compatibility with upstream binaries (Google Chrome, VS Code, Cursor, proprietary graphics drivers) and comprehensive POSIX/GNU extensions. Evaluated against musl for the upcoming Void pilot."
@@ -431,7 +435,7 @@
       "license": "MIT",
       "status": "deferred",
       "role": "Alternative C library evaluated for minimal footprint Void/Alpine profiles",
-      "decision_ref": "base-operating-system.md §C Library Evaluation",
+      "decision_ref": "base-operating-system.md \u00a7C Library Evaluation",
       "summary": "A clean, lightweight, standards-conformant C library designed for static linking and efficiency.",
       "resource_profile": "Ultra-small memory and disk footprint (~600 KB total size), fast thread creation",
       "rationale": "musl offers unmatched simplicity, strict POSIX compliance, and minimal memory usage. Deferred to Void pilot milestone 1.2 to measure real-world workstation impact. Showstoppers to test include proprietary browser/IDE execution and proprietary GPU driver support."
@@ -470,7 +474,7 @@
       "license": "GPL and various",
       "status": "fallback",
       "role": "Designated fallback distribution if Void presents showstoppers",
-      "decision_ref": "D68, D126; base-operating-system.md §Target and fallback",
+      "decision_ref": "D68, D126; base-operating-system.md \u00a7Target and fallback",
       "summary": "A fast, lightweight, systemd-free desktop/core distribution built on Debian Stable/Testing.",
       "resource_profile": "Extremely low RAM footprint (~150MB base), runit init, older hardware optimization",
       "rationale": "antiX Core with runit is the designated fallback target. Its Debian foundation offers vast binary package availability while completely decoupling from systemd. Chosen for its proven track record keeping older hardware useful."
@@ -548,7 +552,7 @@
       "license": "GPL and various",
       "status": "evaluated",
       "role": "Enterprise-grade rolling and stable RPM distribution",
-      "decision_ref": "Peer survey §10",
+      "decision_ref": "Peer survey \u00a710",
       "summary": "A community distribution sponsored by SUSE, featuring Zypper, YaST, and Open Build Service.",
       "resource_profile": "Full-featured RPM distribution, Snapper Btrfs integration",
       "rationale": "openSUSE's implementation of Snapper Btrfs snapshots for rollback was analyzed as a design reference for Tamlinux's Btrfs recovery plan on Void."
@@ -600,7 +604,7 @@
       "license": "LGPL-2.1-only",
       "status": "selected",
       "role": "Reproducible package and deployment framework for Tamlinux software",
-      "decision_ref": "D132, D114, D72; LIFECYCLE.md §3",
+      "decision_ref": "D132, D114, D72; LIFECYCLE.md \u00a73",
       "summary": "A purely functional package manager providing reproducible builds, atomic upgrades, and instant rollback.",
       "resource_profile": "Immutable /nix/store, symlink trees, flake.lock pinning, no runtime daemon",
       "rationale": "Nix is selected for Tamlinux's software delivery layer (tamlinux-packages and Home Manager). It allows Tamlinux to package its shell, tools, and plugins into immutable, bit-for-bit reproducible store paths. Test and Run deployments point to exact flake commits, making rollbacks instantaneous and rock-solid across any host."
@@ -626,7 +630,7 @@
       "license": "BSD-2-Clause",
       "status": "selected",
       "role": "Target native package manager on Void Linux base",
-      "decision_ref": "D68, D126; base-operating-system.md §Package and service ownership",
+      "decision_ref": "D68, D126; base-operating-system.md \u00a7Package and service ownership",
       "summary": "A fast, native C package manager developed for Void Linux, featuring atomic transactions and xbps-src.",
       "resource_profile": "Fastest package manager in its class, clean library design, no background daemon",
       "rationale": "XBPS was built from scratch in C for Void. It offers atomic package transactions, rapid dependency resolution, and xbps-src, a clean chroot-based source package build system. Tamlinux will maintain native xbps-src templates for its workstation components."
@@ -665,7 +669,7 @@
       "license": "BSD-3-Clause",
       "status": "selected",
       "role": "Selected init and service supervision system for Void/antiX base",
-      "decision_ref": "D68, D126; base-operating-system.md §Target and fallback",
+      "decision_ref": "D68, D126; base-operating-system.md \u00a7Target and fallback",
       "summary": "A UNIX init scheme with service supervision, created by Gerrit Pape.",
       "resource_profile": "Tiny memory footprint (~sub-megabyte), near-instant boot, process supervision via runsvdir/runsv",
       "rationale": "runit embodies the Unix philosophy of doing one thing well. It provides deterministic, rock-solid service supervision (automatically restarting failed daemons), lightning-fast boot times, and tiny memory usage without creeping into network, logging, or device management."
@@ -716,7 +720,7 @@
       "url": "https://swaywm.org/",
       "license": "MIT",
       "status": "selected",
-      "role": "Selected long-term tiling Wayland compositor for Tamlinux (0.7–1.0+)",
+      "role": "Selected long-term tiling Wayland compositor for Tamlinux (0.7\u20131.0+)",
       "decision_ref": "D64, D119, D120, D124, D126; compositor survey 2026-10-03",
       "summary": "An i3-compatible Wayland compositor built on wlroots, written in clean C.",
       "resource_profile": "Minimal idle CPU/RAM usage (~30-50MB), wlroots pixman CPU rendering for vintage GPUs, seatd compatibility",
@@ -743,7 +747,7 @@
       "license": "GPL-3.0-or-later",
       "status": "evaluated",
       "role": "Scrollable-tiling Wayland compositor written in Rust",
-      "decision_ref": "compositor survey 2026-10-03, peer survey §11",
+      "decision_ref": "compositor survey 2026-10-03, peer survey \u00a711",
       "summary": "A scrollable-tiling Wayland compositor offering an infinite horizontal ribbon workflow.",
       "resource_profile": "Written in Rust on Smithay; requires hardware OpenGL/Vulkan (rejects software EGL)",
       "rationale": "Niri offers an intuitive horizontal window ribbon paradigm. Evaluated during the 2026-10-03 compositor survey. Disqualified for the baseline because it strictly requires hardware OpenGL/Vulkan and cannot run on software pixman renderers for older hardware."
@@ -756,7 +760,7 @@
       "license": "GPL-3.0-only",
       "status": "evaluated",
       "role": "Dynamic tiling Wayland compositor written in Zig",
-      "decision_ref": "compositor survey 2026-10-03, peer survey §11",
+      "decision_ref": "compositor survey 2026-10-03, peer survey \u00a711",
       "summary": "A dynamic tiling Wayland compositor with a modular external layout generator architecture.",
       "resource_profile": "Written in Zig on wlroots, low idle footprint, external layout processes",
       "rationale": "river's architecture separates window management from layout generation (layouts run as external standalone processes). Highly regarded, but Sway's mature i3 IPC and established multi-display output management made Sway the superior choice for Tamlinux."
@@ -860,7 +864,7 @@
       "license": "MIT",
       "status": "evaluated",
       "role": "Rust framework for building custom Wayland compositors",
-      "decision_ref": "Peer survey §11",
+      "decision_ref": "Peer survey \u00a711",
       "summary": "A modular engine for building Wayland compositors in Rust, powering Cosmic Epoch and Niri.",
       "resource_profile": "Memory-safe Rust implementation, modern GPU backend focus",
       "rationale": "Smithay is the leading Rust foundation for Wayland. Evaluated during compositor surveys; its reliance on modern GPU hardware acceleration limits its use for Tamlinux's vintage hardware targets."
@@ -1042,7 +1046,7 @@
       "license": "GPL-3.0 / MIT",
       "status": "evaluated",
       "role": "Family of native Wayland desktop tools and shell components",
-      "decision_ref": "Peer survey §10",
+      "decision_ref": "Peer survey \u00a710",
       "summary": "An open collection of native Wayland projects designed for lightweight desktop workflows.",
       "resource_profile": "Modular Wayland clients",
       "rationale": "Studied during peer project surveys (2026-10-08) as an example of modular, native Wayland desktop component architecture."
@@ -1055,7 +1059,7 @@
       "license": "GPL-3.0-only",
       "status": "evaluated",
       "role": "Material Design desktop shell for Wayland",
-      "decision_ref": "Peer survey §1",
+      "decision_ref": "Peer survey \u00a71",
       "summary": "A complete desktop shell adhering to Google Material Design standards on Wayland.",
       "resource_profile": "Full desktop environment shell",
       "rationale": "Surveyed as a peer project building a standalone shell across compositors; reinforced Tamlinux's decision to use standard protocol layers (ext-workspace-v1) rather than compositor-specific private IPC."
@@ -1228,6 +1232,149 @@
       "summary": "Local web applications and community initiatives dedicated to sustainability and civic empowerment.",
       "resource_profile": "Lightweight web apps (localhost:8000), static staging, zero cloud lock-in",
       "rationale": "Tamlinux is not an abstract exercise; it is the workstation foundation for Suspra's mission. By maximizing hardware longevity, eliminating e-waste, and optimizing energy use ('value per watt'), Tamlinux directly supports community resilience and environmental stewardship."
+    },
+    {
+      "name": "kde_gear",
+      "display_name": "KDE Gear",
+      "category": "desktop_application_suites",
+      "url": "https://apps.kde.org/",
+      "license": "GPL-2.0-or-later / LGPL-2.1-or-later",
+      "status": "selected",
+      "role": "Primary modular application suite for Tamlinux graphical utilities",
+      "decision_ref": "docs/desktop-application-suites.md",
+      "summary": "Comprehensive collection of over 200 applications and libraries built atop Qt 6 and KDE Frameworks 6.",
+      "resource_profile": "Highly modular; individual utilities range from ~15 MB (KCalc) to ~40 MB (Dolphin)",
+      "rationale": "KDE Gear provides modular, power-user applications that align natively with Tamlinux's Qt Quick/QML shell (Quickshell). Tier 1-3 KDE Frameworks have zero systemd dependencies, enabling clean execution on Void Linux (runit + seatd)."
+    },
+    {
+      "name": "gnome_core_apps",
+      "display_name": "GNOME Core Applications",
+      "category": "desktop_application_suites",
+      "url": "https://apps.gnome.org/",
+      "license": "GPL-3.0-or-later / LGPL-2.1-or-later",
+      "status": "evaluated",
+      "role": "Architectural reference and alternative application suite",
+      "decision_ref": "docs/desktop-application-suites.md",
+      "summary": "Task-focused, opinionated desktop application suite built with GTK 4, Libadwaita, and the GNOME Human Interface Guidelines.",
+      "resource_profile": "Moderate-to-high (~40-120 MB per app); GJS apps incur JS engine overhead",
+      "rationale": "GNOME applications are sleek and accessible, but enforce Client-Side Decorations (CSD headerbars) that waste vertical screen space in tiling Sway. Furthermore, core GNOME applications increasingly require systemd, logind, and background indexing services (Tracker/TinySPARQL)."
+    },
+    {
+      "name": "okular",
+      "display_name": "Okular",
+      "category": "desktop_application_suites",
+      "url": "https://okular.kde.org/",
+      "license": "GPL-2.0-or-later",
+      "status": "selected",
+      "role": "Universal document and PDF viewer",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.3",
+      "summary": "Universal document viewer supporting PDF, ePub, PostScript, DjVu, Markdown, and comic book archives.",
+      "resource_profile": "Lean memory footprint (~30 MB idle); high rendering speed via Poppler-qt6; zero daemons",
+      "rationale": "Universally recognized as the most capable and responsive open-source document viewer. Runs standalone with no background daemons or systemd requirements."
+    },
+    {
+      "name": "kate",
+      "display_name": "Kate",
+      "category": "desktop_application_suites",
+      "url": "https://kate-editor.org/",
+      "license": "LGPL-2.0-or-later",
+      "status": "selected",
+      "role": "Advanced graphical text editor and lightweight IDE",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.2",
+      "summary": "Feature-dense text editor with multi-cursor support, native LSP client, Git integration, and split editing.",
+      "resource_profile": "Fast startup, ~35 MB idle RAM, zero background daemons",
+      "rationale": "Kate delivers IDE-grade functionality in a minimal footprint. Built on KF6 KTextEditor, it operates cleanly on Void Linux without systemd and integrates seamlessly with Sway."
+    },
+    {
+      "name": "dolphin",
+      "display_name": "Dolphin",
+      "category": "desktop_application_suites",
+      "url": "https://apps.kde.org/dolphin/",
+      "license": "GPL-2.0-or-later",
+      "status": "selected",
+      "role": "Advanced dual-pane file manager",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.1",
+      "summary": "Power-user file manager featuring split views, embedded terminal, tabs, and extensive KIO network protocol support.",
+      "resource_profile": "~40 MB idle RAM when Baloo file indexing is disabled; on-demand KIO workers",
+      "rationale": "Dolphin is the benchmark Linux file manager. Configured with Baloo indexing disabled, it provides instant file browsing without violating Value per Watt."
+    },
+    {
+      "name": "nautilus",
+      "display_name": "Nautilus (GNOME Files)",
+      "category": "desktop_application_suites",
+      "url": "https://apps.gnome.org/Nautilus/",
+      "license": "GPL-3.0-or-later",
+      "status": "evaluated",
+      "role": "Minimalist graphical file manager",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.1",
+      "summary": "Simple, search-centric file manager built on GTK 4 and Libadwaita.",
+      "resource_profile": "~60 MB RAM + background TinySPARQL/localsearch indexing services",
+      "rationale": "Evaluated as an alternative. Relies on Tracker/TinySPARQL indexing daemons which consume CPU/IO on older hardware, and Libadwaita headerbars conflict with Sway tiling."
+    },
+    {
+      "name": "loupe",
+      "display_name": "Loupe (GNOME Image Viewer)",
+      "category": "desktop_application_suites",
+      "url": "https://apps.gnome.org/Loupe/",
+      "license": "GPL-3.0-or-later",
+      "status": "evaluated",
+      "role": "Sandboxed graphical image viewer",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.4",
+      "summary": "Modern image viewer built in Rust and GTK 4 with sandboxed image decoders (Glycin).",
+      "resource_profile": "~50 MB RAM; spawns Bubblewrap container workers per decoded format",
+      "rationale": "Offers outstanding memory safety against malicious image payloads via Bubblewrap/seccomp sandboxes. Evaluated for environments with unprivileged user namespaces enabled."
+    },
+    {
+      "name": "papers",
+      "display_name": "Papers",
+      "category": "desktop_application_suites",
+      "url": "https://gitlab.gnome.org/GNOME/Incubator/papers",
+      "license": "GPL-2.0-or-later",
+      "status": "evaluated",
+      "role": "Modern GTK 4 document viewer",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.3",
+      "summary": "Modern document viewer for the GNOME desktop, succeeding Evince with a GTK 4 and Libadwaita interface.",
+      "resource_profile": "Clean rendering via Poppler-glib, ~45 MB RAM",
+      "rationale": "Evaluated as the modern GTK 4 document viewing standard. Functionally solid, though less versatile than Okular for diverse document types."
+    },
+    {
+      "name": "kcalc",
+      "display_name": "KCalc",
+      "category": "desktop_application_suites",
+      "url": "https://apps.kde.org/kcalc/",
+      "license": "GPL-2.0-or-later",
+      "status": "selected",
+      "role": "Scientific and programming calculator",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.7",
+      "summary": "Lightweight scientific, statistical, and hexadecimal calculator powered by GMP and MPFR arbitrary precision.",
+      "resource_profile": "Ultra-lightweight (~15 MB RAM), instantaneous launch, zero daemons",
+      "rationale": "Clean, reliable utility that launches instantly, requires no background processes, and runs identically on Void and Arch."
+    },
+    {
+      "name": "filelight",
+      "display_name": "Filelight",
+      "category": "desktop_application_suites",
+      "url": "https://apps.kde.org/filelight/",
+      "license": "GPL-2.0-or-later",
+      "status": "selected",
+      "role": "Interactive disk space usage visualizer",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.6",
+      "summary": "Disk space visualizer displaying filesystem usage as interactive concentric segmented rings.",
+      "resource_profile": "~25 MB RAM, built with Qt Quick and QML, zero daemons",
+      "rationale": "Filelight shares the Qt Quick/QML architecture of Tamlinux's Quickshell. It provides immediate visual insight into disk usage on vintage and modern machines without heavy dependencies."
+    },
+    {
+      "name": "kdeconnect",
+      "display_name": "KDE Connect",
+      "category": "desktop_application_suites",
+      "url": "https://kdeconnect.kde.org/",
+      "license": "GPL-2.0-or-later",
+      "status": "selected",
+      "role": "Secure cross-device phone-to-desktop bridge",
+      "decision_ref": "docs/desktop-application-suites.md \u00a72.7",
+      "summary": "Multi-device integration utility providing shared clipboard, notification synchronization, file transfer, and remote media control.",
+      "resource_profile": "Lightweight background daemon (~30 MB RAM) listening on local TLS network sockets",
+      "rationale": "KDE Connect is an exemplary piece of network protocol engineering. It runs completely standalone on Sway without KDE Plasma or systemd, bridging Android/iOS devices seamlessly to Tamlinux."
     }
   ]
 }

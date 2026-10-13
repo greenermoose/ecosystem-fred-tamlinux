@@ -75,6 +75,35 @@
     "track": "improve"
   },
   {
+    "topic": "ecosystem-desktop-suites",
+    "path": "ecosystem/desktop-suites.html",
+    "title": "Desktop Application Suites: KDE Gear & GNOME Core Evaluation",
+    "summary": "Evaluation of KDE Gear and GNOME Core/Circle application suites for Tamlinux Cultivar and Root-stock",
+    "keywords": [
+      "desktop applications",
+      "kde",
+      "gnome",
+      "kde gear",
+      "gnome core",
+      "dolphin",
+      "nautilus",
+      "kate",
+      "okular",
+      "kcalc",
+      "filelight",
+      "libadwaita",
+      "qt6",
+      "kf6",
+      "rootstock",
+      "cultivar",
+      "sway",
+      "void",
+      "runit"
+    ],
+    "level": "intermediate",
+    "track": "improve"
+  },
+  {
     "topic": "ecosystem-distros",
     "path": "ecosystem/distros.html",
     "title": "Base Distributions: Arch, Void, and antiX",

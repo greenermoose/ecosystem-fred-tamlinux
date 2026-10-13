@@ -174,3 +174,22 @@ No leftover `omarchy-fred-ecosystem` command after the Home Manager switch.
 - Updated `AI_PROVENANCE.md`: refreshed toolchain versions as of 2026-10-04;
   added omarchy patches and recorded recent maintenance sessions.
 
+## Session: 2026-10-13 — Research KDE & GNOME desktop application suites
+
+- **CLI Tool**: `agy` `1.3.4` (Antigravity CLI)
+- **Model**: `gemini-3.8-flash-high`
+- **Transcript**: Retained privately by the author.
+- **Participants**: Fred (@greenermoose), Antigravity
+
+### Guiding prompt
+> **Fred:**
+> "For ecosystem-fred-tamlinux, do careful research about the suites of software KDE and GNOME provide. Create a report or a series of files that contains information about the applications that KDE and GNOME deliver as part of their desktop environments. We'll use this to inform our choice of applications that we include in Tamlinux. In particular, we need to understand the functionality and the dependencies of the KDE and GNOME software. It may be that we can or it might be that we cannot run those applications on the root-stock and Tamlinux cultivar we are developing. Either way is fine; we just need to know that so we can decide whether to include those applications, port them to Tamlinux, or use them as inspiration for a new suite we create ourselves."
+
+### Decisions and implementation
+- Evaluated KDE Gear and GNOME Core/Circle software suites against Tamlinux Botanical Architecture (Void Linux + runit + seatd root-stock; Sway + Quickshell cultivar).
+- Authored master architectural report in `docs/desktop-application-suites.md`.
+- Created semantic HTML knowledge chapter in `knowledge/ecosystem/desktop-suites.html` and linked in `knowledge/ecosystem/index.html`.
+- Added `desktop_application_suites` category and 11 evaluated packages to `ecosystem.json`.
+- Rendered `ECOSYSTEM.md` and indexed knowledge corpus into `knowledge/index.tsv` and `knowledge/index.json`.
+
+

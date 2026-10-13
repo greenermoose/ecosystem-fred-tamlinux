@@ -29,12 +29,12 @@ session IDs or local transcript paths.
 | **Claude Code** (`claude`) | `2.1.289` | Claude Opus 5.5 (`claude-opus-5-5`), Claude Opus 5 | Architecture, planning, this repository's design and first content; diagnosis and patches for the hyprland and omawrite rigs; aquamarine 0.15.1 and hyprland 0.56.2-4.1 rebases; gtk4 retirement. |
 | **Codex CLI** (`codex`) | `0.160.0` | `gpt-6-astra`, `gpt-5.6-sol`, `gpt-6-sol` | Second opinion on plans and upstream survey documentation. |
 | **Codex API** | N/A (API session) | GPT-6 | Diagnosed and patched the Aquamarine null connector shutdown crash. |
-| **Antigravity CLI** (`agy`) | `1.2.16` | Gemini 3.8 Flash (High) | Coding and implementation on the plugin side; omawrite close-button and 80-column patches; documentation audits and repository alignment. |
+| **Antigravity CLI** (`agy`) | `1.3.4` | Gemini 3.8 Flash (High) | Coding and implementation on the plugin side; omawrite close-button and 80-column patches; documentation audits; KDE and GNOME desktop application suites architectural survey. |
 | **OpenCode** (`opencode`) | `1.18.31` | Big Pickle | Arch/Omarchy Q&A. |
 | **Grok CLI** (`grok`) | `1.0.25` | Grok 4.6 | Workstation support. |
 | **Cursor** (`cursor`) | `3.23.12` | `composer` | Omarchy bar-tooltip fractional scaling patches; daily CLI rename and branding. |
 
-Versions captured 2026-10-04 (`claude --version`, `agy --version`, `codex --version`, `opencode --version`, `grok --version`, `cursor --version`).
+Versions captured 2026-10-04, updated 2026-10-13 (`agy --version 1.3.4`).
 
 ## 2. Milestones
 
@@ -44,6 +44,7 @@ Versions captured 2026-10-04 (`claude --version`, `agy --version`, `codex --vers
 | CLI rename to `tam-ecosystem` | `v0.1.0` | Cursor `3.21.16` (`composer`) | Daily name `tam-ecosystem`; long alias `ecosystem-fred-tamlinux`. |
 | Tamlinux branding | `v0.1.0` | Cursor `3.21.16` (`composer`) | README and `ecosystem.json` description say Fred's Tamlinux workstations. |
 | Considered packages survey & tam offline resource | `v0.2.0` | Antigravity CLI `agy` (`1.2.16`, Gemini 3.8 Flash (High)) | Expanded scope from patches-only to complete ecosystem registry; ingested bookmarks_10_13_26b.html; added 66 considered packages across 14 categories in ecosystem.json; authored 11 technical survey dossiers in surveys/; created semantic HTML knowledge corpus and index in knowledge/ecosystem/ for tam; added survey, guide, export-knowledge to bin/tam-ecosystem. |
+| Desktop application suites survey & botanical evaluation | `v0.2.1` | Antigravity CLI `agy` (`1.3.4`, Gemini 3.8 Flash (High)) | Researched KDE Gear and GNOME Core/Circle application suites; authored `docs/desktop-application-suites.md`; created semantic knowledge chapter `knowledge/ecosystem/desktop-suites.html`; added `desktop_application_suites` category and 11 evaluated packages to `ecosystem.json`; re-rendered `ECOSYSTEM.md` and rebuilt knowledge index. |
 
 ## 3. Per-package origin of the patches
 

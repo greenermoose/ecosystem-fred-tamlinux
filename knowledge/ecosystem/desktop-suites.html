@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Desktop Application Suites: KDE Gear & GNOME Core Evaluation</title>
+<meta name="topic" content="ecosystem-desktop-suites">
+<meta name="summary" content="Evaluation of KDE Gear and GNOME Core/Circle application suites for Tamlinux Cultivar and Root-stock">
+<meta name="keywords" content="desktop applications, kde, gnome, kde gear, gnome core, dolphin, nautilus, kate, okular, kcalc, filelight, libadwaita, qt6, kf6, rootstock, cultivar, sway, void, runit">
+<meta name="level" content="intermediate">
+<meta name="track" content="improve">
+</head>
+<body>
+<h1>Desktop Application Suites: KDE vs. GNOME</h1>
+
+<p><a href="index.html">&larr; Back to Ecosystem Index</a></p>
+
+<p>A functional workstation environment requires a dependable set of graphical daily-driver
+applications: file management, document viewing, text editing, image manipulation, media playback,
+and utility tools. Tamlinux evaluates software suites from both <strong>KDE</strong> (KDE Gear,
+Plasma utilities, KDE Frameworks 6) and <strong>GNOME</strong> (GNOME Core, GNOME Circle, Libadwaita)
+to determine compatibility with the Tamlinux botanical architecture.</p>
+
+<h2>1. Botanical Architecture Requirements</h2>
+
+<p>Tamlinux couples a distinct base operating system with an independent desktop layer:</p>
+
+<ul>
+<li><strong>The Root-stock (Minimal Void Linux):</strong> Supervised deterministically by <code>runit</code>, using <code>seatd</code> for seat arbitration, and packaged with XBPS. Applications must execute reliably without requiring <code>systemd</code> PID 1, <code>systemd --user</code> session units, or <code>elogind</code>.</li>
+<li><strong>The Cultivar (Sway + Quickshell):</strong> A keyboard-driven tiling compositor (Sway on wlroots) paired with a declarative Qt Quick / QML shell (Quickshell) themed with the Tamarack palette. Applications must respect Wayland tiling geometries, support Server-Side Decorations or frameless layouts, and adhere to our <strong>Value per Watt</strong> tenet (no perpetual background polling or runaway indexing loops).</li>
+</ul>
+
+<h2>2. Key Findings: KDE Frameworks 6 vs. GNOME Libadwaita</h2>
+
+<ul>
+<li><strong>Toolkit Alignment:</strong> Tamlinux's desktop shell is built on <strong>Qt Quick and QML</strong>. KDE applications share Qt 6 runtimes, font rendering caches, and memory pages. In contrast, GNOME's GTK 4 / Libadwaita stack introduces a secondary graphics toolkit and memory footprint.</li>
+<li><strong>Window Decorations & Screen Real Estate:</strong> KDE applications support standard Wayland Server-Side Decorations (SSD via <code>xdg-decoration-unstable-v1</code>), surrendering window frames cleanly to Sway. GNOME's Libadwaita enforces thick Client-Side Decoration (CSD) headerbars that consume 40&ndash;50 pixels of vertical screen space and duplicate tiling keybindings.</li>
+<li><strong>System Supervision Independence:</strong> KDE Frameworks 6 (Tiers 1&ndash;3) is engineered around POSIX/libc standards and is completely decoupled from <code>systemd</code>. Core KDE applications run cleanly on Void Linux with <code>runit</code>. GNOME applications increasingly expect <code>logind</code> D-Bus interfaces and systemd user session management.</li>
+<li><strong>The Indexing & Daemon Tax:</strong> Both environments provide background indexing engines (Baloo in KDE, Tracker/TinySPARQL in GNOME) and heavy relational PIM database daemons (Akonadi in KDE, Evolution-Data-Server in GNOME). On vintage circa-2006 hardware, both engines thrash RAM and disk I/O. However, <strong>Baloo is trivially disabled</strong> via declarative config (<code>baloofilerc</code>), whereas GNOME Core apps depend deeply on Tracker/GIO services.</li>
+</ul>
+
+<h2>3. Recommended Application Selections</h2>
+
+<ul>
+<li><strong>Okular (Selected - Document Viewer):</strong> Best-in-class multi-format document viewer (PDF, ePub, PostScript, Markdown, DjVu). Fast, lean (~30 MB RAM), rich annotations, zero background daemons.</li>
+<li><strong>Kate (Selected - Text & Code Editor):</strong> Exceptional graphical editor with native LSP client, Git integration, multi-cursor editing, and split views in a lightweight ~35 MB footprint.</li>
+<li><strong>Dolphin (Selected with Baloo disabled - File Manager):</strong> Industry benchmark dual-pane file manager with embedded terminal support. Configured with <code>Indexing-Enabled=false</code> for maximum efficiency.</li>
+<li><strong>KCalc (Selected - Calculator):</strong> Scientific/hexadecimal calculator powered by GMP/MPFR with zero daemons and instant startup.</li>
+<li><strong>Filelight (Selected - Disk Space Visualizer):</strong> Interactive radial visualizer built natively with Qt Quick and QML.</li>
+<li><strong>Ark (Selected - Archiver):</strong> Clean, reliable Qt6 frontend for libarchive and compression tools.</li>
+<li><strong>KDE Connect (Selected - Device Bridge):</strong> Peerless mobile integration daemon and client; runs standalone on Sway.</li>
+</ul>
+
+<h2>4. Tamlinux Cultivar Native Tools</h2>
+
+<p>For system settings, desktop menus, and calendar management, both upstream suites are
+disqualified (GNOME Control Center is bound to GNOME Shell; KDE System Settings is bound to KWin;
+both PIM engines are excessively heavy). Tamlinux provides native Quickshell components:</p>
+
+<ul>
+<li><strong>Tamlinux Settings:</strong> Declarative, keyboard-navigable control panel built on Quickshell and <code>libtam</code>.</li>
+<li><strong>fred.monitor:</strong> Native multi-display layout, resolution, and retraining manager.</li>
+<li><strong>fred.clock:</strong> Lean, file-backed calendar and clock without database daemons.</li>
+<li><strong>fred.sysinfo:</strong> Transparent hardware and resource telemetry.</li>
+</ul>
+
+<p>For the complete technical dossier, dependency graphs, and comparison tables, see
+<code>docs/desktop-application-suites.md</code>.</p>
+</body>
+</html>

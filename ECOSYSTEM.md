@@ -76,6 +76,7 @@ Comprehensive survey dossiers and architectural chapters are maintained in [`kno
 9. [`knowledge/ecosystem/patches.html`](knowledge/ecosystem/patches.html) — Carried patches: public forks, patch rigs, and upstream relationships.
 10. [`knowledge/ecosystem/ai-and-agency.html`](knowledge/ecosystem/ai-and-agency.html) — AI coding tools: Claude, Codex, Gemini, Cursor; public provenance, value per watt, and human agency (D139, D140).
 11. [`knowledge/ecosystem/sustainability.html`](knowledge/ecosystem/sustainability.html) — Sustainability: Suspra, community resilience, reducing e-waste, and supporting vintage 2006 hardware.
+12. [`knowledge/ecosystem/desktop-suites.html`](knowledge/ecosystem/desktop-suites.html) — Desktop application suites: KDE Gear (Okular, Kate, Dolphin, KCalc, Filelight) and GNOME Core/Circle evaluation.
 
 ### Complete Considered Packages Dossier
 
@@ -150,6 +151,17 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [ChatGPT (OpenAI)](https://chatgpt.com/) | AI & Developer Tooling | *evaluated* | Exploratory research and general query interface | Proprietary Service | Developer tooling bookmarks |
 | [Cursor IDE](https://cursor.com/) | AI & Developer Tooling | **active** | AI-first developer editor packaged for the Tamlinux workstation | Proprietary / VS Code Fork | cursor-update.md runbook |
 | [Suspra & Earth Day in Brunswick](https://earthdayinbrunswick.com/) | Applications & Community Mission | **selected** | The community resilience, environmental sustainability, and local civic software suite | GPL-3.0-or-later / Open Source | D116; transition/05-suspra-software-and-workstations.md |
+| [KDE Gear](https://apps.kde.org/) | Desktop Application Suites | **selected** | Primary modular application suite for Tamlinux graphical utilities | GPL-2.0-or-later / LGPL-2.1-or-later | docs/desktop-application-suites.md |
+| [GNOME Core Applications](https://apps.gnome.org/) | Desktop Application Suites | *evaluated* | Architectural reference and alternative application suite | GPL-3.0-or-later / LGPL-2.1-or-later | docs/desktop-application-suites.md |
+| [Okular](https://okular.kde.org/) | Desktop Application Suites | **selected** | Universal document and PDF viewer | GPL-2.0-or-later | docs/desktop-application-suites.md §2.3 |
+| [Kate](https://kate-editor.org/) | Desktop Application Suites | **selected** | Advanced graphical text editor and lightweight IDE | LGPL-2.0-or-later | docs/desktop-application-suites.md §2.2 |
+| [Dolphin](https://apps.kde.org/dolphin/) | Desktop Application Suites | **selected** | Advanced dual-pane file manager | GPL-2.0-or-later | docs/desktop-application-suites.md §2.1 |
+| [Nautilus (GNOME Files)](https://apps.gnome.org/Nautilus/) | Desktop Application Suites | *evaluated* | Minimalist graphical file manager | GPL-3.0-or-later | docs/desktop-application-suites.md §2.1 |
+| [Loupe (GNOME Image Viewer)](https://apps.gnome.org/Loupe/) | Desktop Application Suites | *evaluated* | Sandboxed graphical image viewer | GPL-3.0-or-later | docs/desktop-application-suites.md §2.4 |
+| [Papers](https://gitlab.gnome.org/GNOME/Incubator/papers) | Desktop Application Suites | *evaluated* | Modern GTK 4 document viewer | GPL-2.0-or-later | docs/desktop-application-suites.md §2.3 |
+| [KCalc](https://apps.kde.org/kcalc/) | Desktop Application Suites | **selected** | Scientific and programming calculator | GPL-2.0-or-later | docs/desktop-application-suites.md §2.7 |
+| [Filelight](https://apps.kde.org/filelight/) | Desktop Application Suites | **selected** | Interactive disk space usage visualizer | GPL-2.0-or-later | docs/desktop-application-suites.md §2.6 |
+| [KDE Connect](https://kdeconnect.kde.org/) | Desktop Application Suites | **selected** | Secure cross-device phone-to-desktop bridge | GPL-2.0-or-later | docs/desktop-application-suites.md §2.7 |
 <!-- considered:end -->
 
 ---
