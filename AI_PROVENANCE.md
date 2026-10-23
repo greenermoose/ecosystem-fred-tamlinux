@@ -2,7 +2,7 @@
 
 This repository practices transparent AI-assisted engineering. The patches it
 records were written by AI coding agents under Fred's direction; this file and
-[`docs/ai/sessions.md`](docs/ai/sessions.md) say which tool, which model, and
+[`docs/ai/`](docs/ai/) say which tool, which model, and
 what Fred asked for. Every commit co-authored with an agent carries
 `Co-authored-by:`, `AI-Tool:` and `AI-Model:` trailers.
 
