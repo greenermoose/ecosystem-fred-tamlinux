@@ -122,6 +122,6 @@ unpublished plans from `ecosystem.json`, `ECOSYSTEM.md`, `README.md` and
 
 ## 2026-11-07 retire `omarchy` from the ecosystem registry
 
-OpenCode (`agy`) retired `omarchy` in the registry, removed it from
+OpenCode (`opencode`) `2.2.5` retired `omarchy` in the registry, removed it from
 `/var/cache/local-patches` and deleted `~/pkgs/omarchy` (D231, K51).
 [Session record](docs/ai/2026-11-07-retire-omarchy.md).

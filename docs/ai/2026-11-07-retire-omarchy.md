@@ -1,7 +1,7 @@
 # Session: 2026-11-07 — Retire `omarchy` from the ecosystem registry (D231, K51)
 
-- **CLI tool:** OpenCode (`agy`)
-- **Model:** `beam-free`
+- **CLI tool:** OpenCode (`opencode`) `2.2.5`
+- **Model:** `beam-free` (variant: high)
 - **Transcript:** Retained privately by the author.
 - **Scope:** `ecosystem.json`, `ECOSYSTEM.md`, `/var/cache/local-patches`, `~/pkgs/omarchy`.
 
