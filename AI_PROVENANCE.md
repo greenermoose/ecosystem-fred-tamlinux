@@ -119,3 +119,9 @@ the `tam` repository, removed the `knowledge/` corpus and its subcommands from
 `tam-ecosystem` (0.3.0), and removed references to private records and
 unpublished plans from `ecosystem.json`, `ECOSYSTEM.md`, `README.md` and
 `docs/`. [Session record](docs/ai/2026-10-13-tam-corpus-move-and-public-cleanup.md).
+
+## 2026-11-07 retire `omarchy` from the ecosystem registry
+
+OpenCode (`agy`) retired `omarchy` in the registry, removed it from
+`/var/cache/local-patches` and deleted `~/pkgs/omarchy` (D231, K51).
+[Session record](docs/ai/2026-11-07-retire-omarchy.md).
