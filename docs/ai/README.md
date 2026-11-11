@@ -1,5 +1,7 @@
 # AI Collaboration Session Archive: `ecosystem-fred-tamlinux`
 
+- [2026-11-11 — Native display development package integration](2026-11-11-display-native-integration.md)
+
 Individual session records documenting prompts, tools, models, and key
 architectural decisions for `ecosystem-fred-tamlinux`. One file per session;
 there is no monolithic `sessions.md` here, matching `plugin-fred-tamlinux`.

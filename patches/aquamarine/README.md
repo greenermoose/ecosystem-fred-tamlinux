@@ -59,3 +59,14 @@ The installed debug source at line 500 must show the null connector guard.
 (patchset commit `1291a49`), `50-aquamarine-local-patch.hook`, and
 `aquamarine-local-patch-check`. Rollback: Arch's `aquamarine-0.15.1-1` package,
 then log out and back in; that rollback removes the null guard only.
+
+
+## Uninstalled display development correction (2026-11-11)
+
+A separately prepared **0.15.1-1.2** build adds synchronous/asynchronous DRM error attribution while retaining the existing
+patch stack. Source: [`25f5e5d0`](https://github.com/greenermoose/aquamarine/commit/25f5e5d04761b33c25e7e526367831a0ca88f422).
+The frozen recipe, patch closure, archive digest and integration procedure
+are in [tamlinux-packages](https://github.com/greenermoose/tamlinux-packages/blob/develop/docs/display-integration.md).
+This is a development selection; the installed rig and its existing
+retirement check are unchanged. Native installation and exact-candidate
+physical acceptance remain separate steps.

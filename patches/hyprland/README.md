@@ -109,3 +109,14 @@ compositor keeps the old binary — log out and back in after installing.
 `68a4dfe2`, `a7a03d6f` and `3e4303a7`, in that order), `50-hyprland-local-patch.hook`,
 `hyprland-local-patch-check`, `upstream-pr.md` (draft texts, not to be filed).
 Rollback: Arch's `hyprland-0.56.2-4` package, then log out and back in.
+
+
+## Uninstalled display development correction (2026-11-11)
+
+A separately prepared **0.56.2-4.2** build adds focus-preserving output workspace activation and emission-time display diagnostics while retaining the existing
+patch stack. Source: [`3b1b3f15`](https://github.com/greenermoose/Hyprland/commit/3b1b3f15e7b7bd05cb497cab296f2df40190c2c7).
+The frozen recipe, patch closure, archive digest and integration procedure
+are in [tamlinux-packages](https://github.com/greenermoose/tamlinux-packages/blob/develop/docs/display-integration.md).
+This is a development selection; the installed rig and its existing
+retirement check are unchanged. Native installation and exact-candidate
+physical acceptance remain separate steps.

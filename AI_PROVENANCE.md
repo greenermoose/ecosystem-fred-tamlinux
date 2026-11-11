@@ -1,5 +1,7 @@
 # AI Collaboration & Provenance
 
+2026-11-11: Codex CLI `0.167.1` (`gpt-6.1-sol`) indexes paired native display development builds and their frozen recipe/verification contract. [Record](docs/ai/2026-11-11-display-native-integration.md).
+
 This repository practices transparent AI-assisted engineering. The patches it
 records were written by AI coding agents under Fred's direction; this file and
 [`docs/ai/`](docs/ai/) say which tool, which model, and
