@@ -29,7 +29,7 @@ session IDs or local transcript paths.
 | Tool & Interface | CLI Version | Backing Models | Primary Role |
 | :-- | :-- | :-- | :-- |
 | **Claude Code** (`claude`) | `2.1.289` | Claude Opus 5.5 (`claude-opus-5-5`), Claude Opus 5 | Architecture, planning, this repository's design and first content; diagnosis and patches for the hyprland and omawrite rigs; aquamarine 0.15.1 and hyprland 0.56.2-4.1 rebases; gtk4 retirement. |
-| **Codex CLI** (`codex`) | `0.160.0` | `gpt-6-astra`, `gpt-5.6-sol`, `gpt-6-sol` | Second opinion on plans and upstream survey documentation. |
+| **Codex CLI** (`codex`) | `0.169.0` (2026-11-13 session runtime) | `gpt-6-luna`, `gpt-6.1-sol`; earlier `gpt-6-astra`, `gpt-5.6-sol`, `gpt-6-sol` | Documentation review, README corrections, and provenance; earlier second opinions and upstream survey documentation. |
 | **Codex API** | N/A (API session) | GPT-6 | Diagnosed and patched the Aquamarine null connector shutdown crash. |
 | **Antigravity CLI** (`agy`) | `1.3.4` | Gemini 3.8 Flash (High) | Coding and implementation on the plugin side; omawrite close-button and 80-column patches; documentation audits; KDE and GNOME desktop application suites architectural survey. |
 | **OpenCode** (`opencode`) | `1.18.31` | Big Pickle | Arch/Omarchy Q&A. |
@@ -127,3 +127,9 @@ unpublished plans from `ecosystem.json`, `ECOSYSTEM.md`, `README.md` and
 OpenCode (`opencode`) `2.2.5` retired `omarchy` in the registry, removed it from
 `/var/cache/local-patches` and deleted `~/pkgs/omarchy` (D231, K51).
 [Session record](docs/ai/2026-11-07-retire-omarchy.md).
+
+## 2026-11-13 README documentation consistency
+
+Codex CLI `0.169.0` (`gpt-6-luna`, then `gpt-6.1-sol`) corrected the README’s
+Omarchy patch status and current compositor description. Documentation only.
+[Session record](docs/ai/2026-11-13-documentation-consistency.md).

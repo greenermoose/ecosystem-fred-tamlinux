@@ -23,7 +23,7 @@ ecosystem-fred-tamlinux/
 │   ├── aquamarine/             # Active KMS pipeline disconnect fix
 │   ├── gtk4/                   # Retired dmabuf format table munmap fix
 │   ├── hyprland/               # Active DPMS inheritance and idle inhibit noop fixes
-│   ├── omarchy/                # Active tooltip border and scaling fixes
+│   ├── omarchy/                # Historical Omarchy patch record; not a Tamlinux dependency
 │   └── omawrite/               # Retired editor fixes
 ├── packages -> patches         # Backward-compatibility symlink for external scripts
 ├── ecosystem.json              # Single source of truth database (considered pkgs + patches)
@@ -86,6 +86,6 @@ Every package choice and survey in Tamlinux is evaluated against six foundationa
 1. **User Freedom:** Licensed under **GPL-3.0-or-later**, ensuring that user freedom, inspectability, and software modification remain perpetual rights.
 2. **Resource Efficiency:** Event-driven, bounded work with no polling loops and no unnecessary resident daemons, so machines run cool, quiet, and energy-efficiently.
 3. **Hardware Longevity:** The best possible experience on any hardware, choosing a graphical or terminal profile by capability; circa-2006 machines remain useful validation examples.
-4. **Decoupled Modularity:** Adhering to the Unix philosophy; separating window management (Sway) from desktop presentation (Tamlinux Shell) using standard Wayland protocols (`wlr-layer-shell`, `ext-workspace-v1`).
+4. **Decoupled Modularity:** Adhering to the Unix philosophy; separating window management from desktop presentation using standard Wayland protocols. Hyprland and Quickshell are the current desktop; Sway is a future milestone, not the current compositor.
 5. **Offline First:** Local documentation and tools with no mandatory cloud services or network dependencies.
 6. **Human Direction:** Deterministic tools that people direct; AI assistance is used under human direction with public provenance.

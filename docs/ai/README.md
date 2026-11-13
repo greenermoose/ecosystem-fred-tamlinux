@@ -12,6 +12,8 @@ against a local transcript says so explicitly.
 
 ## Session Records
 
+- [2026-11-13 — README documentation consistency](2026-11-13-documentation-consistency.md)
+
 | Date | Topic | Primary Tool | Model | Session Document |
 | :-- | :-- | :-- | :-- | :-- |
 | 2026-09-17 | Public forks + registry design and first release (v0.1.0) | `claude` (Claude Code `2.1.274`) | Claude Opus 5 (`claude-opus-5`) | [`2026-09-17-public-forks-and-registry-design.md`](2026-09-17-public-forks-and-registry-design.md) |
