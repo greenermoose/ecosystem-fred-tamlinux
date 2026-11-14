@@ -47,7 +47,7 @@
       "depended_on_by": [
         "private workstation checkout"
       ],
-      "notes": "patches/gtk4/README.md",
+      "notes": "patches/gtk4/README",
       "retired": "2026-10-04"
     },
     {
@@ -88,7 +88,7 @@
         "private workstation checkout",
         "fred.monitor (planned)"
       ],
-      "notes": "patches/aquamarine/README.md"
+      "notes": "patches/aquamarine/README"
     },
     {
       "name": "hyprland",
@@ -149,7 +149,7 @@
         "workspaces-fred-tamlinux",
         "fred.monitor (planned)"
       ],
-      "notes": "patches/hyprland/README.md"
+      "notes": "patches/hyprland/README"
     },
     {
       "name": "omawrite",
@@ -219,7 +219,7 @@
       "depended_on_by": [
         "private workstation checkout"
       ],
-      "notes": "patches/omawrite/README.md",
+      "notes": "patches/omawrite/README",
       "retired": "2026-10-04"
     },
     {
@@ -283,7 +283,7 @@
         "fred.clock",
         "fred.workspaces"
       ],
-      "notes": "patches/omarchy/README.md",
+      "notes": "patches/omarchy/README",
       "retired": "2026-11-07"
     }
   ],
@@ -614,7 +614,7 @@
       "license": "GPL-2.0-or-later",
       "status": "active",
       "role": "Host package manager for the active Arch workstation and local patches",
-      "decision_ref": "README.md; bin/tam-ecosystem",
+      "decision_ref": "README; bin/tam-ecosystem",
       "summary": "The fast, lightweight package manager combining a simple binary package format with an easy build system.",
       "resource_profile": "Written in C (libalpm), extremely fast, zero daemon overhead",
       "rationale": "Pacman manages the active Arch OS. In ecosystem-fred-tamlinux, pacman's repository precedence rules allow [local-patches] to take priority over upstream Arch packages, keeping patched builds locked until intentionally retired."

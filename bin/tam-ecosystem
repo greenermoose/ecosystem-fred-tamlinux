@@ -394,7 +394,7 @@ cmd_retire() {
     log "[dry-run] would mark $pkg retired ($today) in ecosystem.json, and re-render ECOSYSTEM.md"
     return 0
   fi
-  jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "patches/\($n)/README.md")' \
+  jq --arg n "$pkg" --arg d "$today" '(.packages[] | select(.name == $n)) |= (.status = "retired" | .retired = $d | .notes = "patches/\($n)/README")' \
     "$REGISTRY" > "$REGISTRY.tmp" && mv -f "$REGISTRY.tmp" "$REGISTRY"
   cmd_render
   log "retired $pkg in the registry. Still to do on the machine (runbook §8): remove the rig, the repo entries, the hook, the check script and the state dir; leave the fork tag in place."

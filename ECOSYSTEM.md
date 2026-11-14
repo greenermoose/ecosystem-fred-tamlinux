@@ -15,17 +15,17 @@ Generated table from [`ecosystem.json`](ecosystem.json) (`tam-ecosystem render`)
 <!-- registry:begin -->
 | Package | Status | Local version | Fork (compare view) | Patches | Filed upstream | Retires when | Depended on by |
 |---|---|---|---|---|---|---|---|
-| [gtk4](patches/gtk4/README.md) | retired | `1:4.22.4-1.1` | none (upstream has it) | 1 | — | Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison | private workstation checkout |
-| [aquamarine](patches/aquamarine/README.md) | active | `0.15.1-1.1` | [v0.15.1-fred.1](https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1) | 1 | [hyprwm/aquamarine/issues/383](https://github.com/hyprwm/aquamarine/issues/383) | an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383) | private workstation checkout, fred.monitor (planned) |
-| [hyprland](patches/hyprland/README.md) | active | `0.56.2-4.1` | [v0.56.2-fred.3](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) | 3 | [hyprwm/Hyprland/pull/16290](https://github.com/hyprwm/Hyprland/pull/16290) | an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1 | private workstation checkout, workspaces-fred-tamlinux, fred.monitor (planned) |
-| [omawrite](patches/omawrite/README.md) | retired | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout |
-| [omarchy](patches/omarchy/README.md) | retired | `4.0.4-1.3` | [v4.0.4-fred.2](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) | 3 | — | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy | private workstation checkout, fred.agents, fred.monitor, fred.sysinfo, fred.clock, fred.workspaces |
+| [gtk4](patches/gtk4/README) | retired | `1:4.22.4-1.1` | none (upstream has it) | 1 | — | Arch ships gtk4 >= 4.22.5 (but not 4.23.0-4.23.2) or >= 4.23.3; the pacman hook does the comparison | private workstation checkout |
+| [aquamarine](patches/aquamarine/README) | active | `0.15.1-1.1` | [v0.15.1-fred.1](https://github.com/hyprwm/aquamarine/compare/v0.15.1...greenermoose:aquamarine:v0.15.1-fred.1) | 1 | [hyprwm/aquamarine/issues/383](https://github.com/hyprwm/aquamarine/issues/383) | an Arch aquamarine release with a null connector guard in flushAsyncCommitEvents() (#383) | private workstation checkout, fred.monitor (planned) |
+| [hyprland](patches/hyprland/README) | active | `0.56.2-4.1` | [v0.56.2-fred.3](https://github.com/hyprwm/Hyprland/compare/v0.56.2...greenermoose:Hyprland:v0.56.2-fred.3) | 3 | [hyprwm/Hyprland/pull/16290](https://github.com/hyprwm/Hyprland/pull/16290) | an Arch hyprland release containing all three fixes (onConnect() honours the compositor DPMS state; setInhibit() guards the unchanged case; a filtered `dpms off` no longer marks the compositor DPMS-off). If only some land, drop those patches and rebuild as <arch>.1 | private workstation checkout, workspaces-fred-tamlinux, fred.monitor (planned) |
+| [omawrite](patches/omawrite/README) | retired | `0.5.0-1.5` | [v0.5.0-fred.5](https://github.com/omacom/omawrite/compare/v0.5.0...greenermoose:omawrite:v0.5.0-fred.5) | 5 | [omacom/omawrite/issues/73](https://github.com/omacom/omawrite/issues/73), [omacom/omawrite/pull/72](https://github.com/omacom/omawrite/pull/72) | Arch ships omawrite >= 0.5.1 with a native close button, reliable CLI opening, a working Reload in the 'File removed' dialog, a loop-free shortcuts dialog and >= 80-column width; otherwise rebase the stack onto the new release | private workstation checkout |
+| [omarchy](patches/omarchy/README) | retired | `4.0.4-1.3` | [v4.0.4-fred.2](https://github.com/basecamp/omarchy/compare/v4.0.4...greenermoose:omarchy:v4.0.4-fred.2) | 3 | — | Omarchy ships a release after 4.0.4 whose bar tooltip both reserves border in padding and sizes the popup so logical size × DPR is an integer physical pixel count; then retire via tam-ecosystem retire omarchy | private workstation checkout, fred.agents, fred.monitor, fred.sysinfo, fred.clock, fred.workspaces |
 <!-- registry:end -->
 
 ### Reading a row
 
 - **Fork (compare view)** opens GitHub's diff of the fork tag against the upstream release it patches — the patches in context. The fork's default branch `fred` always points at the current patch set; `patch/<slug>` holds each patch alone and `patchset/<tag>` the integration branch.
-- **Filed upstream** is where a project's rules allowed posting. Where they do not (hyprwm/*), nothing is filed and the fork is the only public copy — see the policy in the [README](README.md#why-this-exists-instead-of-upstream-pull-requests).
+- **Filed upstream** is where a project's rules allowed posting. Where they do not (hyprwm/*), nothing is filed and the fork is the only public copy — see the policy in the [README](README), section WHY CARRIED PATCHES LIVE ON PUBLIC FORKS INSTEAD OF STALLED PRS.
 - **Depended on by** names Fred's own repositories that need the patch to behave as documented; each carries an `ECOSYSTEM.md` at its root that says what breaks without it.
 
 ### Consumers
@@ -43,8 +43,8 @@ Retired entries remain in [`patches/`](patches/) with their status marked retire
 
 | Package | Retired | Upstream resolution |
 |---|---|---|
-| [gtk4](patches/gtk4/README.md) | 2026-10-04 | Arch shipped `1:4.22.5-1`, which includes GTK MR !10166 fixing the Wayland dmabuf format table munmap crash |
-| [omawrite](patches/omawrite/README.md) | 2026-10-04 | Agent review workflow transitioned to `micro-review` skill; editor retired from workstation suite |
+| [gtk4](patches/gtk4/README) | 2026-10-04 | Arch shipped `1:4.22.5-1`, which includes GTK MR !10166 fixing the Wayland dmabuf format table munmap crash |
+| [omawrite](patches/omawrite/README) | 2026-10-04 | Agent review workflow transitioned to `micro-review` skill; editor retired from workstation suite |
 
 ---
 
@@ -91,7 +91,7 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [Ubuntu & Lubuntu](https://lubuntu.me/) | Operating System Distributions | *evaluated* | Popular consumer desktop distribution and LXQt lightweight derivative | GPL and various | — |
 | [Bedrock Linux](https://bedrocklinux.org/) | Operating System Distributions | *evaluated* | Meta-distribution providing cross-distro package integration | GPL-2.0 | — |
 | [Nix / NixOS](https://nixos.org/) | Package Managers & Delivery Mechanisms | **selected** | Reproducible package and deployment framework for Tamlinux software | LGPL-2.1-only | — |
-| [Pacman (Arch Linux)](https://pacman.archlinux.page/) | Package Managers & Delivery Mechanisms | **active** | Host package manager for the active Arch workstation and local patches | GPL-2.0-or-later | README.md; bin/tam-ecosystem |
+| [Pacman (Arch Linux)](https://pacman.archlinux.page/) | Package Managers & Delivery Mechanisms | **active** | Host package manager for the active Arch workstation and local patches | GPL-2.0-or-later | README; bin/tam-ecosystem |
 | [XBPS (X Binary Package System)](https://docs.voidlinux.org/xbps/) | Package Managers & Delivery Mechanisms | **selected** | Target native package manager on Void Linux base | BSD-2-Clause | base-operating-system.md §Package and service ownership |
 | [dpkg & APT (Debian Packaging)](https://wiki.debian.org/Packaging/Intro) | Package Managers & Delivery Mechanisms | *evaluated* | Debian package format and dependency resolver | GPL-2.0-or-later | — |
 | [Portage (Gentoo)](https://wiki.gentoo.org/wiki/Portage) | Package Managers & Delivery Mechanisms | *evaluated* | Source build and dependency resolver benchmark | GPL-2.0-only | — |

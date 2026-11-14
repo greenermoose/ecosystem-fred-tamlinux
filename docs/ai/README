@@ -1,0 +1,101 @@
+AI COLLABORATION SESSION ARCHIVE: ecosystem-fred-tamlinux
+
+- 2026-11-11 — Native display development package integration
+  <2026-11-11-display-native-integration.md>
+
+Individual session records documenting prompts, tools, models, and key
+architectural decisions for ecosystem-fred-tamlinux. One file per session;
+there is no monolithic sessions.md here, matching plugin-fred-tamlinux.
+
+Tool and model versions are read live (<tool> --version) at the time of
+writing, never recalled. An entry whose attribution has not been checked
+against a local transcript says so explicitly.
+
+
+SESSION RECORDS
+
+- 2026-11-13 — README documentation consistency
+  <2026-11-13-documentation-consistency.md>
+
+  Date: 2026-09-17
+  Topic: Public forks + registry design and first release (v0.1.0)
+  Primary Tool: claude (Claude Code 2.1.274)
+  Model: Claude Opus 5 (claude-opus-5)
+  Session Document: <2026-09-17-public-forks-and-registry-design.md>
+
+  Date: 2026-09-21
+  Topic: Omarchy bar tooltip fractional scaling fixes (4.0.4-1.3)
+  Primary Tool: Cursor 3.21.16
+  Model: composer
+  Session Document: <2026-09-21-bar-tooltip-fractional-scaling.md>
+
+  Date: 2026-09-22
+  Topic: Aquamarine shutdown crash fix (0.15.0-2.2)
+  Primary Tool: Codex API
+  Model: GPT-6
+  Session Document: <2026-09-22-aquamarine-shutdown-crash-fix.md>
+
+  Date: 2026-09-22
+  Topic: Rename the registry CLI to tam-ecosystem
+  Primary Tool: Cursor 3.21.16
+  Model: composer
+  Session Document: <2026-09-22-rename-registry-cli-tam-ecosystem.md>
+
+  Date: 2026-09-22
+  Topic: GitHub Repository Rename
+  Primary Tool: Codex CLI 0.155.1
+  Model: gpt-6-sol
+  Session Document: <2026-09-22-github-repository-rename.md>
+
+  Date: 2026-09-23
+  Topic: Upstream Survey Foundation
+  Primary Tool: Codex CLI 0.156.1
+  Model: gpt-6-sol
+  Session Document: <2026-09-23-upstream-survey-foundation.md>
+
+  Date: 2026-09-28
+  Topic: Private Session IDs
+  Primary Tool: Claude Code 2.1.283
+  Model: claude-opus-5-5
+  Session Document: <2026-09-28-private-session-ids.md>
+
+  Date: 2026-10-04
+  Topic: Upstream rebases, GTK4 retirement, and pacman precedence correction
+  Primary Tool: claude (Claude Code 2.1.289)
+  Model: Claude Opus 5.5 (claude-opus-5-5)
+  Session Document: <2026-10-04-upstream-rebases-and-precedence.md>
+
+  Date: 2026-10-04
+  Topic: Omawrite check script alignment with micro-review
+  Primary Tool: claude (Claude Code 2.1.289)
+  Model: Claude Opus 5.5 (claude-opus-5-5)
+  Session Document: <2026-10-04-omawrite-check-script.md>
+
+  Date: 2026-10-04
+  Topic: System status documentation audit and synchronization
+  Primary Tool: agy (Antigravity CLI 1.2.16)
+  Model: Gemini 3.8 Flash (High)
+  Session Document: <2026-10-04-documentation-audit-and-synchronization.md>
+
+  Date: 2026-10-13
+  Topic: Research KDE & GNOME desktop application suites
+  Primary Tool: agy (Antigravity CLI 1.3.4)
+  Model: gemini-3.8-flash-high
+  Session Document: <2026-10-13-desktop-application-suites-survey.md>
+
+  Date: 2026-10-13
+  Topic: Guide chapters moved to tam; public-content cleanup (v0.3.0)
+  Primary Tool: claude (Claude Code 2.1.296)
+  Model: Claude Opus 5.5 (claude-opus-5-5)
+  Session Document: <2026-10-13-tam-corpus-move-and-public-cleanup.md>
+
+
+RELATED
+
+- <../../AI_PROVENANCE.md> — toolchain and milestone table.
+
+Date: 2026-11-13
+Topic: Plain text README conversion
+Tool: Codex CLI 0.169.0
+Model: gpt-6.1-sol
+Record: Session <2026-11-13-plain-readmes.md>

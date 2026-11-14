@@ -1,5 +1,7 @@
 # AI Collaboration & Provenance
 
+2026-11-13: Codex CLI `0.169.0` (`gpt-6.1-sol`) converts tracked README files to plain text and updates their consumers. [Record](docs/ai/2026-11-13-plain-readmes.md).
+
 2026-11-11: Codex CLI `0.167.1` (`gpt-6.1-sol`) indexes paired native display development builds and their frozen recipe/verification contract. [Record](docs/ai/2026-11-11-display-native-integration.md).
 
 This repository practices transparent AI-assisted engineering. The patches it
@@ -11,7 +13,7 @@ what Fred asked for. Every commit co-authored with an agent carries
 This matters more here than in most repos: several upstream projects (notably
 the Hyprland organisation) refuse AI-authored contributions, which is one
 reason these fixes are published as fork branches and recipes rather than
-pull requests. See [`README.md`](README.md) §"Why this exists".
+pull requests. See [`README`](README) section WHY CARRIED PATCHES LIVE ON PUBLIC FORKS INSTEAD OF STALLED PRS.
 
 ## How to read this record
 
