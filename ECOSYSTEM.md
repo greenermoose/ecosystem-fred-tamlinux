@@ -54,13 +54,13 @@ Tamlinux picks and chooses among a large field of possibilities to construct an 
 
 ### Evaluation Framework
 
-- **`selected`:** Adopted for Tamlinux long-term architecture and delivery (Sway, Void Linux, runit, Nix deployment, Quickshell, wlroots, Tamlinux Shell, Btrfs).
+- **`selected`:** Adopted for Tamlinux long-term architecture and delivery (tam-pane, Void Linux, runit, tam-bundle delivery, Quickshell, wlroots, Tamlinux Shell, Btrfs).
 - **`active`:** Currently in daily use in the 0.x Arch development workstation (Arch Linux, Pacman, Hyprland, aquamarine, glibc, systemd).
 - **`evaluated`:** Formally surveyed and assessed as an architectural reference or alternative (Debian, Alpine, river, labwc, Astal/AGS, Smithay, Waybar).
 - **`fallback`:** Designated standby target if the selected primary component encounters showstoppers (antiX Linux Core with runit).
 - **`deferred`:** Scheduled for evaluation at a future milestone pending explicit triggers (Void musl vs glibc pilot at 1.2).
-- **`retired`:** Previously used or supported; now systematically phased out or decoupled (Omarchy at 0.4.3; OpenClaw and Hermes support).
-- **`rejected`:** Excluded due to fundamental incompatibilities with Tamlinux tenets (monolithic compositors, raw .deb/.rpm installs, non-deterministic agent daemons).
+- **`retired`:** Previously used or supported; now systematically phased out or decoupled (Omarchy at 0.4.3; Nix and Home Manager delivery, replaced by tam-bundle at 0.6.27 and being removed; OpenClaw and Hermes support).
+- **`rejected`:** Excluded due to fundamental incompatibilities with Tamlinux tenets (monolithic compositors, raw .deb/.rpm installs, non-deterministic agent daemons; Sway, which Fred judged unable to meet Tamlinux's needs, D263).
 
 ### Explanations in the `tam` guide
 
@@ -90,7 +90,7 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [CentOS / Red Hat Enterprise Linux (RHEL)](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux) | Operating System Distributions | *evaluated* | Enterprise Linux standard and server baseline | GPL and various | — |
 | [Ubuntu & Lubuntu](https://lubuntu.me/) | Operating System Distributions | *evaluated* | Popular consumer desktop distribution and LXQt lightweight derivative | GPL and various | — |
 | [Bedrock Linux](https://bedrocklinux.org/) | Operating System Distributions | *evaluated* | Meta-distribution providing cross-distro package integration | GPL-2.0 | — |
-| [Nix / NixOS](https://nixos.org/) | Package Managers & Delivery Mechanisms | **selected** | Reproducible package and deployment framework for Tamlinux software | LGPL-2.1-only | — |
+| [Nix / NixOS](https://nixos.org/) | Package Managers & Delivery Mechanisms | *retired* | Former package and deployment framework for Tamlinux software; replaced by tam-bundle and being removed | LGPL-2.1-only | D261 |
 | [Pacman (Arch Linux)](https://pacman.archlinux.page/) | Package Managers & Delivery Mechanisms | **active** | Host package manager for the active Arch workstation and local patches | GPL-2.0-or-later | README; bin/tam-ecosystem |
 | [XBPS (X Binary Package System)](https://docs.voidlinux.org/xbps/) | Package Managers & Delivery Mechanisms | **selected** | Target native package manager on Void Linux base | BSD-2-Clause | base-operating-system.md §Package and service ownership |
 | [dpkg & APT (Debian Packaging)](https://wiki.debian.org/Packaging/Intro) | Package Managers & Delivery Mechanisms | *evaluated* | Debian package format and dependency resolver | GPL-2.0-or-later | — |
@@ -99,7 +99,8 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [systemd](https://systemd.io/) | System Managers & Service Supervision | **active** | Active system manager on Arch Linux 0.x workstation; target for removal in 1.2 | LGPL-2.1-or-later | base-operating-system.md |
 | [Wayland Display Protocol](https://wayland.freedesktop.org/) | Windowing Systems & Display Protocols | **selected** | Display server protocol powering the Tamlinux graphical environment | MIT | compositor-protocol-layer.md |
 | [X Window System (X.Org)](https://www.x.org/) | Windowing Systems & Display Protocols | *retired* | Historic windowing architecture; phased out in Tamlinux | MIT | — |
-| [Sway](https://swaywm.org/) | Wayland Compositors & Window Managers | **selected** | Selected long-term tiling Wayland compositor for Tamlinux (0.7–1.0+) | MIT | compositor survey 2026-10-03 |
+| [tam-pane](https://github.com/greenermoose/tam-pane) | Wayland Compositors & Window Managers | **selected** | Tamlinux's own Wayland compositor and window manager; dogfooding starts with Tamlinux 0.7.0 | GPL-3.0-or-later | D263 |
+| [Sway](https://swaywm.org/) | Wayland Compositors & Window Managers | *rejected* | Formerly selected compositor (2026-10-03); replaced by tam-pane (D263). Headless Sway remains a test compositor until tam-pane runs headless (D268). | MIT | D263; D268 |
 | [Hyprland](https://hypr.land/) | Wayland Compositors & Window Managers | **active** | Active interim compositor on Tamlinux 0.x workstation; scheduled for removal at 1.0 | BSD-3-Clause | patches/hyprland |
 | [Niri](https://github.com/niri-wm/niri) | Wayland Compositors & Window Managers | *evaluated* | Scrollable-tiling Wayland compositor written in Rust | GPL-3.0-or-later | compositor survey 2026-10-03 |
 | [river](https://github.com/riverwm/river) | Wayland Compositors & Window Managers | *evaluated* | Dynamic tiling Wayland compositor written in Zig | GPL-3.0-only | compositor survey 2026-10-03 |
@@ -108,7 +109,7 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [miracle-wm](https://github.com/miracle-wm-org/miracle-wm) | Wayland Compositors & Window Managers | *evaluated* | Tiling Wayland compositor built on Canonical's Mir | GPL-3.0-only | compositor survey |
 | [mangowm](https://mangowm.github.io/docs/) | Wayland Compositors & Window Managers | *evaluated* | Lightweight Wayland compositor | GPL-3.0-or-later | compositor survey 2026-10-03 |
 | [Weston](https://wayland.pages.freedesktop.org/weston/index.html) | Wayland Compositors & Window Managers | *evaluated* | Reference Wayland compositor by the Wayland project | MIT | — |
-| [wlroots](https://gitlab.freedesktop.org/wlroots/wlroots) | Compositor Building Blocks & Backends | **selected** | Modular Wayland compositor library powering Sway and Tamlinux display stack | MIT | compositor-protocol-layer.md |
+| [wlroots](https://gitlab.freedesktop.org/wlroots/wlroots) | Compositor Building Blocks & Backends | **selected** | Modular Wayland compositor library that tam-pane builds on today, with a planned exit | MIT | D263; tam-pane README |
 | [aquamarine](https://github.com/hyprwm/aquamarine) | Compositor Building Blocks & Backends | **active** | Rendering abstraction backend for Hyprland; carried patched in Tamlinux | BSD-3-Clause | patches/aquamarine; ECOSYSTEM.md |
 | [Smithay](https://github.com/Smithay/smithay/) | Compositor Building Blocks & Backends | *evaluated* | Rust framework for building custom Wayland compositors | MIT | — |
 | [Canonical Mir](https://github.com/canonical/mir) | Compositor Building Blocks & Backends | *evaluated* | Display server library by Canonical | GPL-2.0 / LGPL-3.0 | Compositor survey |

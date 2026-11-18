@@ -599,12 +599,12 @@
       "category": "package_managers",
       "url": "https://nixos.org/",
       "license": "LGPL-2.1-only",
-      "status": "selected",
-      "role": "Reproducible package and deployment framework for Tamlinux software",
-      "decision_ref": "",
+      "status": "retired",
+      "role": "Former package and deployment framework for Tamlinux software; replaced by tam-bundle and being removed",
+      "decision_ref": "D261",
       "summary": "A purely functional package manager providing reproducible builds, atomic upgrades, and instant rollback.",
       "resource_profile": "Immutable /nix/store, symlink trees, flake.lock pinning, no runtime daemon",
-      "rationale": "Nix is selected for Tamlinux's software delivery layer (tamlinux-packages and Home Manager). It allows Tamlinux to package its shell, tools, and plugins into immutable, bit-for-bit reproducible store paths. Test and Run deployments point to exact flake commits, making rollbacks instantaneous and rock-solid across any host."
+      "rationale": "Nix and Home Manager delivered Tamlinux through 0.6.26. tam-bundle replaced them (D261): the workstation moved to bundles with 0.6.27. Nix and Home Manager remain only as a retiring fallback until fleet acceptance and Nix-free recovery are proved, then they are removed."
     },
     {
       "name": "pacman",
@@ -711,17 +711,30 @@
       "rationale": "X11 lacks modern security isolation (any client can log keystrokes or grab screen pixels), struggles with mixed-DPI fractional scaling, and imposes legacy complexity. Tamlinux is a pure Wayland environment; Xwayland is available only as an isolated compatibility fallback."
     },
     {
+      "name": "tam_pane",
+      "display_name": "tam-pane",
+      "category": "compositors",
+      "url": "https://github.com/greenermoose/tam-pane",
+      "license": "GPL-3.0-or-later",
+      "status": "selected",
+      "role": "Tamlinux's own Wayland compositor and window manager; dogfooding starts with Tamlinux 0.7.0",
+      "decision_ref": "D263",
+      "summary": "A fresh, plain-Make C compositor with dynamic tiling like Hyprland, tags like MangoWM and built-in Lua.",
+      "resource_profile": "End state: libc, libtam, its own code and Mesa; wlroots 0.20 while young",
+      "rationale": "Fred decided on 2026-11-17 that Tamlinux writes its own compositor instead of moving to Sway (D263). tam-pane is developed while the workstation runs 0.6.x on Hyprland, and dogfooding starts with 0.7.0, with Hyprland kept as the fallback session."
+    },
+    {
       "name": "sway",
       "display_name": "Sway",
       "category": "compositors",
       "url": "https://swaywm.org/",
       "license": "MIT",
-      "status": "selected",
-      "role": "Selected long-term tiling Wayland compositor for Tamlinux (0.7–1.0+)",
-      "decision_ref": "compositor survey 2026-10-03",
+      "status": "rejected",
+      "role": "Formerly selected compositor (2026-10-03); replaced by tam-pane (D263). Headless Sway remains a test compositor until tam-pane runs headless (D268).",
+      "decision_ref": "D263; D268",
       "summary": "An i3-compatible Wayland compositor built on wlroots, written in clean C.",
       "resource_profile": "Minimal idle CPU/RAM usage (~30-50MB), wlroots pixman CPU rendering for vintage GPUs, seatd compatibility",
-      "rationale": "Sway was decisively chosen as Tamlinux's long-term compositor. Key reasons: (1) Clean, stable C codebase without rapid breaking API changes; (2) Built on modular wlroots; (3) Fully operational with seatd/libseat without requiring systemd or elogind; (4) Supports WLR_RENDERER=pixman CPU rendering, enabling operation on vintage circa-2006 GPUs lacking OpenGL 3; (5) Rock-solid i3 IPC and standard Wayland protocol support."
+      "rationale": "Sway was chosen on 2026-10-03 for its stable C codebase, wlroots base, seatd support and pixman rendering. On 2026-11-17 Fred decided that Sway will not meet Tamlinux's needs and that Tamlinux writes its own compositor, tam-pane, instead (D263). Several desktop tests still start a private headless Sway to render offscreen until tam-pane can run headless (D268)."
     },
     {
       "name": "hyprland",
@@ -834,11 +847,11 @@
       "url": "https://gitlab.freedesktop.org/wlroots/wlroots",
       "license": "MIT",
       "status": "selected",
-      "role": "Modular Wayland compositor library powering Sway and Tamlinux display stack",
-      "decision_ref": "compositor-protocol-layer.md",
+      "role": "Modular Wayland compositor library that tam-pane builds on today, with a planned exit",
+      "decision_ref": "D263; tam-pane README",
       "summary": "A modular, unopinionated C library providing the foundational backends for Wayland compositors.",
       "resource_profile": "Highly optimized C, pluggable DRM/KMS/pixman renderers, seatd session integration",
-      "rationale": "wlroots is the gold standard for independent Wayland compositors. It implements DRM/KMS, input devices, output management, and Wayland protocol extensions without imposing desktop policy. Crucially for Tamlinux, wlroots supports WLR_RENDERER=pixman for pure CPU software rendering."
+      "rationale": "wlroots implements DRM/KMS, input, output management and Wayland protocol extensions without imposing desktop policy, and supports WLR_RENDERER=pixman for CPU rendering. tam-pane uses wlroots 0.20 while it is young; every tam-pane dependency has a planned exit, and its end state depends only on libc, libtam, its own code and Mesa."
     },
     {
       "name": "aquamarine",

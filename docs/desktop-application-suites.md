@@ -2,7 +2,7 @@
 
 **Repository:** `ecosystem-fred-tamlinux`  
 **Date:** 2026-10-13  
-**Status:** Evaluated Architectural Dossier. Its verdicts are survey recommendations, not project decisions.  
+**Status:** Evaluated Architectural Dossier. Its verdicts are survey recommendations, not project decisions. Written when Sway was the planned compositor; on 2026-11-17 tam-pane, Tamlinux's own compositor, replaced it (D263). Findings that depend on Sway's behaviour need rechecking against tam-pane.  
 **Topic:** Desktop Application Suites (KDE Gear & Plasma Apps vs. GNOME Core & Circle)  
 **Target Architecture:** Tamlinux Cultivar (Sway + Quickshell) grafted onto Root-stock (Minimal Void Linux with `runit` + `seatd`, antiX fallback, Arch development base)
 

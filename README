@@ -113,8 +113,8 @@ foundational tenets:
   useful validation examples.
 4. Decoupled Modularity: Adhering to the Unix philosophy; separating window
   management from desktop presentation using standard Wayland protocols.
-  Hyprland and Quickshell are the current desktop; Sway is a future milestone,
-  not the current compositor.
+  Hyprland and Quickshell are the current desktop; tam-pane, Tamlinux's own
+  compositor, begins dogfooding with 0.7.0 (D263).
 5. Offline First: Local documentation and tools with no mandatory cloud
   services or network dependencies.
 6. Human Direction: Deterministic tools that people direct; AI assistance is
