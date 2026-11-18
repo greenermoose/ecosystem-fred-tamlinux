@@ -4,7 +4,7 @@
 **Date:** 2026-10-13  
 **Status:** Evaluated Architectural Dossier. Its verdicts are survey recommendations, not project decisions. Written when Sway was the planned compositor; on 2026-11-17 tam-pane, Tamlinux's own compositor, replaced it (D263). Findings that depend on Sway's behaviour need rechecking against tam-pane.  
 **Topic:** Desktop Application Suites (KDE Gear & Plasma Apps vs. GNOME Core & Circle)  
-**Target Architecture:** Tamlinux Cultivar (Sway + Quickshell) grafted onto Root-stock (Minimal Void Linux with `runit` + `seatd`, antiX fallback, Arch development base)
+**Target Architecture:** Tamlinux Scion (Sway + Quickshell) grafted onto Rootstock (Minimal Void Linux with `runit` + `seatd`, antiX fallback, Arch development base)
 
 ---
 
@@ -12,19 +12,19 @@
 
 Tamlinux is an independent, user-sovereign workstation environment built on a clean four-layer botanical architecture:
 - **The Pot (Limine):** Fast, declarative UEFI boot loader with atomic Btrfs snapshot selection.
-- **The Nut (Unified Kernel Image - UKI):** Sealed, cryptographically signed `.efi` binary bundling kernel, initramfs, and cmdline.
-- **The Root-stock (Core System Files & Base OS):** Minimal **Void Linux** utilizing **runit** for deterministic service supervision, **seatd** for minimal seat arbitration, and **XBPS** for clean, fast package management (with **antiX Core** as fallback and **Arch Linux** as the 0.x development baseline).
-- **The Cultivar (Complete Tamlinux System):** The user-facing workstation layer comprising **Sway** on **wlroots**, **Quickshell** (Qt Quick / QML) desktop shell with 8 sandboxed `fred.*` plugins, the **Tamarack** design system, and the **`tam`** CLI mentor tool.
+- **The Bud (Initial Minimal Tamlinux Package):** Minimal bootstrap package installed on the rootstock (`tam-nut`, scheduled to be renamed `tam-bud` in 1.0.0) used to grow the rest of the Tamlinux scion.
+- **The Rootstock (Base OS):** Minimal **Void Linux** utilizing **runit** for deterministic service supervision, **seatd** for minimal seat arbitration, and **XBPS** for clean, fast package management (with **antiX Core** as fallback and **Arch Linux** as the 0.x development baseline).
+- **The Scion (Tamlinux Software):** The user-facing workstation layer comprising **Sway** on **wlroots**, **Quickshell** (Qt Quick / QML) desktop shell with 8 sandboxed `fred.*` plugins, the **Tamarack** design system, and the **`tam`** CLI mentor tool.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        TAMLINUX CULTIVAR                               │
+│                        TAMLINUX SCION                                  │
 │      Sway (wlroots) + Quickshell (Qt Quick/QML) + fred.* Plugins       │
 │      Tamarack Theme + tam CLI + Selected Application Suite             │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ grafted onto
 ┌───────────────────────────────────▼────────────────────────────────────┐
-│                       TAMLINUX ROOT-STOCK                              │
+│                       TAMLINUX ROOTSTOCK                               │
 │      Minimal Void Linux: runit init + seatd + XBPS + Btrfs             │
 │      (Strictly no systemd PID 1; antiX fallback; Arch dev baseline)    │
 └────────────────────────────────────────────────────────────────────────┘
@@ -35,14 +35,14 @@ The workstation desktop experience requires a dependable suite of daily-driver g
 This survey evaluates the software suites delivered by the two major open-source desktop platforms—**KDE** (KDE Gear, Plasma Applications, KDE Frameworks 6) and **GNOME** (GNOME Core Applications, GNOME Circle, Libadwaita)—to determine:
 1. **Functionality:** Breadth, ergonomics, and suitability for keyboard-driven tiling workflows.
 2. **Dependencies & Couplings:** Required runtimes, background daemons, IPC buses, and system integration points.
-3. **Root-stock Portability:** Whether applications can operate on a minimal `runit` + `seatd` Void Linux host without `systemd` daemons or monolithic session managers.
-4. **Cultivar Harmony:** How cleanly applications integrate with a Qt Quick / Sway desktop, respect external color themes (Tamarack), and adhere to Tamlinux's core tenet of **resource efficiency** (zero unnecessary background polling, no runaway indexing loops, 2006 hardware longevity).
+3. **Rootstock Portability:** Whether applications can operate on a minimal `runit` + `seatd` Void Linux host without `systemd` daemons or monolithic session managers.
+4. **Scion Harmony:** How cleanly applications integrate with a Qt Quick / Sway desktop, respect external color themes (Tamarack), and adhere to Tamlinux's core tenet of **resource efficiency** (zero unnecessary background polling, no runaway indexing loops, 2006 hardware longevity).
 
 ---
 
 ## 1. High-Level Architectural Comparison
 
-| Dimension | GNOME Software Suite | KDE Software Suite (KDE Gear) | Tamlinux Cultivar Implication |
+| Dimension | GNOME Software Suite | KDE Software Suite (KDE Gear) | Tamlinux Scion Implication |
 | :--- | :--- | :--- | :--- |
 | **Primary UI Toolkit** | GTK 4 + Libadwaita (some GTK 3 legacy) | Qt 6 + Qt Quick / QML + Kirigami | Tamlinux shell is **Qt Quick / QML**; KDE apps share runtime, style engine, and font stack. |
 | **Foundation Libraries** | GLib, GObject, GIO, Cairo, Pango | Qt6-base, Qt6-declarative, KDE Frameworks 6 | Both are mature C/C++ runtimes. KF6 separates into tiered modular libraries. |
@@ -63,14 +63,14 @@ This survey evaluates the software suites delivered by the two major open-source
 #### GNOME: Nautilus (`org.gnome.Nautilus` / Files)
 - **Functionality:** Clean, task-oriented file browsing with grid/list views, starred files, batch renaming, archive compression integration, and search-driven file retrieval.
 - **Dependencies:** GTK 4, Libadwaita, GIO/GVFS (D-Bus), `tinysparql` (formerly Tracker 3 core), `localsearch` (Tracker miners), `gnome-autoar`, `libcloudproviders`, `dconf`.
-- **Root-stock (Void + runit):** Runs if `gvfs` and `tinysparql` are installed. However, Tracker filesystem miners run background inotify trees that consume battery and I/O cycles. Without systemd user units, service lifecycle management for background indexers is fragile.
-- **Cultivar (Sway + Quickshell):** Enforces Libadwaita CSD headerbars. Keyboard shortcuts are mouse/gesture-biased. Theming does not follow Tamarack tokens automatically.
+- **Rootstock (Void + runit):** Runs if `gvfs` and `tinysparql` are installed. However, Tracker filesystem miners run background inotify trees that consume battery and I/O cycles. Without systemd user units, service lifecycle management for background indexers is fragile.
+- **Scion (Sway + Quickshell):** Enforces Libadwaita CSD headerbars. Keyboard shortcuts are mouse/gesture-biased. Theming does not follow Tamarack tokens automatically.
 
 #### KDE: Dolphin (`org.kde.dolphin`)
 - **Functionality:** Industry benchmark for desktop file management. Features dual-pane split view (`F3`), embedded terminal (`F4` via `konsolepart`), tabbed browsing, customizable columns, configurable toolbars, multi-selection modes, and deep KIO integration (trash, sftp, smb, fish protocols).
 - **Dependencies:** Qt 6, KF6 (`kio`, `kio-extras`, `kparts`, `kcoreaddons`, `kxmlgui`, `solid`), optional `baloo`.
-- **Root-stock (Void + runit):** Packaged natively in Void Linux XBPS. Operates completely without systemd. KIO workers spawn on-demand as ephemeral helper processes rather than perpetual daemons.
-- **Cultivar (Sway + Quickshell):** Exceptional fit for power users and keyboard tiling. Can hide all menus/toolbars for an ultra-minimal look. When Baloo is disabled in `~/.config/baloofilerc` (`[Basic Settings] Indexing-Enabled=false`), idle memory footprint is ~40 MB with zero background polling.
+- **Rootstock (Void + runit):** Packaged natively in Void Linux XBPS. Operates completely without systemd. KIO workers spawn on-demand as ephemeral helper processes rather than perpetual daemons.
+- **Scion (Sway + Quickshell):** Exceptional fit for power users and keyboard tiling. Can hide all menus/toolbars for an ultra-minimal look. When Baloo is disabled in `~/.config/baloofilerc` (`[Basic Settings] Indexing-Enabled=false`), idle memory footprint is ~40 MB with zero background polling.
 - **Tamlinux Recommendation:** **Dolphin (Selected with Baloo disabled)** or paired with a terminal file manager (Yazi/Ranger).
 
 ---
@@ -82,8 +82,8 @@ This survey evaluates the software suites delivered by the two major open-source
   - *Text Editor:* Minimalist, modern notepad with syntax highlighting (`gtksourceview5`), session restoration, vim emulation mode, and inline spell checking (`libspelling`).
   - *Builder:* Full-fledged IDE tailored for Flatpak, Meson, C, Rust, and Python development within the GNOME platform ecosystem.
 - **Dependencies:** GTK 4, Libadwaita, `gtksourceview5`, `libspelling`, `editorconfig-core-c`.
-- **Root-stock (Void + runit):** Completely portable; self-contained GTK4 application with zero systemd couplings.
-- **Cultivar (Sway + Quickshell):** Clean and fast, though Libadwaita limits custom theming and window geometry.
+- **Rootstock (Void + runit):** Completely portable; self-contained GTK4 application with zero systemd couplings.
+- **Scion (Sway + Quickshell):** Clean and fast, though Libadwaita limits custom theming and window geometry.
 
 #### KDE: Kate (`kate`), KWrite & KDevelop
 - **Functionality:**
@@ -91,8 +91,8 @@ This survey evaluates the software suites delivered by the two major open-source
   - *KWrite:* Lightweight single-document editor using the same `ktexteditor` component.
   - *KDevelop:* Advanced IDE with deep C++/Python semantic analysis.
 - **Dependencies:** Qt 6, KF6 (`ktexteditor`, `syntax-highlighting`, `kio`, `kparts`, `kxmlgui`). **Zero background daemons.**
-- **Root-stock (Void + runit):** Extremely clean build in Void Linux. No systemd or D-Bus service dependencies required for core editing.
-- **Cultivar (Sway + Quickshell):** Flawless integration. Kate provides IDE-grade capabilities in a lean ~35 MB footprint. It respects system color schemes (`kdeglobals`), uses the Atkinson Hyperlegible monospace font cleanly, and complements terminal-based editing (Micro / Neovim).
+- **Rootstock (Void + runit):** Extremely clean build in Void Linux. No systemd or D-Bus service dependencies required for core editing.
+- **Scion (Sway + Quickshell):** Flawless integration. Kate provides IDE-grade capabilities in a lean ~35 MB footprint. It respects system color schemes (`kdeglobals`), uses the Atkinson Hyperlegible monospace font cleanly, and complements terminal-based editing (Micro / Neovim).
 - **Tamlinux Recommendation:** **Kate (Selected)** as primary graphical editor; pair with Micro for terminal workflows.
 
 ---
@@ -102,16 +102,16 @@ This survey evaluates the software suites delivered by the two major open-source
 #### GNOME: Papers (`papers`) & Evince
 - **Functionality:** Clean document viewing supporting PDF, PostScript, DjVu, and TIFF. *Papers* is the modern GNOME 46+ GTK4/Libadwaita rewrite of the venerable Evince.
 - **Dependencies:** GTK 4, Libadwaita, Poppler-glib, `libarchive`, `libspelling`, `djvulibre`, `dconf`.
-- **Root-stock (Void + runit):** Highly portable. Requires standard rendering libraries.
-- **Cultivar (Sway + Quickshell):** Modern, touch-friendly UI, but titlebar takes space in tiling layouts.
+- **Rootstock (Void + runit):** Highly portable. Requires standard rendering libraries.
+- **Scion (Sway + Quickshell):** Modern, touch-friendly UI, but titlebar takes space in tiling layouts.
 
 #### KDE: Okular (`okular`)
 - **Functionality:** Universally recognized as the most versatile, high-performance document viewer in open-source computing.
   - Supported formats: PDF, ePub, PostScript, DjVu, Markdown, CHM, DVI, FictionBook, CBR/CBZ (comic books), and raster images.
   - Features: Rich annotations (inline notes, highlighter, stamps, freehand drawing), text-to-speech support (`qt6-speech`), form filling, cryptographic signature verification, table selection tool, trim margins mode, and presentation mode.
 - **Dependencies:** Qt 6, KF6 (`kparts`, `kio`, `kxmlgui`, `kwallet`), Poppler-qt6, `libkexiv2`, `threadweaver`.
-- **Root-stock (Void + runit):** Native Void Linux package. Works without systemd.
-- **Cultivar (Sway + Quickshell):** Flawless behavior. High rendering speed via Poppler-qt6; memory footprint is lean (~30 MB base); handles multi-hundred-page technical specifications effortlessly.
+- **Rootstock (Void + runit):** Native Void Linux package. Works without systemd.
+- **Scion (Sway + Quickshell):** Flawless behavior. High rendering speed via Poppler-qt6; memory footprint is lean (~30 MB base); handles multi-hundred-page technical specifications effortlessly.
 - **Tamlinux Recommendation:** **Okular (Selected)** — undisputed best-in-class utility.
 
 ---
@@ -122,16 +122,16 @@ This survey evaluates the software suites delivered by the two major open-source
 - **Functionality:** Loupe is GNOME's modern image viewer built in Rust and GTK4. Smooth trackpad zooming, image rotation, and metadata inspector.
 - **Architecture & Security:** Employs **Glycin**—an image decoding framework that sandboxes image decoders inside **Bubblewrap** (`bwrap`) containers with restricted `seccomp` profiles. Malicious image payloads cannot compromise user memory.
 - **Dependencies:** GTK 4, Libadwaita, Glycin, Bubblewrap, `libseccomp`, Rust runtime.
-- **Root-stock (Void + runit):** Requires unprivileged user namespaces (`kernel.unprivileged_userns_clone=1`) or suid bubblewrap. If user namespaces are disabled, Glycin decoders fail.
-- **Cultivar (Sway + Quickshell):** Sleek, secure, but Libadwaita styling and sandbox prerequisites require root-stock tuning.
+- **Rootstock (Void + runit):** Requires unprivileged user namespaces (`kernel.unprivileged_userns_clone=1`) or suid bubblewrap. If user namespaces are disabled, Glycin decoders fail.
+- **Scion (Sway + Quickshell):** Sleek, secure, but Libadwaita styling and sandbox prerequisites require rootstock tuning.
 
 #### KDE: Gwenview (`gwenview`) & Kolourpaint
 - **Functionality:**
   - *Gwenview:* Image viewer and basic editor. Features folder thumbnail browsing, lossless JPEG crop/rotation, resize, red-eye reduction, color management (LCMS2), and Exif/IPTC metadata editing.
   - *Kolourpaint:* Simple, lightweight raster painting tool (resembling MS Paint) for fast diagram markup and annotations.
 - **Dependencies:** Qt 6, KF6 (`kio`, `kparts`, `kfilemetadata`), `exiv2`, `lcms2`, optional `baloo`.
-- **Root-stock (Void + runit):** Native Void XBPS package, no systemd ties.
-- **Cultivar (Sway + Quickshell):** Fast, full-featured image management.
+- **Rootstock (Void + runit):** Native Void XBPS package, no systemd ties.
+- **Scion (Sway + Quickshell):** Fast, full-featured image management.
 - **Tamlinux Recommendation:** **Gwenview** or **Loupe** (evaluated); Kolourpaint for fast desktop markup.
 
 ---
@@ -235,9 +235,9 @@ Under Tamlinux's botanical design, the PIM stacks of both environments represent
 
 ---
 
-## 3. Root-stock Compatibility Analysis (Void Linux + `runit` + `seatd`)
+## 3. Rootstock Compatibility Analysis (Void Linux + `runit` + `seatd`)
 
-A critical requirement of Tamlinux is that applications must run reliably on the target **Root-stock**: a minimal installation of **Void Linux** supervised by **`runit`** and arbitrated by **`seatd`**, with no `systemd` PID 1 and no `elogind` emulation layer.
+A critical requirement of Tamlinux is that applications must run reliably on the target **Rootstock**: a minimal installation of **Void Linux** supervised by **`runit`** and arbitrated by **`seatd`**, with no `systemd` PID 1 and no `elogind` emulation layer.
 
 ### 3.1 Why KDE Frameworks 6 Excels on Void Linux
 
@@ -249,7 +249,7 @@ KDE Frameworks (KF6) was engineered around modularity and cross-platform portabi
 2. **Init & Seat Agnosticism:** None of the core KF6 libraries require `systemd-logind` or `systemd --user`. Hardware inspection in `Solid` cleanly queries `udev` and fallback sysfs paths when monolithic daemons are missing.
 3. **Void Packaging Health:** Void Linux maintains first-class binary packages for Qt 6, KDE Frameworks 6, and core KDE Gear applications (Kate, Okular, Dolphin, Ark, KCalc).
 
-### 3.2 Where GNOME Applications Encounter Root-stock Friction
+### 3.2 Where GNOME Applications Encounter Rootstock Friction
 
 1. **The `logind` Dependency:** Many GNOME utilities query `org.freedesktop.login1` for session status, power state, and idle management. In a pure `seatd` environment without `elogind`, applications log repeated D-Bus timeout errors.
 2. **XDG Desktop Portals:** GNOME applications expect `xdg-desktop-portal-gnome`. Under Sway, this portal fails because `org.gnome.Mutter` is absent. Tamlinux must deploy `xdg-desktop-portal-wlr` combined with `xdg-desktop-portal-gtk`.
@@ -257,9 +257,9 @@ KDE Frameworks (KF6) was engineered around modularity and cross-platform portabi
 
 ---
 
-## 4. Cultivar Compatibility Analysis (Sway + Quickshell + Tamarack)
+## 4. Scion Compatibility Analysis (Sway + Quickshell + Tamarack)
 
-The Tamlinux Cultivar is a keyboard-centric tiling environment running **Sway** on **wlroots** with a **Quickshell** desktop shell styled according to the **Tamarack** design tokens.
+The Tamlinux Scion is a keyboard-centric tiling environment running **Sway** on **wlroots** with a **Quickshell** desktop shell styled according to the **Tamarack** design tokens.
 
 ### 4.1 Window Decoration & Screen Real Estate
 
@@ -310,9 +310,9 @@ High-value, lightweight, self-contained applications that run with zero systemd 
 Applications with exceptional utility that require specific configuration recipes or environment guards to prevent resource thrashing or portal friction:
 1. **Dolphin (File Manager):** Include Dolphin, but ship declarative defaults in `/etc/skel/.config/baloofilerc` disabling file indexing (`Indexing-Enabled=false`). This secures best-in-class dual-pane browsing while eliminating background polling.
 2. **Haruna (Media Player):** Package Haruna with native VAAPI hardware acceleration enabled, providing lean video playback on modern GPUs and efficient software decoding on older chips.
-3. **Loupe (Image Viewer):** If unprivileged user namespaces are enabled in the root-stock kernel, Loupe provides memory-safe image decoding via Glycin and Bubblewrap.
+3. **Loupe (Image Viewer):** If unprivileged user namespaces are enabled in the rootstock kernel, Loupe provides memory-safe image decoding via Glycin and Bubblewrap.
 
-### Path 3: Tamlinux Cultivar Native Suite (Custom QML Applications)
+### Path 3: Tamlinux Scion Native Suite (Custom QML Applications)
 Areas where both KDE and GNOME software are ill-suited (due to monolithic desktop coupling, heavy daemons, or mismatched tiling paradigms). Tamlinux should provide native Quickshell / Qt Quick tools:
 1. **Tamlinux Settings:** A declarative, keyboard-navigable control panel built on Quickshell and `libtam` to manage display layouts (`fred.monitor`), audio volume, network profiles, and theme toggles.
 2. **Tamlinux Launcher & Menu:** Fast keyboard application launcher and power menu integrated directly into the shell.
@@ -323,7 +323,7 @@ Areas where both KDE and GNOME software are ill-suited (due to monolithic deskto
 
 ## 6. Comprehensive Evaluation Matrix
 
-| Application | Suite | Primary Role | Toolkit | Dependencies & Daemons | Void/runit Portability | Cultivar Alignment | Tamlinux Verdict |
+| Application | Suite | Primary Role | Toolkit | Dependencies & Daemons | Void/runit Portability | Scion Alignment | Tamlinux Verdict |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Okular** | KDE | Document / PDF Viewer | Qt 6 / KF6 | Poppler-qt6; no daemons | **Flawless** | **Excellent** | **Selected (Core)** |
 | **Kate** | KDE | Advanced Text Editor | Qt 6 / KF6 | SyntaxHighlighting, KIO; no daemons | **Flawless** | **Excellent** | **Selected (Core)** |
@@ -350,8 +350,8 @@ Areas where both KDE and GNOME software are ill-suited (due to monolithic deskto
 
 The survey reveals a decisive architectural alignment:
 
-1. **KDE Frameworks 6 and modular KDE Gear applications align substantially better with Tamlinux than GNOME's software stack.** Because Tamlinux's Cultivar shell is built on **Qt Quick / QML**, KDE applications naturally share memory pages, font rendering caches, and graphics contexts with the desktop shell.
+1. **KDE Frameworks 6 and modular KDE Gear applications align substantially better with Tamlinux than GNOME's software stack.** Because Tamlinux's Scion shell is built on **Qt Quick / QML**, KDE applications naturally share memory pages, font rendering caches, and graphics contexts with the desktop shell.
 2. **KDE applications respect windowing protocols under Sway.** They support Server-Side Decorations, allowing Sway to manage window borders cleanly without wasting vertical screen space on redundant headerbars.
-3. **KDE's modular libraries (KF6 Tiers 1–3) are completely free of `systemd` couplings**, compiling and executing flawlessly on minimal **Void Linux (`runit` + `seatd`)** and **antiX** root-stocks.
+3. **KDE's modular libraries (KF6 Tiers 1–3) are completely free of `systemd` couplings**, compiling and executing flawlessly on minimal **Void Linux (`runit` + `seatd`)** and **antiX** rootstocks.
 4. **Care must be taken to prune heavy daemons.** The background indexing daemons (Baloo in KDE, Tracker/TinySPARQL in GNOME) and the heavy PIM database daemons (Akonadi in KDE, Evolution-Data-Server in GNOME) must be excluded or disabled by default to uphold Tamlinux's **resource efficiency** and preserve the 2006 vintage hardware floor.
-5. **Standout applications (Okular, Kate, KCalc, Filelight, Ark, Dolphin without Baloo) can be directly included in Tamlinux.** System settings, status indicators, and desktop menus should remain native Tamlinux Cultivar components built in Quickshell and `libtam`.
+5. **Standout applications (Okular, Kate, KCalc, Filelight, Ark, Dolphin without Baloo) can be directly included in Tamlinux.** System settings, status indicators, and desktop menus should remain native Tamlinux Scion components built in Quickshell and `libtam`.

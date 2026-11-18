@@ -368,7 +368,7 @@
     },
     "desktop_application_suites": {
       "title": "Desktop Application Suites",
-      "description": "Graphical application suites evaluated for daily-driver workstation utility, resource efficiency, and root-stock portability"
+      "description": "Graphical application suites evaluated for daily-driver workstation utility, resource efficiency, and rootstock portability"
     }
   },
   "considered_packages": [
@@ -457,7 +457,7 @@
       "url": "https://voidlinux.org/",
       "license": "BSD-2-Clause and various",
       "status": "selected",
-      "role": "Target base distribution for independent Tamlinux cultivar at milestone 1.2",
+      "role": "Target rootstock for independent Tamlinux scion at milestone 1.2",
       "decision_ref": "base-operating-system.md",
       "summary": "An independent, general-purpose rolling distribution featuring runit and the XBPS package manager.",
       "resource_profile": "Minimal memory overhead, no systemd daemons, native runit init, glibc/musl options",
