@@ -1,0 +1,12 @@
+WORK SESSIONS
+
+This folder is where ecosystem-fred-tamlinux hands work between sessions.
+
+  WHATNOW        what was just done and what comes next. Read it first.
+  W<n>-<name>    one record per work session: what was asked, what got
+                 done, what failed and what is left.
+  history/       records written before the 2026-11-17 cutover, moved
+                 from docs/ai/ under D278. Read-only and not indexed.
+
+Public Tamlinux repositories have no docs/ai/ folder. Their old records
+are in work/history/ and new sessions write work/W<n>-<name> records.

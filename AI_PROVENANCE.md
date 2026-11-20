@@ -1,12 +1,12 @@
 # AI Collaboration & Provenance
 
-2026-11-13: Codex CLI `0.169.0` (`gpt-6.1-sol`) converts tracked README files to plain text and updates their consumers. [Record](docs/ai/2026-11-13-plain-readmes.md).
+2026-11-13: Codex CLI `0.169.0` (`gpt-6.1-sol`) converts tracked README files to plain text and updates their consumers. [Record](work/history/2026-11-13-plain-readmes.md).
 
-2026-11-11: Codex CLI `0.167.1` (`gpt-6.1-sol`) indexes paired native display development builds and their frozen recipe/verification contract. [Record](docs/ai/2026-11-11-display-native-integration.md).
+2026-11-11: Codex CLI `0.167.1` (`gpt-6.1-sol`) indexes paired native display development builds and their frozen recipe/verification contract. [Record](work/history/2026-11-11-display-native-integration.md).
 
 This repository practices transparent AI-assisted engineering. The patches it
 records were written by AI coding agents under Fred's direction; this file and
-[`docs/ai/`](docs/ai/) say which tool, which model, and
+[`work/history/`](work/history/) say which tool, which model, and
 what Fred asked for. Every commit co-authored with an agent carries
 `Co-authored-by:`, `AI-Tool:` and `AI-Model:` trailers.
 
@@ -19,7 +19,7 @@ pull requests. See [`README`](README) section WHY CARRIED PATCHES LIVE ON PUBLIC
 
 This repository follows the Tamlinux [AI provenance standard](https://github.com/greenermoose/tamlinux/blob/main/docs/ai-provenance-standard.md). In
 brief: commits made with AI help carry `AI-Tool` and `AI-Model` trailers, and
-each session record in [`docs/ai/`](docs/ai/) gives the date, tool version,
+each session record in [`work/history/`](work/history/) gives the date, tool version,
 model, Fred's guiding prompts verbatim, the commits, and the decisions. Session
 transcripts are retained privately by the author, so the records carry no
 session IDs or local transcript paths.
@@ -74,21 +74,21 @@ author; see [How to read this record](#how-to-read-this-record).
 
 ## 2026-09-22 repository rename
 
-Codex CLI `0.155.1` (`gpt-6-sol`) updated canonical GitHub links for `ecosystem-fred-tamlinux`. [Session record](docs/ai/2026-09-22-github-repository-rename.md).
+Codex CLI `0.155.1` (`gpt-6-sol`) updated canonical GitHub links for `ecosystem-fred-tamlinux`. [Session record](work/history/2026-09-22-github-repository-rename.md).
 
 ## 2026-09-23 upstream survey foundation
 
 Codex CLI `0.156.1` (`gpt-6-sol`) established the root upstream reference
 and dated survey directory for this repository. This was documentation only;
 no field survey or runtime change was made.
-[Session record](docs/ai/2026-09-23-upstream-survey-foundation.md).
+[Session record](work/history/2026-09-23-upstream-survey-foundation.md).
 
 ## 2026-09-28 private session IDs
 
 Claude Code `2.1.283` (`claude-opus-5-5`) removed session IDs and local
 transcript paths from this repository's AI records and linked the public
 provenance standard. Documentation only.
-[Session record](docs/ai/2026-09-28-private-session-ids.md).
+[Session record](work/history/2026-09-28-private-session-ids.md).
 
 ## 2026-10-04 upstream rebases, GTK4 retirement, and review workflow update
 
@@ -122,16 +122,16 @@ Claude Code `2.1.296` (`claude-opus-5-5`) moved the offline guide chapters to
 the `tam` repository, removed the `knowledge/` corpus and its subcommands from
 `tam-ecosystem` (0.3.0), and removed references to private records and
 unpublished plans from `ecosystem.json`, `ECOSYSTEM.md`, `README.md` and
-`docs/`. [Session record](docs/ai/2026-10-13-tam-corpus-move-and-public-cleanup.md).
+`docs/`. [Session record](work/history/2026-10-13-tam-corpus-move-and-public-cleanup.md).
 
 ## 2026-11-07 retire `omarchy` from the ecosystem registry
 
 OpenCode (`opencode`) `2.2.5` retired `omarchy` in the registry, removed it from
 `/var/cache/local-patches` and deleted `~/pkgs/omarchy` (D231, K51).
-[Session record](docs/ai/2026-11-07-retire-omarchy.md).
+[Session record](work/history/2026-11-07-retire-omarchy.md).
 
 ## 2026-11-13 README documentation consistency
 
 Codex CLI `0.169.0` (`gpt-6-luna`, then `gpt-6.1-sol`) corrected the README’s
 Omarchy patch status and current compositor description. Documentation only.
-[Session record](docs/ai/2026-11-13-documentation-consistency.md).
+[Session record](work/history/2026-11-13-documentation-consistency.md).

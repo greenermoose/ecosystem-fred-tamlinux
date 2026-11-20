@@ -1,0 +1,35 @@
+W1 WORK HISTORY MIGRATION
+
+Date: 2026-11-20
+AI harness: opencode 2.2.5
+AI model: big-pickle
+Commits: the docs/ai retirement commit
+
+
+GUIDANCE
+
+  Fred: "all docs/ai files should be rewritten into work/ files. i don't
+  want there to be a docs/ai/ folder any more -- I'm looking in work/
+  to see work history"
+
+  D278 retires docs/ai/ in every live repository.
+
+
+DONE
+
+  - Moved all 17 records to work/history/ with git mv. The docs/ai
+    folder is gone.
+  - Repointed 12 paths in AI_PROVENANCE.md and one git log path in a
+    moved record. The AI provenance standard URL is a different file
+    and was left alone.
+  - Created this work folder with README-work, W1 and WHATNOW.
+
+
+FAILED
+
+  - Nothing.
+
+
+HANDOFF
+
+  - No stage, version or source pin changed.

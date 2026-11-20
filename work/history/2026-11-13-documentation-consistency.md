@@ -3,7 +3,7 @@
 - **CLI Tool**: Codex CLI `0.169.0` (verified from the session runtime metadata).
 - **Models**: `gpt-6-luna` for the initial review and README edits; `gpt-6.1-sol` for provenance completion and commit preparation (verified from turn metadata).
 - **Authorship**: AI-assisted documentation under Fred's direction.
-- **Commit**: The commit containing this record also contains the README corrections; use `git log -- docs/ai/2026-11-13-documentation-consistency.md` to locate it.
+- **Commit**: The commit containing this record also contains the README corrections; use `git log -- work/history/2026-11-13-documentation-consistency.md` to locate it.
 - **Transcript**: Retained privately by the author.
 
 ## Guiding prompts

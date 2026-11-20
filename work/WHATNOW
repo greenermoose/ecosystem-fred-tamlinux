@@ -1,0 +1,26 @@
+WHATNOW
+
+What ecosystem-fred-tamlinux is doing now and what comes next.
+
+Updated: 2026-11-20, with W1
+
+
+STATE
+
+  D278 retired docs/ai/: the 17 old records are read-only history in
+  work/history/ (W1). No live docs/ai folder remains in this repository.
+
+
+NEXT
+
+  - No ecosystem work is queued.
+
+
+WAITING FOR FRED
+
+  - Nothing.
+
+
+WATCH OUT
+
+  - Keep session records under work/, not docs/ai/.
