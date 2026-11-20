@@ -310,7 +310,7 @@
     },
     "supervised_determinism": {
       "title": "Deterministic Tools and Supervised Human Agency",
-      "description": "Favor deterministic tools that people direct. AI coding assistants are used under human direction with public provenance (AI_PROVENANCE.md); OpenClaw and Hermes support were retired from Tamlinux's defaults."
+      "description": "Favor deterministic tools that people direct. AI coding assistants are used under human direction with public AI blame (AI-BLAME.md); OpenClaw and Hermes support were retired from Tamlinux's defaults."
     }
   },
   "categories": {
@@ -1173,10 +1173,10 @@
       "license": "Proprietary Service",
       "status": "selected",
       "role": "Primary reasoning and architectural orchestration agent for Tamlinux development",
-      "decision_ref": "AI_PROVENANCE.md",
+      "decision_ref": "AI-BLAME.md",
       "summary": "Advanced AI assistant developed by Anthropic, used for complex system design, policy synthesis, and orchestration.",
       "resource_profile": "Cloud API; direct human steering by Fred",
-      "rationale": "Claude is employed as an interactive pair programmer and orchestrator. In Tamlinux, AI does not run in uncontrolled autonomous loops; Fred directs every plan, decision, and release. Provenance is tracked in AI_PROVENANCE.md."
+      "rationale": "Claude is employed as an interactive pair programmer and orchestrator. In Tamlinux, AI does not run in uncontrolled autonomous loops; Fred directs every plan, decision, and release. AI blame is tracked in AI-BLAME.md."
     },
     {
       "name": "codex",
@@ -1186,7 +1186,7 @@
       "license": "Proprietary Service",
       "status": "selected",
       "role": "High-speed code synthesis, mechanical refactoring, and test generation agent",
-      "decision_ref": "AI_PROVENANCE.md",
+      "decision_ref": "AI-BLAME.md",
       "summary": "OpenAI's coding agent, used for precise, bounded code transformations.",
       "resource_profile": "Cloud API; scoped delegation with byte-accurate verification",
       "rationale": "Codex is used for bounded coding tasks (for example panel ports, test suites, exact refactors), reviewed before merge."
@@ -1199,7 +1199,7 @@
       "license": "Proprietary Service",
       "status": "selected",
       "role": "Antigravity CLI (agy) pair-programming assistant for codebase refactoring and analysis",
-      "decision_ref": "AI_PROVENANCE.md",
+      "decision_ref": "AI-BLAME.md",
       "summary": "Google DeepMind's multimodal model driving the Antigravity (agy) agent for deep repository analysis and execution.",
       "resource_profile": "Cloud API / local terminal agent (agy)",
       "rationale": "agy is utilized for large-scale codebase surveys, fast symbol analysis, and comprehensive repository expansions under Fred's direct guidance."

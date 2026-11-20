@@ -36,7 +36,7 @@ CONSOLIDATED REPOSITORY STRUCTURE
     ├── ECOSYSTEM.md                # Human-readable catalog generated from ecosystem.json
     ├── README                      # Repository guide and architectural overview
     ├── ACKNOWLEDGEMENTS.md         # Upstream & author acknowledgements
-    ├── AI_PROVENANCE.md            # Provenance log
+    ├── AI-BLAME.md            # AI blame log
     ├── VERSION                     # Version string (0.3.0)
     └── LICENSE                     # GPL-3.0-or-later
 
@@ -65,7 +65,7 @@ Ghostty, GIMP, and Hyprwm) have restricted outside PRs or enacted strict
 anti-AI contribution policies.
 
 Tamlinux is developed through human-directed AI pair programming with complete
-transparency (<AI_PROVENANCE.md>). Rather than burdening upstream maintainers
+transparency (<AI-BLAME.md>). Rather than burdening upstream maintainers
 with pull requests they do not wish to review, Tamlinux carries necessary
 bugfixes openly:
 - Public Fork Branches: Fixes are committed to greenermoose/<Upstream> topic

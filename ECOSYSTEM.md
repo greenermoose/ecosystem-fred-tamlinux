@@ -134,9 +134,9 @@ Generated from [`ecosystem.json`](ecosystem.json) via `tam-ecosystem render`:
 | [UTM (macOS)](https://mac.getutm.app/) | Virtualization, Emulation & Containment | *evaluated* | Open-source QEMU-based virtual machine manager for macOS | Apache-2.0 | — |
 | [Tart (macOS)](https://tart.run/) | Virtualization, Emulation & Containment | *evaluated* | Lightweight macOS virtualization tool for Linux and macOS VMs | Fair Source / Apache-2.0 | — |
 | [OrbStack (macOS)](https://orbstack.dev/) | Virtualization, Emulation & Containment | *evaluated* | High-efficiency macOS container and Linux machine runtime | Proprietary | — |
-| [Claude (Anthropic)](https://claude.ai/) | AI & Developer Tooling | **selected** | Primary reasoning and architectural orchestration agent for Tamlinux development | Proprietary Service | AI_PROVENANCE.md |
-| [Codex / OpenAI API](https://openai.com/) | AI & Developer Tooling | **selected** | High-speed code synthesis, mechanical refactoring, and test generation agent | Proprietary Service | AI_PROVENANCE.md |
-| [Gemini (Google DeepMind) / agy](https://gemini.google.com/app) | AI & Developer Tooling | **selected** | Antigravity CLI (agy) pair-programming assistant for codebase refactoring and analysis | Proprietary Service | AI_PROVENANCE.md |
+| [Claude (Anthropic)](https://claude.ai/) | AI & Developer Tooling | **selected** | Primary reasoning and architectural orchestration agent for Tamlinux development | Proprietary Service | AI-BLAME.md |
+| [Codex / OpenAI API](https://openai.com/) | AI & Developer Tooling | **selected** | High-speed code synthesis, mechanical refactoring, and test generation agent | Proprietary Service | AI-BLAME.md |
+| [Gemini (Google DeepMind) / agy](https://gemini.google.com/app) | AI & Developer Tooling | **selected** | Antigravity CLI (agy) pair-programming assistant for codebase refactoring and analysis | Proprietary Service | AI-BLAME.md |
 | [ChatGPT (OpenAI)](https://chatgpt.com/) | AI & Developer Tooling | *evaluated* | Exploratory research and general query interface | Proprietary Service | — |
 | [Cursor IDE](https://cursor.com/) | AI & Developer Tooling | **active** | AI-first developer editor packaged for the Tamlinux workstation | Proprietary / VS Code Fork | — |
 | [KDE Gear](https://apps.kde.org/) | Desktop Application Suites | *evaluated* | Primary modular application suite for Tamlinux graphical utilities | GPL-2.0-or-later / LGPL-2.1-or-later | docs/desktop-application-suites.md |

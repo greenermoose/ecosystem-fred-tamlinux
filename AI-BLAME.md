@@ -17,7 +17,7 @@ pull requests. See [`README`](README) section WHY CARRIED PATCHES LIVE ON PUBLIC
 
 ## How to read this record
 
-This repository follows the Tamlinux [AI provenance standard](https://github.com/greenermoose/tamlinux/blob/main/docs/ai-provenance-standard.md). In
+This repository follows the Tamlinux [AI blame standard](https://github.com/greenermoose/tamlinux/blob/main/work/ai-blame-standard.md). In
 brief: commits made with AI help carry `AI-Tool` and `AI-Model` trailers, and
 each session record in [`work/history/`](work/history/) gives the date, tool version,
 model, Fred's guiding prompts verbatim, the commits, and the decisions. Session
